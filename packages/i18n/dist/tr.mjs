@@ -1,0 +1,651 @@
+// tr.json
+var tr_default = {
+  _lang: "tr",
+  common: {
+    cancel: "İptal",
+    apply: "Uygula",
+    close: "Kapat",
+    comment: "Yorum",
+    dismiss: "Kapat"
+  },
+  toolbar: {
+    ariaLabel: "Biçimlendirme araç çubuğu",
+    file: "Dosya",
+    format: "Biçim",
+    insert: "Ekle",
+    open: "Aç",
+    openShortcut: "Ctrl+O",
+    save: "Kaydet",
+    saveShortcut: "Ctrl+S",
+    print: "Yazdır",
+    printShortcut: "Ctrl+P",
+    pageSetup: "Sayfa yapısı",
+    leftToRight: "Soldan sağa metin",
+    rightToLeft: "Sağdan sola metin",
+    image: "Görsel",
+    table: "Tablo",
+    pageBreak: "Sayfa sonu",
+    tableOfContents: "İçindekiler tablosu",
+    help: "Yardım",
+    reportIssue: "Sorun bildir",
+    watermark: "Filigran",
+    break: "Kesme",
+    sectionBreakContinuous: "Bölüm sonu (sürekli)",
+    sectionBreakNextPage: "Bölüm sonu (sonraki sayfa)",
+    insertFootnote: "Dipnot ekle",
+    insertEndnote: "Sonnot ekle"
+  },
+  formattingBar: {
+    groups: {
+      history: "Geçmiş",
+      zoom: "Yakınlaştırma",
+      styles: "Stiller",
+      font: "Yazı tipi",
+      textFormatting: "Metin biçimlendirme",
+      script: "Komut",
+      alignment: "Hizalama",
+      listFormatting: "Liste biçimlendirme",
+      image: "Görsel",
+      table: "Tablo"
+    },
+    undo: "Geri al",
+    undoShortcut: "Geri al (Ctrl+Z)",
+    redo: "Yinele",
+    redoShortcut: "Yinele (Ctrl+Y)",
+    bold: "Kalın",
+    boldShortcut: "Kalın (Ctrl+B)",
+    italic: "Eğik",
+    italicShortcut: "Eğik (Ctrl+I)",
+    underline: "Altı çizili",
+    underlineShortcut: "Altı çizili (Ctrl+U)",
+    strikethrough: "Üstü çizili",
+    fontColor: "Yazı rengi",
+    highlightColor: "Vurgu rengi",
+    insertLink: "Bağlantı ekle",
+    insertLinkShortcut: "Bağlantı ekle (Ctrl+K)",
+    superscript: "Üst simge",
+    superscriptShortcut: "Üst simge (Ctrl+Shift+=)",
+    subscript: "Alt simge",
+    subscriptShortcut: "Alt simge (Ctrl+=)",
+    imageProperties: "Görsel özellikleri",
+    imagePropertiesShortcut: "Görsel özellikleri (alternatif metin, kenarlık)...",
+    clearFormatting: "Biçimlendirmeyi temizle",
+    commentsAndChanges: "Açıklamalar ve değişiklikler",
+    unavailableInPreview: "Bu önizleme sürümünde kullanılamaz",
+    more: "Diğer",
+    altText: "Alternatif metin",
+    imageWrap: "Metni kaydır"
+  },
+  alignment: {
+    alignLeft: "Sola hizala",
+    alignLeftShortcut: "Ctrl+L",
+    center: "Ortala",
+    centerShortcut: "Ctrl+E",
+    alignRight: "Sağa hizala",
+    alignRightShortcut: "Ctrl+R",
+    justify: "İki yana yasla",
+    justifyShortcut: "Ctrl+J"
+  },
+  lists: {
+    ariaLabel: "Liste biçimlendirme",
+    typeAriaLabel: "Liste tipi",
+    indentationAriaLabel: "Liste girintilemesi",
+    bulletList: "Madde işaretli liste",
+    numberedList: "Numaralı liste",
+    decreaseIndent: "Girintiyi azalt",
+    increaseIndent: "Girintiyi artır"
+  },
+  lineSpacing: {
+    single: "Tek",
+    double: "Çift",
+    lineSpacingTitle: "Satır aralığı: {label}",
+    blockSpacingRules: "Paragraf aralığı",
+    label: "Satır aralığı",
+    addSpaceAfter: "Paragraftan sonra boşluk ekle",
+    addSpaceBefore: "Paragraftan önce boşluk ekle",
+    removeSpaceAfter: "Paragraftan sonraki boşluğu kaldır",
+    removeSpaceBefore: "Paragraftan önceki boşluğu kaldır"
+  },
+  styles: {
+    selectAriaLabel: "Paragraf stili seç",
+    normalText: "Normal metin",
+    title: "Başlık",
+    subtitle: "Alt başlık",
+    heading1: "Başlık 1",
+    heading2: "Başlık 2",
+    heading3: "Başlık 3"
+  },
+  font: {
+    selectAriaLabel: "Yazı tipi ailesini seç",
+    sansSerif: "Sans Serif",
+    serif: "Serif",
+    monospace: "Eş aralıklı",
+    documentFonts: "Belge yazı tipleri"
+  },
+  fontSize: {
+    decrease: "Yazı tipi boyutunu küçült",
+    increase: "Yazı tipi boyutunu büyüt",
+    label: "Yazı tipi boyutu",
+    listLabel: "Yazı tipi boyutları"
+  },
+  zoom: {
+    ariaLabel: "Yakınlaştırma: {label}",
+    zoomIn: "Yakınlaştır",
+    zoomLevel: "Yakınlaştırma düzeyi",
+    zoomOut: "Uzaklaştır",
+    automatic: null,
+    fitWidth: null
+  },
+  colorPicker: {
+    highlightColors: "Vurgu renkleri",
+    customColor: "Özel renk",
+    noColor: "Renk yok",
+    automatic: "Otomatik",
+    themeColors: "Tema renkleri",
+    standardColors: "Standart renkler",
+    colors: {
+      black: "Siyah",
+      darkRed: "Koyu kırmızı",
+      red: "Kırmızı",
+      orange: "Turuncu",
+      yellow: "Sarı",
+      darkYellow: "Koyu sarı",
+      green: "Yeşil",
+      darkGreen: "Koyu yeşil",
+      blue: "Mavi",
+      darkBlue: "Koyu mavi",
+      purple: "Mor",
+      white: "Beyaz",
+      lightGreen: "Açık yeşil",
+      lightBlue: "Açık mavi",
+      darkGray: "Koyu gri",
+      cyan: "Camgöbeği",
+      magenta: "Macenta",
+      brightGreen: "Parlak yeşil",
+      darkCyan: "Koyu camgöbeği",
+      darkMagenta: "Koyu macenta",
+      lightGray: "Açık gri"
+    },
+    apply: "Uygula",
+    theme: {
+      accent1: "Vurgu 1",
+      accent2: "Vurgu 2",
+      accent3: "Vurgu 3",
+      accent4: "Vurgu 4",
+      accent5: "Vurgu 5",
+      accent6: "Vurgu 6",
+      background1: "Arka Plan 1",
+      background2: "Arka Plan 2",
+      text1: "Metin 1",
+      text2: "Metin 2"
+    }
+  },
+  dialogs: {
+    imageProperties: {
+      title: "Görsel özellikleri",
+      altText: "Alternatif metin",
+      altTextPlaceholder: "Erişilebilirlik için bu görseli açıkla...",
+      dimensions: "Boyutlar",
+      heightLabel: "Yükseklik:",
+      lockAspectRatio: "En boy oranını kilitle",
+      textWrapping: "Metin sarma",
+      widthLabel: "Genişlik:"
+    },
+    imagePosition: {
+      relativeOptions: {
+        page: "Sayfa",
+        column: "Sütun",
+        margin: "Kenar boşluğu",
+        character: "Karakter",
+        paragraph: "Paragraf",
+        line: "Satır"
+      }
+    },
+    pageSetup: {
+      title: "Sayfa yapısı",
+      pageSize: "SAYFA BOYUTU",
+      sizeLabel: "Boyut",
+      custom: "Özel",
+      orientation: "Yön",
+      portrait: "Dikey",
+      landscape: "Yatay",
+      margins: "KENAR BOŞLUKLARI",
+      top: "Üst",
+      bottom: "Alt",
+      left: "Sol",
+      right: "Sağ",
+      pageSizes: {
+        letter: 'Letter (8.5" × 11")',
+        a4: 'A4 (8.27" × 11.69")',
+        legal: 'Legal (8.5" × 14")',
+        a3: 'A3 (11.69" × 16.54")',
+        a5: 'A5 (5.83" × 8.27")',
+        b5: 'B5 (6.93" × 9.84")',
+        executive: 'Executive (7.25" × 10.5")'
+      },
+      applyTo: "Uygulama yeri",
+      applyToDocument: "Tüm belge",
+      applyToSection: "Bu bölüm"
+    },
+    footnoteProperties: {
+      title: "Dipnot ve son not özellikleri",
+      footnotes: "Dipnotlar",
+      endnotes: "Son notlar",
+      position: "Konum",
+      numberFormat: "Numara biçimi",
+      numbering: "Numaralandırma",
+      footnotePositions: {
+        bottomOfPage: "Sayfa altı",
+        belowText: "Metin altı"
+      },
+      endnotePositions: {
+        endOfDocument: "Belge sonu",
+        endOfSection: "Bölüm sonu"
+      },
+      numberingOptions: {
+        continuous: "Sürekli",
+        restartSection: "Her bölümde yeniden başla",
+        restartPage: "Her sayfada yeniden başla"
+      },
+      formats: {
+        decimal: "1, 2, 3, ...",
+        lowerRoman: "i, ii, iii, ...",
+        upperRoman: "I, II, III, ..."
+      }
+    }
+  },
+  comments: {
+    unknown: "Bilinmiyor",
+    addComment: "Yorum ekle...",
+    replyPlaceholder: "Yanıtla veya @ ile başkalarını ekle"
+  },
+  contextMenu: {
+    ariaLabel: "Yapay zekâ işlemleri menüsü",
+    cut: "Kes",
+    cutShortcut: "Ctrl+X",
+    copy: "Kopyala",
+    copyShortcut: "Ctrl+C",
+    paste: "Yapıştır",
+    pasteShortcut: "Ctrl+V",
+    delete: "Sil",
+    deleteShortcut: "Del",
+    selectAll: "Tümünü seç",
+    selectAllShortcut: "Ctrl+A",
+    editCustomNode: "{label} öğesini düzenle",
+    removeCustomNode: "{label} öğesini kaldır"
+  },
+  documentOutline: {
+    ariaLabel: "Belge ana hattı",
+    closeAriaLabel: "Ana hattı kapat",
+    closeTitle: "Ana hattı kapat",
+    title: "Ana hat",
+    noHeadings: "Başlık bulunamadı. Burada görünmeleri için belgeye başlık ekle."
+  },
+  viewer: {
+    pageIndicator: "{total} sayfadan {current}."
+  },
+  titleBar: {
+    untitled: "Adsız",
+    documentNameAriaLabel: "Belge adı",
+    menuBarAriaLabel: "Menü çubuğu"
+  },
+  errors: {
+    unableToParse: "Belge ayrıştırılamadı",
+    somethingWentWrong: "Bir şeyler ters gitti",
+    errorDescription: "Bu bileşen oluşturulurken bir hata oluştu. Lütfen tekrar dene veya sorun devam ederse destek ile iletişime geç.",
+    errorLabel: "Hata:",
+    componentStack: "Bileşen yığını:",
+    tryAgain: "Tekrar dene",
+    showDetails: "Ayrıntıları göster",
+    hideDetails: "Ayrıntıları gizle"
+  },
+  table: {
+    insertRowAbove: "Üste satır ekle",
+    insertRowBelow: "Alta satır ekle",
+    insertColumnLeft: "Sola sütun ekle",
+    insertColumnRight: "Sağa sütun ekle",
+    deleteRow: "Satırı sil",
+    deleteColumn: "Sütunu sil",
+    deleteTable: "Tabloyu sil",
+    mergeCells: "Hücreleri birleştir",
+    splitCell: "Hücreyi böl",
+    editingTools: "Tablo düzenleme araçları",
+    label: "Tablo:",
+    cellFillColor: "Hücre dolgu rengi",
+    borderColor: "Kenarlık rengi",
+    borderWidth: "Kenarlık kalınlığı",
+    borders: {
+      all: "Tüm kenarlıklar",
+      outside: "Dış kenarlıklar",
+      inside: "İç kenarlıklar",
+      none: "Kenarlık yok",
+      top: "Üst kenarlık",
+      bottom: "Alt kenarlık",
+      left: "Sol kenarlık",
+      right: "Sağ kenarlık",
+      styleAriaLabel: "Kenarlık stili",
+      tooltip: "Kenarlıklar"
+    },
+    moreOptions: "Daha fazla tablo seçeneği",
+    selectTable: "Tüm tabloyu seç",
+    borderStyles: {
+      dashed: "Kesik çizgili",
+      dotted: "Noktalı",
+      double: "Çift",
+      single: "Düz",
+      thick: "Kalın",
+      triple: "Üçlü"
+    },
+    borderWidths: {
+      halfPt: "0,5 nk",
+      oneHalfPt: "1,5 nk",
+      onePt: "1 nk",
+      threePt: "3 nk",
+      twoPt: "2 nk"
+    },
+    clearCellFill: "Hücre dolgusunu temizle"
+  },
+  tableAdvanced: {
+    verticalAlignment: "Dikey hizalama",
+    top: "Üst",
+    middle: "Orta",
+    bottom: "Alt",
+    toggleNoWrap: "Sarmamayı aç/kapa",
+    toggleHeaderRow: "Başlık satırını aç/kapa",
+    distributeColumns: "Sütunları eşit dağıt",
+    autoFit: "İçeriğe otomatik sığdır",
+    tableProperties: "Tablo özellikleri...",
+    tableAlignment: "Tablo hizalaması",
+    alignTableLeft: "Tabloyu sola hizala",
+    alignTableCenter: "Tabloyu ortala",
+    alignTableRight: "Tabloyu sağa hizala"
+  },
+  imageTransform: {
+    tooltip: "Dönüştür",
+    rotateClockwise: "Saat yönünde döndür",
+    rotateCounterClockwise: "Saat yönünün tersine döndür",
+    flipHorizontal: "Yatay çevir",
+    flipVertical: "Dikey çevir"
+  },
+  imageWrap: {
+    inline: "Metinle aynı satırda",
+    floatLeft: "Sol kareleme",
+    floatRight: "Sağ kareleme",
+    topAndBottom: "Üst ve alt",
+    behindText: "Metnin arkasında",
+    inFrontOfText: "Metnin önünde",
+    tooltipPrefix: "Sarma: {label}",
+    menu: {
+      inLineWithText: "Metinle aynı satırda",
+      squareLeft: "Sol kareleme",
+      squareRight: "Sağ kareleme",
+      ariaLabel: "Görsel düzeni seçenekleri"
+    },
+    square: "Kare",
+    targets: {
+      behind: "Metin arkasına",
+      inFront: "Metin önüne",
+      inline: "Metinle aynı hizada",
+      square: "Kare",
+      squareLeft: "Kare (sol)",
+      squareRight: "Kare (sağ)",
+      through: "İçinden",
+      tight: "Sıkı",
+      topAndBottom: "Üst ve alt"
+    },
+    through: "İçinden",
+    tight: "Sıkı"
+  },
+  editor: {
+    showDocumentOutline: "Belge ana hattını göster",
+    linkCopied: "Bağlantı panoya kopyalandı",
+    fontSubstitutionNotice: "Bu belgedeki bazı yazı tipleri kullanılamıyor; bunların yerine şunlar gösteriliyor: {fonts}"
+  },
+  hyperlinkPopup: {
+    displayTextPlaceholder: "Görüntülenen metin",
+    urlPlaceholder: "https://ornek.com",
+    copyLink: "Bağlantıyı kopyala",
+    editLink: "Bağlantıyı düzenle",
+    removeLink: "Bağlantıyı kaldır",
+    apply: "Uygula",
+    bookmarkTarget: "Bu belgedeki bir konuma gider",
+    cancel: "İptal",
+    editTitle: "Bağlantıyı düzenle",
+    inertTarget: "Bu bağlantı, düzenleyicinin açmayacağı bir yere işaret ediyor",
+    insertTitle: "Bağlantı ekle",
+    openLink: "Bağlantıyı aç",
+    refused: "Bu bağlantı uygulanamadı. Adresi denetleyip yeniden deneyin.",
+    urlLabel: "URL"
+  },
+  headerFooter: {
+    header: "Üstbilgi",
+    footer: "Altbilgi",
+    options: "Seçenekler",
+    insertPageNumber: "Mevcut sayfa numarasını ekle",
+    insertTotalPages: "Toplam sayfa sayısını ekle",
+    chromeAriaLabel: "Üstbilgi ve altbilgi düzenleme",
+    firstPageHeader: "İlk sayfa üstbilgisi",
+    firstPageFooter: "İlk sayfa altbilgisi",
+    evenPageHeader: "Çift sayfa üstbilgisi",
+    evenPageFooter: "Çift sayfa altbilgisi",
+    sameAsPrevious: "Öncekiyle aynı",
+    sameAsPreviousHint: "Düzenlemeler önceki bölümün sayfalarına da uygulanır.",
+    differentFirstPage: "Farklı ilk sayfa",
+    differentOddEven: "Farklı tek ve çift sayfalar",
+    differentOddEvenHint: "Tüm belgeye uygulanır.",
+    linkToPrevious: "Öncekine bağla",
+    unlinkFromPrevious: "Öncekinden bağlantıyı kaldır",
+    headerDistance: "Üstbilginin kenardan uzaklığı",
+    footerDistance: "Altbilginin kenardan uzaklığı",
+    removeHeader: "Üstbilgiyi kaldır",
+    removeFooter: "Altbilgiyi kaldır",
+    insertSectionPages: "Bölüm sayfa sayısını ekle",
+    insertPageXofY: "X / Y sayfasını ekle"
+  },
+  image: {
+    contentMismatch: "Görüntü içeriği türüyle eşleşmiyor",
+    decodeFailed: "Görüntünün kodu çözülemedi",
+    externalResource: "Dış görüntü yüklenmedi",
+    invalidResource: "Geçersiz görüntü",
+    missingResource: "Görüntü eksik",
+    nonPictureGraphic: "Desteklenmeyen grafik ({kind})",
+    pendingResource: "Görüntü yükleniyor",
+    resourceLimit: "Görüntü boyut sınırlarını aşıyor",
+    unsupportedFormat: "Desteklenmeyen görüntü biçimi ({format})"
+  },
+  ruler: {
+    horizontal: "Yatay cetvel",
+    vertical: "Dikey cetvel",
+    firstLineIndent: "İlk satır girintisi",
+    leftIndent: "Sol girinti",
+    rightIndent: "Sağ girinti",
+    topMargin: "Üst kenar boşluğu",
+    bottomMargin: "Alt kenar boşluğu",
+    hangingIndent: "Asılı girinti"
+  },
+  loading: {
+    label: "Yükleniyor"
+  },
+  imageOverlay: {
+    handle: {
+      e: "Sağ kenarı yeniden boyutlandır",
+      n: "Üst kenarı yeniden boyutlandır",
+      ne: "Sağ üst köşeyi yeniden boyutlandır",
+      nw: "Sol üst köşeyi yeniden boyutlandır",
+      s: "Alt kenarı yeniden boyutlandır",
+      se: "Sağ alt köşeyi yeniden boyutlandır",
+      sw: "Sol alt köşeyi yeniden boyutlandır",
+      w: "Sol kenarı yeniden boyutlandır"
+    },
+    selection: "Seçili görüntü"
+  },
+  revisions: {
+    paragraphMarkInserted: "Paragraf işareti eklendi",
+    runPropertiesChanged: "Metin biçimlendirmesi değiştirildi"
+  },
+  toc: {
+    refresh: "Tüm tabloyu güncelle",
+    refreshPageNumbers: "Yalnızca sayfa numaralarını güncelle"
+  },
+  editingMode: {
+    editing: "Düzenleme",
+    label: "Düzenleme modu",
+    editingHint: "Belgeyi doğrudan düzenle",
+    suggesting: "Öneri",
+    suggestingHint: "Düzenlemeler öneriye dönüşür",
+    viewing: "Görüntüleme",
+    viewingHint: "Salt okunur, düzenleme yok"
+  },
+  navigation: {
+    ariaLabel: "Belge gezintisi",
+    closeAriaLabel: "Gezintiyi kapat",
+    closeTitle: "Gezintiyi kapat",
+    find: {
+      clearAriaLabel: "Aramayı temizle",
+      counter: "Sonuç {current}/{total}",
+      counterTruncated: "Sonuç {current}/{total}+",
+      inputAriaLabel: "Belgede ara",
+      matchCase: "Büyük/küçük harf eşleştir",
+      nextAriaLabel: "Sonraki sonuç",
+      noResults: "Sonuç yok",
+      optionsAriaLabel: "Arama seçenekleri",
+      placeholder: "Belgede ara",
+      previousAriaLabel: "Önceki sonuç",
+      resultsAriaLabel: "Arama sonuçları",
+      searching: "Aranıyor…",
+      wholeWord: "Yalnızca tam sözcükler",
+      total: "{total, plural, other {# sonuç}}",
+      totalTruncated: "{total, plural, other {#+ sonuç}}"
+    },
+    headings: {
+      noHeadings: "Başlık bulunamadı. Burada görmek için belgenize başlık ekleyin."
+    },
+    openAriaLabel: "Gezintiyi aç",
+    openTitle: "Gezinti",
+    tabs: {
+      find: "Bul",
+      headings: "Başlıklar"
+    },
+    title: "Gezinti"
+  },
+  contentControl: {
+    formFill: "Form doldurma modu",
+    group: "İçerik denetimleri",
+    inspector: "İçerik denetimi özellikleri",
+    inspectorPanel: {
+      alias: "Başlık",
+      bound: "Veriye bağlı",
+      boundNote: "Bu denetim harici verilere bağlı. Düzenleme reddedildi.",
+      empty: "—",
+      lock: "Kilit",
+      lockedNote: "Bu denetimde içerik düzenleme kilitli.",
+      no: "Hayır",
+      placeholder: "Yer tutucu",
+      tag: "Etiket",
+      title: "İçerik denetimi",
+      type: "Tür",
+      yes: "Evet"
+    },
+    lock: {
+      contentLocked: "İçerik kilitli",
+      sdtContentLocked: "İçerik denetimi ve içerik kilitli",
+      sdtLocked: "İçerik denetimi kilitli",
+      unlocked: "Kilitsiz"
+    },
+    remove: "İçerik denetimini kaldır",
+    showAll: "İçerik denetimi sınırlarını göster",
+    types: {
+      checkbox: "Onay kutusu",
+      comboBox: "Birleşik kutu",
+      date: "Tarih",
+      dropdown: "Açılan liste",
+      picture: "Resim",
+      plainText: "Düz metin",
+      repeatingSection: "Yinelenen bölüm",
+      richText: "Zengin metin"
+    }
+  },
+  notes: {
+    delete: "Notu sil",
+    convertToEndnote: "Son nota dönüştür",
+    convertToFootnote: "Dip nota dönüştür",
+    scope: "Uygula",
+    scopeDocument: "Tüm belge",
+    scopeSection: "Bu bölüm",
+    previewFallback: "Dipnot",
+    chromeAriaLabel: "Not düzenleme",
+    editingRegion: "{kind} {number}",
+    footnoteKind: "Dipnot",
+    endnoteKind: "Sonnot",
+    convertAllFootnotes: "Tüm dip notları son notlara dönüştür",
+    convertAllEndnotes: "Tüm son notları dip notlara dönüştür",
+    inheritedValue: "(devralınan)"
+  },
+  review: {
+    accept: "Kabul et",
+    ariaLabel: "Gözden geçir",
+    commentRefused: "Açıklama eklenemedi",
+    deleted: "Silindi",
+    empty: "Değişiklik veya açıklama yok",
+    inserted: "Eklendi",
+    movedFrom: "Buradan taşındı",
+    movedTo: "Buraya taşındı",
+    reject: "Reddet",
+    replaced: "Değiştirildi",
+    replacedWith: "şununla:",
+    reply: "Yanıtla",
+    replyRefused: "Yanıt gönderilemedi",
+    showPane: "Açıklamaları göster",
+    structural: "Belge yapısı değiştirildi",
+    deleteComment: "Açıklamayı sil",
+    discardChange: "Değişikliği at"
+  },
+  imageAltText: {
+    description: "Açıklama",
+    panelTitle: "Alternatif metin",
+    title: "Başlık"
+  },
+  imageInsert: {
+    errors: {
+      emptyFile: "Seçilen dosya boş.",
+      invalidSignature: "Dosya desteklenen bir PNG, JPEG veya GIF görüntüsü değil.",
+      oversize: "Görüntü izin verilen en büyük boyutu aşıyor.",
+      refused: "Görüntü eklenemedi.",
+      unsupportedFormat: "Bu görüntü biçimi ekleme için desteklenmiyor."
+    }
+  },
+  imageProperties: {
+    crop: "Kırp",
+    cropBottom: "Alt (%)",
+    cropLeft: "Sol (%)",
+    cropRight: "Sağ (%)",
+    cropTop: "Üst (%)",
+    errors: {
+      invalidCrop: "Kırpma değerleri 0 ile 100 arasında yüzde olmalıdır.",
+      invalidDimensions: "Pozitif genişlik ve yükseklik değerleri girin.",
+      refused: "Bu özellikler uygulanamadı.",
+      invalidPosition: "Geçerli yatay ve dikey konum değerleri girin."
+    },
+    hyperlink: "Köprü",
+    nonPictureHint: "Kırpma ve doğal boyuta sıfırlama yalnızca resimler için kullanılabilir.",
+    resetNaturalSize: "Doğal boyuta sıfırla",
+    units: {
+      points: "nk"
+    },
+    horizontalOffset: "Yatay uzaklık",
+    position: "Konum",
+    positionLocked: "Bu çizim taşınamaz.",
+    positionUnavailable: "Konum yalnızca kayan görüntüler için kullanılabilir.",
+    relativeToHorizontal: "Göreli konum (yatay)",
+    relativeToVertical: "Göreli konum (dikey)",
+    verticalOffset: "Dikey uzaklık"
+  }
+};
+
+// src/tr.ts
+var tr = tr_default;
+var tr_default2 = tr;
+export {
+  tr_default2 as default,
+  tr
+};

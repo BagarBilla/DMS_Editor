@@ -1,0 +1,23 @@
+{
+  "name": "docx-editor-example-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --port 3002",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@docx-editor.dev/core": "2.2.1",
+    "@docx-editor.dev/nuxt": "2.2.1",
+    "@docx-editor.dev/vue": "2.2.1",
+    "vue": "^3.5.0",
+    "@docx-editor.dev/pro": "2.2.1",
+    "fflate": "^0.8.2"
+  },
+  "devDependencies": {
+    "nuxt": "^4.4.6",
+    "typescript": "^6.0.3"
+  }
+}
+

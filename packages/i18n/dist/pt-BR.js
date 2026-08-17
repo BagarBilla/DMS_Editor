@@ -1,0 +1,678 @@
+"use strict";
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/pt-BR.ts
+var pt_BR_exports = {};
+__export(pt_BR_exports, {
+  default: () => pt_BR_default2,
+  ptBR: () => ptBR
+});
+module.exports = __toCommonJS(pt_BR_exports);
+
+// pt-BR.json
+var pt_BR_default = {
+  _lang: "pt-BR",
+  common: {
+    cancel: "Cancelar",
+    apply: "Aplicar",
+    close: "Fechar",
+    comment: "Comentário",
+    dismiss: "Dispensar"
+  },
+  toolbar: {
+    ariaLabel: "Barra de formatação",
+    file: "Arquivo",
+    format: "Formatar",
+    insert: "Inserir",
+    print: "Imprimir",
+    printShortcut: "Ctrl+P",
+    pageSetup: "Configurar página",
+    leftToRight: "Texto da esquerda para a direita",
+    rightToLeft: "Texto da direita para a esquerda",
+    image: "Imagem",
+    table: "Tabela",
+    pageBreak: "Quebra de página",
+    tableOfContents: "Sumário",
+    help: "Ajuda",
+    reportIssue: "Reportar problema",
+    open: "Abrir",
+    openShortcut: "Ctrl+O",
+    save: "Salvar",
+    saveShortcut: "Ctrl+S",
+    watermark: "Marca d'água",
+    break: "Quebra",
+    sectionBreakContinuous: "Quebra de seção (contínua)",
+    sectionBreakNextPage: "Quebra de seção (próxima página)",
+    insertFootnote: "Inserir nota de rodapé",
+    insertEndnote: "Inserir nota de fim"
+  },
+  formattingBar: {
+    groups: {
+      history: "Histórico",
+      zoom: "Zoom",
+      styles: "Estilos",
+      font: "Fonte",
+      textFormatting: "Formatação de texto",
+      script: "Sobrescrito/Subscrito",
+      alignment: "Alinhamento",
+      listFormatting: "Formatação de lista",
+      image: "Imagem",
+      table: "Tabela"
+    },
+    undo: "Desfazer",
+    undoShortcut: "Desfazer (Ctrl+Z)",
+    redo: "Refazer",
+    redoShortcut: "Refazer (Ctrl+Y)",
+    bold: "Negrito",
+    boldShortcut: "Negrito (Ctrl+B)",
+    italic: "Itálico",
+    italicShortcut: "Itálico (Ctrl+I)",
+    underline: "Sublinhado",
+    underlineShortcut: "Sublinhado (Ctrl+U)",
+    strikethrough: "Tachado",
+    fontColor: "Cor da fonte",
+    highlightColor: "Cor de destaque do texto",
+    insertLink: "Inserir link",
+    insertLinkShortcut: "Inserir link (Ctrl+K)",
+    superscript: "Sobrescrito",
+    superscriptShortcut: "Sobrescrito (Ctrl+Shift+=)",
+    subscript: "Subscrito",
+    subscriptShortcut: "Subscrito (Ctrl+=)",
+    imageProperties: "Propriedades da imagem",
+    imagePropertiesShortcut: "Propriedades da imagem (texto alternativo, borda)...",
+    clearFormatting: "Limpar formatação",
+    commentsAndChanges: "Comentários e alterações",
+    unavailableInPreview: "Não disponível nesta versão de visualização",
+    more: "Mais",
+    altText: "Texto alternativo",
+    imageWrap: "Quebra de texto automática"
+  },
+  alignment: {
+    alignLeft: "Alinhar à esquerda",
+    alignLeftShortcut: "Ctrl+L",
+    center: "Centralizar",
+    centerShortcut: "Ctrl+E",
+    alignRight: "Alinhar à direita",
+    alignRightShortcut: "Ctrl+R",
+    justify: "Justificar",
+    justifyShortcut: "Ctrl+J"
+  },
+  lists: {
+    ariaLabel: "Formatação de lista",
+    typeAriaLabel: "Tipo de lista",
+    indentationAriaLabel: "Recuo da lista",
+    bulletList: "Lista com marcadores",
+    numberedList: "Lista numerada",
+    decreaseIndent: "Diminuir recuo",
+    increaseIndent: "Aumentar recuo"
+  },
+  lineSpacing: {
+    single: "Simples",
+    double: "Duplo",
+    lineSpacingTitle: "Espaçamento entre linhas: {label}",
+    blockSpacingRules: "Espaçamento entre parágrafos",
+    label: "Espaçamento entre linhas",
+    addSpaceAfter: "Adicionar espaço depois do parágrafo",
+    addSpaceBefore: "Adicionar espaço antes do parágrafo",
+    removeSpaceAfter: "Remover espaço depois do parágrafo",
+    removeSpaceBefore: "Remover espaço antes do parágrafo"
+  },
+  styles: {
+    selectAriaLabel: "Selecionar estilo de parágrafo",
+    normalText: "Texto normal",
+    title: "Título",
+    subtitle: "Subtítulo",
+    heading1: "Cabeçalho 1",
+    heading2: "Cabeçalho 2",
+    heading3: "Cabeçalho 3"
+  },
+  font: {
+    selectAriaLabel: "Selecionar família da fonte",
+    sansSerif: "Sans Serif",
+    serif: "Serif",
+    monospace: "Monoespaçado",
+    documentFonts: "Fontes do documento"
+  },
+  fontSize: {
+    decrease: "Diminuir tamanho da fonte",
+    increase: "Aumentar tamanho da fonte",
+    label: "Tamanho da fonte",
+    listLabel: "Tamanhos da fonte"
+  },
+  zoom: {
+    ariaLabel: "Zoom: {label}",
+    zoomIn: "Ampliar",
+    zoomLevel: "Nível de zoom",
+    zoomOut: "Reduzir",
+    automatic: null,
+    fitWidth: null
+  },
+  colorPicker: {
+    highlightColors: "Cores de destaque",
+    customColor: "Cor personalizada",
+    noColor: "Sem cor",
+    automatic: "Automático",
+    themeColors: "Cores do tema",
+    standardColors: "Cores padrão",
+    colors: {
+      black: "Preto",
+      darkRed: "Vermelho escuro",
+      red: "Vermelho",
+      orange: "Laranja",
+      yellow: "Amarelo",
+      darkYellow: "Amarelo escuro",
+      green: "Verde",
+      darkGreen: "Verde escuro",
+      blue: "Azul",
+      darkBlue: "Azul escuro",
+      purple: "Roxo",
+      white: "Branco",
+      lightGreen: "Verde claro",
+      lightBlue: "Azul claro",
+      darkGray: "Cinza escuro",
+      cyan: "Ciano",
+      magenta: "Magenta",
+      brightGreen: "Verde brilhante",
+      darkCyan: "Ciano escuro",
+      darkMagenta: "Magenta escuro",
+      lightGray: "Cinza claro"
+    },
+    apply: "Aplicar",
+    theme: {
+      accent1: "Ênfase 1",
+      accent2: "Ênfase 2",
+      accent3: "Ênfase 3",
+      accent4: "Ênfase 4",
+      accent5: "Ênfase 5",
+      accent6: "Ênfase 6",
+      background1: "Plano de Fundo 1",
+      background2: "Plano de Fundo 2",
+      text1: "Texto 1",
+      text2: "Texto 2"
+    }
+  },
+  dialogs: {
+    imageProperties: {
+      title: "Propriedades da imagem",
+      altText: "Texto alternativo",
+      altTextPlaceholder: "Descreva esta imagem para acessibilidade...",
+      dimensions: "Dimensões",
+      heightLabel: "Altura:",
+      lockAspectRatio: "Bloquear proporção",
+      textWrapping: "Quebra de texto",
+      widthLabel: "Largura:"
+    },
+    imagePosition: {
+      relativeOptions: {
+        page: "Página",
+        column: "Coluna",
+        margin: "Margem",
+        character: "Caractere",
+        paragraph: "Parágrafo",
+        line: "Linha"
+      }
+    },
+    pageSetup: {
+      title: "Configurar página",
+      pageSize: "TAMANHO DA PÁGINA",
+      sizeLabel: "Tamanho",
+      custom: "Personalizado",
+      orientation: "Orientação",
+      portrait: "Retrato",
+      landscape: "Paisagem",
+      margins: "MARGENS",
+      top: "Superior",
+      bottom: "Inferior",
+      left: "Esquerda",
+      right: "Direita",
+      pageSizes: {
+        letter: 'Carta (8,5" × 11")',
+        a4: 'A4 (8,27" × 11,69")',
+        legal: 'Ofício (8,5" × 14")',
+        a3: 'A3 (11,69" × 16,54")',
+        a5: 'A5 (5,83" × 8,27")',
+        b5: 'B5 (6,93" × 9,84")',
+        executive: 'Executivo (7,25" × 10,5")'
+      },
+      applyTo: "Aplicar a",
+      applyToDocument: "Documento inteiro",
+      applyToSection: "Esta seção"
+    },
+    footnoteProperties: {
+      title: "Propriedades de notas de rodapé e fim",
+      footnotes: "Notas de rodapé",
+      endnotes: "Notas de fim",
+      position: "Posição",
+      numberFormat: "Formato do número",
+      numbering: "Numeração",
+      footnotePositions: {
+        bottomOfPage: "Final da página",
+        belowText: "Abaixo do texto"
+      },
+      endnotePositions: {
+        endOfDocument: "Final do documento",
+        endOfSection: "Final da seção"
+      },
+      numberingOptions: {
+        continuous: "Contínuo",
+        restartSection: "Reiniciar a cada seção",
+        restartPage: "Reiniciar a cada página"
+      },
+      formats: {
+        decimal: "1, 2, 3, ...",
+        lowerRoman: "i, ii, iii, ...",
+        upperRoman: "I, II, III, ..."
+      }
+    }
+  },
+  comments: {
+    unknown: "Desconhecido",
+    addComment: "Adicionar um comentário...",
+    replyPlaceholder: "Responda ou adicione outros com @"
+  },
+  contextMenu: {
+    ariaLabel: "Menu de ações de IA",
+    cut: "Recortar",
+    cutShortcut: "Ctrl+X",
+    copy: "Copiar",
+    copyShortcut: "Ctrl+C",
+    paste: "Colar",
+    pasteShortcut: "Ctrl+V",
+    delete: "Excluir",
+    deleteShortcut: "Del",
+    selectAll: "Selecionar tudo",
+    selectAllShortcut: "Ctrl+A",
+    editCustomNode: "Editar {label}",
+    removeCustomNode: "Remover {label}"
+  },
+  documentOutline: {
+    ariaLabel: "Estrutura do documento",
+    closeAriaLabel: "Fechar estrutura",
+    closeTitle: "Fechar estrutura",
+    title: "Estrutura",
+    noHeadings: "Nenhum cabeçalho encontrado. Adicione cabeçalhos ao seu documento para vê-los aqui."
+  },
+  titleBar: {
+    untitled: "Sem título",
+    documentNameAriaLabel: "Nome do documento",
+    menuBarAriaLabel: "Barra de menu"
+  },
+  errors: {
+    unableToParse: "Não foi possível analisar o documento",
+    somethingWentWrong: "Algo deu errado",
+    errorDescription: "Ocorreu um erro ao renderizar este componente. Tente novamente ou contate o suporte se o problema persistir.",
+    errorLabel: "Erro:",
+    componentStack: "Pilha de componentes:",
+    tryAgain: "Tentar novamente",
+    showDetails: "Mostrar detalhes",
+    hideDetails: "Ocultar detalhes"
+  },
+  table: {
+    insertRowAbove: "Inserir linha acima",
+    insertRowBelow: "Inserir linha abaixo",
+    insertColumnLeft: "Inserir coluna à esquerda",
+    insertColumnRight: "Inserir coluna à direita",
+    deleteRow: "Excluir linha",
+    deleteColumn: "Excluir coluna",
+    deleteTable: "Excluir tabela",
+    mergeCells: "Mesclar células",
+    splitCell: "Dividir célula",
+    editingTools: "Ferramentas de edição de tabela",
+    label: "Tabela:",
+    cellFillColor: "Cor de preenchimento da célula",
+    borderColor: "Cor da borda",
+    borderWidth: "Largura da borda",
+    borders: {
+      all: "Todas as bordas",
+      outside: "Bordas externas",
+      inside: "Bordas internas",
+      none: "Sem bordas",
+      top: "Borda superior",
+      bottom: "Borda inferior",
+      left: "Borda esquerda",
+      right: "Borda direita",
+      styleAriaLabel: "Estilo da borda",
+      tooltip: "Bordas"
+    },
+    moreOptions: "Mais opções de tabela",
+    selectTable: "Selecionar a tabela inteira",
+    borderStyles: {
+      dashed: "Tracejada",
+      dotted: "Pontilhada",
+      double: "Dupla",
+      single: "Sólida",
+      thick: "Espessa",
+      triple: "Tripla"
+    },
+    borderWidths: {
+      halfPt: "0,5 pt",
+      oneHalfPt: "1,5 pt",
+      onePt: "1 pt",
+      threePt: "3 pt",
+      twoPt: "2 pt"
+    },
+    clearCellFill: "Limpar preenchimento da célula"
+  },
+  tableAdvanced: {
+    verticalAlignment: "Alinhamento vertical",
+    top: "Superior",
+    middle: "Meio",
+    bottom: "Inferior",
+    toggleNoWrap: "Alternar sem quebra",
+    toggleHeaderRow: "Alternar linha de cabeçalho",
+    distributeColumns: "Distribuir colunas uniformemente",
+    autoFit: "Ajustar automaticamente ao conteúdo",
+    tableProperties: "Propriedades da tabela...",
+    tableAlignment: "Alinhamento da tabela",
+    alignTableLeft: "Alinhar tabela à esquerda",
+    alignTableCenter: "Centralizar tabela",
+    alignTableRight: "Alinhar tabela à direita"
+  },
+  imageTransform: {
+    tooltip: "Transformar",
+    rotateClockwise: "Girar no sentido horário",
+    rotateCounterClockwise: "Girar no sentido anti-horário",
+    flipHorizontal: "Espelhar horizontalmente",
+    flipVertical: "Espelhar verticalmente"
+  },
+  imageWrap: {
+    inline: "Em linha com o texto",
+    floatLeft: "Flutuar à esquerda (envolver à direita)",
+    floatRight: "Flutuar à direita (envolver à esquerda)",
+    topAndBottom: "Acima e abaixo",
+    behindText: "Atrás do texto",
+    inFrontOfText: "Na frente do texto",
+    tooltipPrefix: "Quebra: {label}",
+    menu: {
+      ariaLabel: "Opções de layout de imagem",
+      inLineWithText: "Em linha com o texto",
+      squareLeft: "Quadrado à esquerda",
+      squareRight: "Quadrado à direita"
+    },
+    square: "Quadrado",
+    targets: {
+      behind: "Atrás do texto",
+      inFront: "Na frente do texto",
+      inline: "Alinhado com o texto",
+      square: "Quadrado",
+      squareLeft: "Quadrado à esquerda",
+      squareRight: "Quadrado à direita",
+      through: "Através",
+      tight: "Justa",
+      topAndBottom: "Superior e inferior"
+    },
+    through: "Através",
+    tight: "Justa"
+  },
+  editor: {
+    showDocumentOutline: "Mostrar estrutura do documento",
+    linkCopied: "Link copiado para a área de transferência",
+    fontSubstitutionNotice: "Algumas fontes deste documento não estão disponíveis, então substitutas estão sendo exibidas: {fonts}"
+  },
+  hyperlinkPopup: {
+    displayTextPlaceholder: "Texto de exibição",
+    urlPlaceholder: "https://example.com",
+    copyLink: "Copiar link",
+    editLink: "Editar link",
+    removeLink: "Remover link",
+    apply: "Aplicar",
+    bookmarkTarget: "Leva a um local neste documento",
+    cancel: "Cancelar",
+    editTitle: "Editar link",
+    inertTarget: "Este link aponta para um destino que o editor não abrirá",
+    insertTitle: "Inserir link",
+    openLink: "Abrir link",
+    refused: "Não foi possível aplicar o link. Verifique o endereço e tente novamente.",
+    urlLabel: "URL"
+  },
+  headerFooter: {
+    header: "Cabeçalho",
+    footer: "Rodapé",
+    options: "Opções",
+    insertPageNumber: "Inserir número da página atual",
+    insertTotalPages: "Inserir contagem total de páginas",
+    chromeAriaLabel: "Edição de cabeçalho e rodapé",
+    firstPageHeader: "Cabeçalho da primeira página",
+    firstPageFooter: "Rodapé da primeira página",
+    evenPageHeader: "Cabeçalho de páginas pares",
+    evenPageFooter: "Rodapé de páginas pares",
+    sameAsPrevious: "Igual ao anterior",
+    sameAsPreviousHint: "As edições também se aplicam às páginas da seção anterior.",
+    differentFirstPage: "Primeira página diferente",
+    differentOddEven: "Páginas ímpares e pares diferentes",
+    differentOddEvenHint: "Aplica-se a todo o documento.",
+    linkToPrevious: "Vincular ao anterior",
+    unlinkFromPrevious: "Desvincular do anterior",
+    headerDistance: "Distância do cabeçalho da borda",
+    footerDistance: "Distância do rodapé da borda",
+    removeHeader: "Remover cabeçalho",
+    removeFooter: "Remover rodapé",
+    insertSectionPages: "Inserir contagem de páginas da seção",
+    insertPageXofY: "Inserir página X de Y"
+  },
+  image: {
+    contentMismatch: "O conteúdo da imagem não corresponde ao seu tipo",
+    decodeFailed: "Não foi possível decodificar a imagem",
+    externalResource: "Imagem externa não carregada",
+    invalidResource: "Imagem inválida",
+    missingResource: "Imagem ausente",
+    nonPictureGraphic: "Elemento gráfico sem suporte ({kind})",
+    pendingResource: "Carregando imagem",
+    resourceLimit: "A imagem excede os limites de tamanho",
+    unsupportedFormat: "Formato de imagem sem suporte ({format})"
+  },
+  ruler: {
+    horizontal: "Régua horizontal",
+    vertical: "Régua vertical",
+    firstLineIndent: "Recuo da primeira linha",
+    leftIndent: "Recuo esquerdo",
+    rightIndent: "Recuo direito",
+    topMargin: "Margem superior",
+    bottomMargin: "Margem inferior",
+    hangingIndent: "Deslocamento"
+  },
+  loading: {
+    label: "Carregando"
+  },
+  viewer: {
+    pageIndicator: "{current} de {total}"
+  },
+  imageOverlay: {
+    handle: {
+      e: "Redimensionar borda direita",
+      n: "Redimensionar borda superior",
+      ne: "Redimensionar canto superior direito",
+      nw: "Redimensionar canto superior esquerdo",
+      s: "Redimensionar borda inferior",
+      se: "Redimensionar canto inferior direito",
+      sw: "Redimensionar canto inferior esquerdo",
+      w: "Redimensionar borda esquerda"
+    },
+    selection: "Imagem selecionada"
+  },
+  revisions: {
+    paragraphMarkInserted: "Marca de parágrafo inserida",
+    runPropertiesChanged: "Formatação do texto alterada"
+  },
+  toc: {
+    refresh: "Atualizar tabela inteira",
+    refreshPageNumbers: "Atualizar apenas números de página"
+  },
+  editingMode: {
+    editing: "Edição",
+    label: "Modo de edição",
+    editingHint: "Editar o documento diretamente",
+    suggesting: "Sugestão",
+    suggestingHint: "As edições viram sugestões",
+    viewing: "Exibição",
+    viewingHint: "Somente leitura, sem edições"
+  },
+  navigation: {
+    ariaLabel: "Navegação no documento",
+    closeAriaLabel: "Fechar navegação",
+    closeTitle: "Fechar navegação",
+    find: {
+      clearAriaLabel: "Limpar pesquisa",
+      counter: "Resultado {current} de {total}",
+      counterTruncated: "Resultado {current} de {total}+",
+      inputAriaLabel: "Pesquisar no documento",
+      matchCase: "Diferenciar maiúsculas de minúsculas",
+      nextAriaLabel: "Próximo resultado",
+      noResults: "Nenhum resultado",
+      optionsAriaLabel: "Opções de pesquisa",
+      placeholder: "Pesquisar no documento",
+      previousAriaLabel: "Resultado anterior",
+      resultsAriaLabel: "Resultados da pesquisa",
+      searching: "Pesquisando…",
+      wholeWord: "Somente palavras inteiras",
+      total: "{total, plural, one {# resultado} other {# resultados}}",
+      totalTruncated: "{total, plural, other {#+ resultados}}"
+    },
+    headings: {
+      noHeadings: "Nenhum título encontrado. Adicione títulos ao documento para vê-los aqui."
+    },
+    openAriaLabel: "Abrir navegação",
+    openTitle: "Navegação",
+    tabs: {
+      find: "Localizar",
+      headings: "Títulos"
+    },
+    title: "Navegação"
+  },
+  contentControl: {
+    formFill: "Modo de preenchimento de formulário",
+    group: "Controles de conteúdo",
+    inspector: "Propriedades do controle de conteúdo",
+    inspectorPanel: {
+      alias: "Título",
+      bound: "Vinculado a dados",
+      boundNote: "Este controle está vinculado a dados externos. A edição foi recusada.",
+      empty: "—",
+      lock: "Bloqueio",
+      lockedNote: "A edição de conteúdo está bloqueada neste controle.",
+      no: "Não",
+      placeholder: "Marcador de posição",
+      tag: "Marca",
+      title: "Controle de conteúdo",
+      type: "Tipo",
+      yes: "Sim"
+    },
+    lock: {
+      contentLocked: "Conteúdo bloqueado",
+      sdtContentLocked: "Controle de conteúdo e conteúdo bloqueados",
+      sdtLocked: "Controle de conteúdo bloqueado",
+      unlocked: "Desbloqueado"
+    },
+    remove: "Remover controle de conteúdo",
+    showAll: "Mostrar limites dos controles de conteúdo",
+    types: {
+      checkbox: "Caixa de seleção",
+      comboBox: "Caixa de combinação",
+      date: "Data",
+      dropdown: "Lista suspensa",
+      picture: "Imagem",
+      plainText: "Texto sem formatação",
+      repeatingSection: "Seção repetitiva",
+      richText: "Rich Text"
+    }
+  },
+  notes: {
+    delete: "Excluir nota",
+    convertToEndnote: "Converter em nota de fim",
+    convertToFootnote: "Converter em nota de rodapé",
+    scope: "Aplicar a",
+    scopeDocument: "Documento inteiro",
+    scopeSection: "Esta seção",
+    previewFallback: "Nota de rodapé",
+    chromeAriaLabel: "Edição de nota",
+    editingRegion: "{kind} {number}",
+    footnoteKind: "Nota de rodapé",
+    endnoteKind: "Nota de fim",
+    convertAllFootnotes: "Converter todas as notas de rodapé em notas de fim",
+    convertAllEndnotes: "Converter todas as notas de fim em notas de rodapé",
+    inheritedValue: "(herdado)"
+  },
+  review: {
+    accept: "Aceitar",
+    ariaLabel: "Revisão",
+    commentRefused: "Não foi possível adicionar o comentário",
+    deleted: "Excluído",
+    empty: "Sem alterações ou comentários",
+    inserted: "Adicionado",
+    movedFrom: "Movido daqui",
+    movedTo: "Movido para cá",
+    reject: "Rejeitar",
+    replaced: "Substituído",
+    replacedWith: "por",
+    reply: "Responder",
+    replyRefused: "Não foi possível publicar a resposta",
+    showPane: "Mostrar comentários",
+    structural: "Estrutura do documento alterada",
+    deleteComment: "Excluir comentário",
+    discardChange: "Descartar alteração"
+  },
+  imageAltText: {
+    description: "Descrição",
+    panelTitle: "Texto alternativo",
+    title: "Título"
+  },
+  imageInsert: {
+    errors: {
+      emptyFile: "O arquivo selecionado está vazio.",
+      invalidSignature: "O arquivo não é uma imagem PNG, JPEG ou GIF compatível.",
+      oversize: "A imagem excede o tamanho máximo permitido.",
+      refused: "Não foi possível inserir a imagem.",
+      unsupportedFormat: "Este formato de imagem não é compatível para inserção."
+    }
+  },
+  imageProperties: {
+    crop: "Cortar",
+    cropBottom: "Inferior (%)",
+    cropLeft: "Esquerda (%)",
+    cropRight: "Direita (%)",
+    cropTop: "Superior (%)",
+    errors: {
+      invalidCrop: "Os valores de corte devem ser porcentagens de 0 a 100.",
+      invalidDimensions: "Insira valores positivos de largura e altura.",
+      refused: "Não foi possível aplicar essas propriedades.",
+      invalidPosition: "Insira valores válidos de posição horizontal e vertical."
+    },
+    hyperlink: "Hiperlink",
+    nonPictureHint: "Corte e redefinição para o tamanho natural estão disponíveis apenas para imagens.",
+    resetNaturalSize: "Redefinir para o tamanho natural",
+    units: {
+      points: "pt"
+    },
+    horizontalOffset: "Deslocamento horizontal",
+    position: "Posição",
+    positionLocked: "Este desenho não pode ser movido.",
+    positionUnavailable: "A posição está disponível apenas para imagens flutuantes.",
+    relativeToHorizontal: "Em relação a (horizontal)",
+    relativeToVertical: "Em relação a (vertical)",
+    verticalOffset: "Deslocamento vertical"
+  }
+};
+
+// src/pt-BR.ts
+var ptBR = pt_BR_default;
+var pt_BR_default2 = ptBR;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  ptBR
+});

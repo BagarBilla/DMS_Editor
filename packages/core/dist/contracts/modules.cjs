@@ -1,0 +1,1 @@
+'use strict';var chunk7VQ7YLW3_cjs=require('../chunk-7VQ7YLW3.cjs');Object.defineProperty(exports,"resolveEditorModules",{enumerable:true,get:function(){return chunk7VQ7YLW3_cjs.a}});

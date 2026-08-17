@@ -1,0 +1,11 @@
+export { L as EditorScope, U as InteractionAffinity, W as InteractionOutcome, X as InteractionOutcomeCode, a9 as SemanticIdentity, aa as SemanticTarget, V as ViewScope } from '../editor-C8oaTHr3.js';
+import './document.js';
+import './types.js';
+import '../review-support-B9ykYpoZ.js';
+import '../ooxml-tree-BU0e3DVi.js';
+import '../tree-op-types-DWLCllG7.js';
+import '../semantic-interaction-unGpRNCk.js';
+import '../semantic-records-BC4bIKKL.js';
+import '../revision-projection-DHAkcD_L.js';
+import '../image-resources-C_YnqPhn.js';
+import '../ooxml-package-D_CtywTW.js';

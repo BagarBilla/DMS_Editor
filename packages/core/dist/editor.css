@@ -1,0 +1,4785 @@
+/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
+@layer properties;
+.collapse {
+  visibility: collapse;
+}
+.invisible {
+  visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.relative {
+  position: relative;
+}
+.static {
+  position: static;
+}
+.sticky {
+  position: sticky;
+}
+.col-1 {
+  grid-column: 1;
+}
+.col-2 {
+  grid-column: 2;
+}
+.row-1 {
+  grid-row: 1;
+}
+.container {
+  width: 100%;
+}
+.\!inline {
+  display: inline !important;
+}
+.block {
+  display: block;
+}
+.contents {
+  display: contents;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.grid\! {
+  display: grid !important;
+}
+.hidden {
+  display: none;
+}
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+}
+.list-item {
+  display: list-item;
+}
+.table {
+  display: table;
+}
+.table-cell {
+  display: table-cell;
+}
+.shrink {
+  flex-shrink: 1;
+}
+.grow {
+  flex-grow: 1;
+}
+.transform {
+  transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+}
+.resize {
+  resize: both;
+}
+.resize\! {
+  resize: both !important;
+}
+.border {
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+}
+.text-wrap {
+  text-wrap: wrap;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.italic {
+  font-style: italic;
+}
+.italic\! {
+  font-style: italic !important;
+}
+.ordinal {
+  --tw-ordinal: ordinal;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+}
+.line-through {
+  text-decoration-line: line-through;
+}
+.underline {
+  text-decoration-line: underline;
+}
+.underline\! {
+  text-decoration-line: underline !important;
+}
+.ring {
+  --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.outline {
+  outline-style: var(--tw-outline-style);
+  outline-width: 1px;
+}
+.grayscale {
+  --tw-grayscale: grayscale(100%);
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+.invert {
+  --tw-invert: invert(100%);
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+.filter {
+  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+}
+.transition {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+  transition-timing-function: var(--tw-ease, ease);
+  transition-duration: var(--tw-duration, 0s);
+}
+.select-all {
+  -webkit-user-select: all;
+  user-select: all;
+}
+.docx-editor {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+  --doc-surface: #ffffff;
+  --doc-card: #f8fbff;
+  --doc-bg: #f8f9fa;
+  --doc-bg-subtle: #f5f5f5;
+  --doc-bg-hover: #f1f3f4;
+  --doc-bg-input: #f8f9fa;
+  --doc-primary: #1a73e8;
+  --doc-primary-hover: #1557b0;
+  --doc-primary-light: #e8f0fe;
+  --doc-accent: #6366f1;
+  --doc-accent-bg: #eef2ff;
+  --doc-on-primary: #ffffff;
+  --doc-toggle-active-bg: hsl(var(--foreground));
+  --doc-toggle-active-fg: #ffffff;
+  --doc-comment-bg: rgba(255, 212, 0, 0.12);
+  --doc-comment-border: rgba(245, 174, 0, 0.45);
+  --doc-comment-active-bg: rgba(255, 212, 0, 0.35);
+  --doc-comment-active-border: rgba(245, 174, 0, 0.9);
+  --doc-text: #202124;
+  --doc-text-muted: #5f6368;
+  --doc-text-subtle: #9aa0a6;
+  --doc-text-placeholder: #999;
+  --doc-border: #e0e0e0;
+  --doc-border-light: #dadce0;
+  --doc-border-dark: #d0d0d0;
+  --doc-border-input: #ccc;
+  --doc-error: #c5221f;
+  --doc-error-bg: #fce8e6;
+  --doc-danger: var(--doc-error);
+  --doc-destructive: var(--doc-error);
+  --doc-destructive-hover-bg: var(--doc-error-bg);
+  --doc-success: #34a853;
+  --doc-success-bg: #e8f5e9;
+  --doc-warning: #f9a825;
+  --doc-warning-bg: #fff8e1;
+  --doc-warning-text: #856404;
+  --doc-link: #0563c1;
+  --doc-revision-insertion: #2e7d32;
+  --doc-revision-deletion: #c62828;
+  --doc-revision-insertion-tint: rgba(46, 125, 50, 0.09);
+  --doc-revision-deletion-tint: rgba(198, 40, 40, 0.09);
+  --doc-revision-insertion-wash: rgba(46, 125, 50, 0.05);
+  --doc-revision-deletion-wash: rgba(198, 40, 40, 0.05);
+  --doc-field-shading: rgba(0, 0, 0, 0.09);
+  --doc-revision-format: #6b7f8c;
+  --doc-revision-format-wash: rgba(107, 127, 140, 0.1);
+  --doc-review-author-0: #c0392b;
+  --doc-review-author-1: #1f6fb2;
+  --doc-review-author-2: #7d3c98;
+  --doc-review-author-3: #117a65;
+  --doc-review-author-4: #b9770e;
+  --doc-review-author-5: #a93226;
+  --doc-review-author-6: #2e4053;
+  --doc-review-author-7: #6c3483;
+  --doc-review-change-bar: #767676;
+  --doc-cell-selection: rgba(26, 115, 232, 0.22);
+  --doc-shadow: rgba(0, 0, 0, 0.15);
+  --doc-shadow-strong: rgba(0, 0, 0, 0.3);
+  --doc-shadow-subtle: rgba(0, 0, 0, 0.06);
+  --doc-overlay: rgba(0, 0, 0, 0.5);
+  --doc-hf-dim-opacity: 0.45;
+  --doc-card-shadow: 0 1px 3px rgba(60, 64, 67, 0.2), 0 2px 6px rgba(60, 64, 67, 0.08);
+  --doc-card-shadow-strong: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+  --doc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --doc-focus-ring: rgba(26, 115, 232, 0.4);
+  --doc-selection: rgba(26, 115, 232, 0.3);
+  --doc-z-chrome: 40;
+  --doc-z-overlay: 50;
+  --doc-z-context: 55;
+  --doc-page-bg: #ffffff;
+  --doc-page-bg-rendered: #ffffff;
+  --doc-page-text: #000000;
+  --doc-caret: #202124;
+  --doc-caret-contrast: #ffffff;
+  --doc-scrollbar-size: 14px;
+  --doc-scrollbar-thumb: var(--doc-text-muted);
+  @supports (color: color-mix(in lab, red, red)) {
+    --doc-scrollbar-thumb: color-mix(in srgb, var(--doc-text-muted) 45%, transparent);
+  }
+  --doc-scrollbar-thumb-hover: var(--doc-text-muted);
+  @supports (color: color-mix(in lab, red, red)) {
+    --doc-scrollbar-thumb-hover: color-mix(in srgb, var(--doc-text-muted) 65%, transparent);
+  }
+  --doc-scrollbar-track: transparent;
+}
+.docx-editor.dark,
+.docx-editor.dark .docx-editor {
+  --background: 0 0% 12%;
+  --foreground: 0 0% 91%;
+  --card: 0 0% 18%;
+  --card-foreground: 0 0% 91%;
+  --popover: 0 0% 18%;
+  --popover-foreground: 0 0% 91%;
+  --primary: 212 100% 65%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 0 0% 20%;
+  --secondary-foreground: 0 0% 91%;
+  --muted: 0 0% 20%;
+  --muted-foreground: 0 0% 63%;
+  --accent: 0 0% 23%;
+  --accent-foreground: 212 100% 65%;
+  --destructive: 0 72% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 24%;
+  --input: 0 0% 24%;
+  --ring: 212 100% 60%;
+  --doc-surface: #1f1f1f;
+  --doc-card: #2d2d2d;
+  --doc-bg: #262626;
+  --doc-bg-subtle: #2d2d2d;
+  --doc-bg-hover: #3a3a3a;
+  --doc-bg-input: #333333;
+  --doc-primary: #4e9dff;
+  --doc-primary-hover: #6cb0ff;
+  --doc-primary-light: rgba(78, 157, 255, 0.18);
+  --doc-accent: #4e9dff;
+  --doc-accent-bg: #1f3047;
+  --doc-on-primary: #1f1f1f;
+  --doc-toggle-active-bg: var(--doc-primary-light);
+  --doc-toggle-active-fg: var(--doc-primary);
+  --doc-comment-bg: rgba(253, 214, 99, 0.16);
+  --doc-comment-border: rgba(253, 214, 99, 0.5);
+  --doc-comment-active-bg: rgba(253, 214, 99, 0.32);
+  --doc-comment-active-border: rgba(253, 214, 99, 0.95);
+  --doc-review-author-0: #ff8a80;
+  --doc-review-author-1: #82b1ff;
+  --doc-review-author-2: #d7a3ff;
+  --doc-review-author-3: #7fe3c5;
+  --doc-review-author-4: #ffd180;
+  --doc-review-author-5: #ff9e80;
+  --doc-review-author-6: #b0bec5;
+  --doc-review-author-7: #ce93d8;
+  --doc-revision-format: #9fb3bf;
+  --doc-review-change-bar: #9e9e9e;
+  --doc-text: #e8e8e8;
+  --doc-text-muted: #a0a0a0;
+  --doc-text-subtle: #6e6e6e;
+  --doc-text-placeholder: #6e6e6e;
+  --doc-border: #3c3c3c;
+  --doc-border-light: #353535;
+  --doc-border-dark: #555555;
+  --doc-border-input: #4a4a4a;
+  --doc-error: #f28b82;
+  --doc-error-bg: #3c1f1d;
+  --doc-success: #81c995;
+  --doc-success-bg: #1f2e22;
+  --doc-warning: #fdd663;
+  --doc-warning-bg: #332a1a;
+  --doc-warning-text: #fdd663;
+  --doc-link: #6eb9ff;
+  --doc-shadow: rgba(0, 0, 0, 0.4);
+  --doc-shadow-strong: rgba(0, 0, 0, 0.6);
+  --doc-shadow-subtle: rgba(0, 0, 0, 0.2);
+  --doc-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --doc-card-shadow-strong: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 8px 3px rgba(0, 0, 0, 0.3);
+  --doc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --doc-overlay: rgba(0, 0, 0, 0.7);
+  --doc-hf-dim-opacity: 0.4;
+  --doc-focus-ring: rgba(78, 157, 255, 0.45);
+  --doc-selection: rgba(78, 157, 255, 0.32);
+  --doc-page-bg: #cccccc;
+  --doc-page-bg-rendered: #333333;
+  --doc-caret: #e8e8e8;
+  --doc-caret-contrast: #202124;
+}
+.docx-editor.dark .layout-page,
+
+
+.docx-editor.dark .docx-page-content [data-highlight],
+.docx-editor.dark .layout-page [data-highlight] {
+  filter: invert(1) hue-rotate(180deg);
+}
+.docx-editor.dark .docx-page-content ::selection {
+  background-color: rgba(177, 98, 0, 0.32);
+}
+.docx-editor.dark .docx-page-content {
+  filter: invert(1) hue-rotate(180deg) contrast(0.92);
+}
+.docx-editor.dark .layout-page {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) !important;
+}
+.docx-editor.dark .layout-page img,
+.docx-editor.dark .layout-page svg,
+.docx-editor.dark .layout-page canvas,
+.docx-editor.dark .layout-page video,
+.docx-editor.dark .layout-page [data-no-color-invert],
+.docx-editor.dark .docx-page-content img,
+.docx-editor.dark .docx-page-content svg,
+.docx-editor.dark .docx-page-content canvas,
+.docx-editor.dark .docx-page-content video,
+.docx-editor.dark .docx-page-content [data-no-color-invert] {
+  filter: invert(1) hue-rotate(180deg);
+}
+@media print {
+  .docx-editor.dark {
+    --doc-page-bg: #ffffff;
+    --doc-page-bg-rendered: #ffffff;
+    --doc-page-text: #000000;
+  }
+  .docx-editor.dark .layout-page,
+  .docx-editor.dark .layout-page img,
+  .docx-editor.dark .layout-page svg,
+  .docx-editor.dark .layout-page canvas,
+  .docx-editor.dark .layout-page video {
+    filter: none;
+  }
+}
+.docx-editor .docx-editor__scroll-container,
+.docx-editor .docx-editor-vue__pages-viewport {
+  scrollbar-width: auto;
+  scrollbar-color: var(--doc-scrollbar-thumb) var(--doc-scrollbar-track);
+}
+.docx-editor .docx-editor__scroll-container,
+.docx-editor.docx-editor__scroll-container {
+  scrollbar-gutter: stable both-edges;
+}
+.docx-editor .docx-editor__scroll-container::-webkit-scrollbar,
+.docx-editor .docx-editor-vue__pages-viewport::-webkit-scrollbar {
+  width: var(--doc-scrollbar-size);
+  height: var(--doc-scrollbar-size);
+}
+.docx-editor .docx-editor__scroll-container::-webkit-scrollbar-track,
+.docx-editor .docx-editor-vue__pages-viewport::-webkit-scrollbar-track {
+  background: var(--doc-scrollbar-track);
+}
+.docx-editor .docx-editor__scroll-container::-webkit-scrollbar-thumb,
+.docx-editor .docx-editor-vue__pages-viewport::-webkit-scrollbar-thumb {
+  background: var(--doc-scrollbar-thumb);
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}
+.docx-editor .docx-editor__scroll-container:hover::-webkit-scrollbar-thumb,
+.docx-editor .docx-editor-vue__pages-viewport:hover::-webkit-scrollbar-thumb {
+  background: var(--doc-scrollbar-thumb-hover);
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}
+.docx-editor [contenteditable='true'] {
+  caret-color: #000;
+  outline: none;
+  caret-shape: bar;
+}
+.docx-run-editable[contenteditable='true'] {
+  caret-color: #000;
+  min-height: 1em;
+  display: inline;
+}
+.docx-paragraph-empty [contenteditable='true'] {
+  min-height: 1em;
+  min-width: 1px;
+  display: inline-block;
+}
+.docx-paragraph-editable {
+  cursor: text;
+}
+.docx-run-editable[contenteditable='true']:focus {
+  outline: none;
+}
+.docx-paragraph-editable:focus-within {
+  outline: none;
+}
+.docx-run-editable::selection,
+.docx-run-editable *::selection,
+.docx-run::selection,
+.docx-run *::selection,
+.docx-editor [contenteditable='true']::selection,
+.docx-editor [contenteditable='true'] *::selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-run-editable::-moz-selection,
+.docx-run-editable *::-moz-selection,
+.docx-run::-moz-selection,
+.docx-run *::-moz-selection,
+.docx-editor [contenteditable='true']::-moz-selection,
+.docx-editor [contenteditable='true'] *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-paragraph::selection,
+.docx-paragraph *::selection,
+.docx-paragraph-editable::selection,
+.docx-paragraph-editable *::selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-paragraph::-moz-selection,
+.docx-paragraph *::-moz-selection,
+.docx-paragraph-editable::-moz-selection,
+.docx-paragraph-editable *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+a.docx-hyperlink {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+a.docx-hyperlink:not([href]) {
+  cursor: default;
+}
+a.docx-hyperlink:focus-visible {
+  outline: 2px solid var(--doc-focus-ring);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+.docx-hyperlink::selection,
+.docx-hyperlink *::selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-hyperlink::-moz-selection,
+.docx-hyperlink *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-run-highlighted::selection,
+.docx-run-highlighted *::selection {
+  background-color: rgba(26, 115, 232, 0.5) !important;
+  color: inherit !important;
+}
+.docx-run-highlighted::-moz-selection,
+.docx-run-highlighted *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.5) !important;
+  color: inherit !important;
+}
+.docx-run-dark-bg::selection,
+.docx-run-dark-bg *::selection {
+  background-color: rgba(100, 181, 246, 0.5) !important;
+  color: inherit !important;
+}
+.docx-run-dark-bg::-moz-selection,
+.docx-run-dark-bg *::-moz-selection {
+  background-color: rgba(100, 181, 246, 0.5) !important;
+  color: inherit !important;
+}
+.docx-run-bold::selection,
+.docx-run-bold *::selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-run-bold::-moz-selection,
+.docx-run-bold *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-run-italic::selection,
+.docx-run-italic *::selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-run-italic::-moz-selection,
+.docx-run-italic *::-moz-selection {
+  background-color: rgba(26, 115, 232, 0.3) !important;
+  color: inherit !important;
+}
+.docx-find-highlight {
+  background-color: rgba(255, 235, 59, 0.5) !important;
+  border-radius: 2px;
+}
+.docx-find-highlight-current {
+  background-color: rgba(255, 152, 0, 0.6) !important;
+  border-radius: 2px;
+  outline: 2px solid rgba(255, 152, 0, 0.8);
+}
+.docx-ai-selection-preview {
+  background-color: rgba(156, 39, 176, 0.2);
+  border-bottom: 2px dashed rgba(156, 39, 176, 0.6);
+}
+.docx-editor .layout-paragraph.docx-paragraph-flash {
+  animation: docx-paragraph-flash-fade var(--docx-paragraph-flash-duration, 1200ms) ease-out both;
+}
+@keyframes docx-paragraph-flash-fade {
+  0%,
+  70% {
+    box-shadow: inset 0 0 0 9999px var(--docx-paragraph-flash-color, rgba(255, 235, 59, 0.55));
+  }
+  100% {
+    box-shadow: inset 0 0 0 9999px transparent;
+  }
+}
+.docx-selection-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.docx-selection-overlay-rect {
+  position: absolute;
+  background-color: rgba(66, 133, 244, 0.25);
+  pointer-events: none;
+  user-select: none;
+}
+.docx-run-highlighted[contenteditable='true'] {
+  caret-color: #333;
+}
+.docx-run-dark-bg[contenteditable='true'] {
+  caret-color: #fff;
+}
+.docx-editor {
+  cursor: default;
+}
+.docx-editor-page {
+  cursor: text;
+}
+.docx-generated-region {
+  cursor: pointer;
+  user-select: none;
+}
+.docx-toc-empty-placeholder {
+  box-sizing: border-box;
+  border: 1px solid var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px solid color-mix(in srgb, var(--doc-primary) 28%, var(--doc-page-bg-rendered));
+  }
+  border-radius: 3px;
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 6%, var(--doc-page-bg-rendered));
+  }
+}
+.docx-list-marker,
+.docx-bookmark-start,
+.docx-bookmark-end,
+.docx-field,
+.docx-drawing-placeholder,
+.docx-shape-placeholder,
+.docx-content-control-chrome,
+.docx-content-control-boundary,
+.docx-content-control-label,
+.docx-content-control-widget {
+  cursor: default;
+  user-select: none;
+}
+.docx-content-control-boundary {
+  box-sizing: border-box;
+  border: 1px solid var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px solid color-mix(in srgb, var(--doc-primary) 24%, var(--doc-page-bg-rendered));
+  }
+  border-radius: 3px;
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 3%, var(--doc-page-bg-rendered));
+  }
+  opacity: 0;
+  pointer-events: auto;
+}
+.docx-content-control-chrome[data-boundary-visible] .docx-content-control-boundary {
+  opacity: 1;
+}
+.docx-content-control-chrome[data-active] .docx-content-control-boundary,
+.docx-content-control-chrome[data-open] .docx-content-control-boundary,
+.docx-content-control-chrome[data-hover] .docx-content-control-boundary,
+.docx-content-control-chrome:hover .docx-content-control-boundary {
+  border-color: var(--doc-primary);
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 10%, transparent);
+  }
+  opacity: 1;
+}
+.docx-content-control-chrome[data-docx-toc]:not([data-hover]):not([data-boundary-visible])
+  .docx-content-control-boundary {
+  opacity: 0;
+}
+.docx-content-control-label {
+  box-sizing: border-box;
+  max-width: 12rem;
+  overflow: hidden;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--doc-primary);
+  color: var(--doc-on-primary);
+  font: 500 10px/14px ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: none;
+  pointer-events: none;
+  box-shadow: 0 0 0 2px var(--doc-page-bg-rendered),
+    0 1px 4px var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    box-shadow: 0 0 0 2px var(--doc-page-bg-rendered),
+    0 1px 4px color-mix(in srgb, var(--doc-primary) 35%, transparent);
+  }
+}
+.docx-content-control-chrome[data-active] .docx-content-control-label,
+.docx-content-control-chrome[data-open] .docx-content-control-label {
+  display: block;
+}
+.docx-content-control-widget {
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 4%, var(--doc-page-bg-rendered));
+  }
+  border: 1px solid var(--doc-primary) !important;
+  @supports (color: color-mix(in lab, red, red)) {
+    border: 1px solid color-mix(in srgb, var(--doc-primary) 28%, var(--doc-page-bg-rendered)) !important;
+  }
+  cursor: pointer !important;
+}
+.docx-content-control-chrome[data-active] .docx-content-control-widget,
+.docx-content-control-chrome[data-open] .docx-content-control-widget,
+.docx-content-control-chrome:hover .docx-content-control-widget {
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 15%, transparent);
+  }
+  border-color: var(--doc-primary) !important;
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in srgb, var(--doc-primary) 55%, transparent) !important;
+  }
+}
+.docx-content-control-widget::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--doc-primary);
+  font: 600 10px/1 system-ui,
+    sans-serif;
+}
+.docx-content-control-widget[data-docx-cc-widget='dropdown']::after,
+.docx-content-control-widget[data-docx-cc-widget='comboBox']::after {
+  content: '▾';
+}
+.docx-content-control-widget[data-docx-cc-widget='date']::after {
+  content: '';
+  inset: 3px;
+  display: block;
+  border: 1.5px solid currentcolor;
+  border-radius: 2px;
+  background: linear-gradient(currentcolor, currentcolor) 0 3px / 100% 1px no-repeat;
+}
+.docx-content-control-widget[data-docx-cc-widget='date']::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 2px;
+  left: 5px;
+  width: 1px;
+  height: 3px;
+  background: currentcolor;
+  box-shadow: 4px 0 currentcolor;
+}
+.docx-content-control-widget[data-docx-cc-widget='checkbox']::after {
+  content: '';
+  inset: 2px 5px 4px;
+  display: block;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  opacity: 0;
+  transform: rotate(45deg);
+}
+.docx-content-control-widget[data-docx-cc-widget='checkbox'][data-checked='true']::after {
+  opacity: 1;
+}
+.docx-content-control-widget:disabled,
+.docx-content-control-widget[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+}
+.docx-content-control-menu {
+  min-width: 13rem;
+  max-width: 18rem;
+  max-height: 16rem;
+  overflow: auto;
+  background: var(--doc-popover-bg, #fff);
+  border: 1px solid var(--doc-border, rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  padding: 0.3rem;
+  user-select: none;
+}
+.docx-content-control-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.docx-content-control-menu-item:hover {
+  background: var(--doc-primary);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary) 12%, transparent);
+  }
+}
+.docx-content-control-menu-input,
+.docx-content-control-date {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.3rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.docx-content-control-calendar {
+  width: 17rem;
+  max-width: calc(100vw - 1.5rem);
+  padding: 0.65rem;
+  border-radius: 12px;
+}
+.docx-content-control-calendar-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--doc-border);
+  border-radius: 7px;
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  font: inherit;
+}
+.docx-content-control-calendar-input:focus {
+  border-color: var(--doc-primary);
+  outline: 2px solid var(--doc-primary-light);
+  outline-offset: 1px;
+}
+.docx-content-control-calendar-input[aria-invalid='true'] {
+  border-color: var(--doc-danger);
+}
+.docx-content-control-calendar-input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+.docx-content-control-calendar-header {
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+}
+.docx-content-control-calendar-title {
+  text-align: center;
+  font-weight: 600;
+}
+.docx-content-control-calendar-nav,
+.docx-content-control-calendar-day {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+.docx-content-control-calendar-nav {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  font-size: 1.35rem;
+}
+.docx-content-control-calendar-weekdays,
+.docx-content-control-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
+}
+.docx-content-control-calendar-weekdays {
+  margin-bottom: 0.2rem;
+  color: var(--doc-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+.docx-content-control-calendar-day {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 7px;
+}
+.docx-content-control-calendar-nav:hover,
+.docx-content-control-calendar-day:hover {
+  background: var(--doc-primary-light);
+}
+.docx-content-control-calendar-day[data-other-month] {
+  color: var(--doc-text-muted);
+  opacity: 0.6;
+}
+.docx-content-control-calendar-day[data-selected] {
+  background: var(--doc-primary);
+  color: var(--doc-on-primary);
+}
+.docx-content-control-calendar-day[data-today]:not([data-selected]) {
+  box-shadow: inset 0 0 0 1px var(--doc-primary);
+}
+.docx-drawing {
+  pointer-events: auto;
+}
+.docx-drawing-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.docx-drawing-layer-behind {
+  z-index: 0;
+}
+.docx-drawing-layer-front {
+  z-index: 2;
+}
+.docx-drawing-placeholder-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px dashed var(--doc-border, #c8c8c8);
+  background: var(--doc-surface-muted, #f3f4f6);
+  color: var(--doc-text-muted, #6b7280);
+}
+.docx-drawing-placeholder-label {
+  font: 11px/1.3 var(--doc-font-ui, system-ui, sans-serif);
+  text-align: center;
+  padding: 4px;
+}
+.docx-drawing-image-frame {
+  width: 100%;
+  height: 100%;
+}
+.docx-drawing-crop-viewport {
+  position: relative;
+}
+.docx-drawing-image {
+  position: absolute;
+  max-width: none;
+  max-height: none;
+}
+.docx-editor.dark .docx-drawing-placeholder-card,
+.dark .docx-drawing-placeholder-card {
+  background: var(--doc-surface-muted, #2a2a2a);
+  border-color: var(--doc-border, #404040);
+  color: var(--doc-text-muted, #a3a3a3);
+}
+.docx-run-has-variable [contenteditable='false'] {
+  cursor: default;
+  user-select: all;
+}
+.docx-table-furniture {
+  z-index: 3;
+  pointer-events: none;
+}
+.docx-table-divider-handle,
+.docx-table-edge-handle-right {
+  pointer-events: auto;
+}
+.docx-table-resize-preview {
+  background-color: var(--doc-primary);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.docx-table-insert-row,
+.docx-table-insert-column {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid var(--doc-border-dark);
+  border-radius: 2px;
+  background: var(--doc-surface);
+  color: var(--doc-text-muted);
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+}
+.docx-editor .paged-editor--readonly .docx-table-furniture {
+  display: none !important;
+}
+.docx-table-chrome {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.docx-table-chrome__panel {
+  position: absolute;
+  z-index: var(--doc-z-chrome);
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 150px;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--doc-shadow);
+  padding: 6px;
+}
+.docx-table-chrome__target-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+.docx-table-chrome__option,
+.docx-table-chrome__target-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  cursor: pointer;
+  transition: background-color 0.12s ease,
+    border-color 0.12s ease;
+}
+.docx-table-chrome__option:hover:not(:disabled),
+.docx-table-chrome__target-btn:hover:not(:disabled) {
+  background: var(--doc-bg-hover);
+}
+.docx-table-chrome__option:focus-visible,
+.docx-table-chrome__target-btn:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: 1px;
+}
+.docx-table-chrome__option:disabled,
+.docx-table-chrome__target-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-table-chrome__option[data-active='true'],
+.docx-table-chrome__target-btn[data-active='true'] {
+  background: var(--doc-toggle-active-bg);
+  color: var(--doc-toggle-active-fg);
+}
+.docx-table-chrome__width-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+.docx-table-chrome__width-row:hover:not(:disabled) {
+  background: var(--doc-bg-hover);
+}
+.docx-table-chrome__width-row:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: -2px;
+}
+.docx-table-chrome__width-row:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-table-chrome__swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--doc-border-dark);
+  border-radius: 2px;
+  background: var(--doc-surface);
+}
+.docx-table-line {
+  display: block;
+  width: 50px;
+  height: 1px;
+  background: var(--doc-text);
+  border-radius: 0;
+}
+.docx-table-line--single {
+  display: block;
+  width: 50px;
+  height: 1px;
+  background: var(--doc-text);
+}
+.docx-table-line--dashed {
+  background: none;
+  border-top: 1px dashed var(--doc-text);
+  height: 0;
+}
+.docx-table-line--dotted {
+  background: none;
+  border-top: 1px dotted var(--doc-text);
+  height: 0;
+}
+.docx-table-line--double {
+  height: 3px;
+  background: none;
+  border-top: 1px solid var(--doc-text);
+  border-bottom: 1px solid var(--doc-text);
+}
+.docx-table-line--triple {
+  height: 5px;
+  background: none;
+  border-top: 1px solid var(--doc-text);
+  border-bottom: 1px solid var(--doc-text);
+  box-shadow: inset 0 1px 0 var(--doc-text);
+}
+.docx-table-line--thick {
+  height: 3px;
+  background: var(--doc-text);
+}
+.docx-table-chrome__destructive-row {
+  color: var(--doc-destructive);
+}
+.docx-table-chrome__destructive-row:hover:not(:disabled) {
+  background: var(--doc-destructive-hover-bg);
+}
+@media (max-width: 640px) {
+  .docx-table-chrome {
+    max-width: 100%;
+  }
+  .docx-table-chrome__target-grid {
+    grid-template-columns: repeat(4, minmax(28px, 1fr));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docx-table-chrome__option,
+  .docx-table-chrome__target-btn,
+  .docx-table-chrome__width-row {
+    transition: none;
+  }
+}
+.docx-editor .layout-table-cell-selected {
+  position: relative;
+  outline: 2px solid var(--doc-selection);
+  outline-offset: -2px;
+}
+.docx-editor .layout-table-cell-selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(66, 133, 244, 0.15);
+  pointer-events: none;
+}
+.docx-editor .layout-table-resize-handle {
+  background-color: transparent;
+  transition: background-color 0.15s;
+}
+.docx-editor .layout-table-resize-handle[data-active='true'] {
+  background-color: transparent;
+}
+.docx-editor .layout-table-resize-handle[data-active='true']::after,
+.docx-editor .layout-table-edge-handle-right[data-active='true']::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: var(--doc-primary);
+  opacity: 0.75;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+.docx-editor .layout-table-resize-handle:hover,
+.docx-editor .layout-table-resize-handle.dragging {
+  background-color: transparent;
+}
+.docx-editor .layout-table-resize-handle:hover::after,
+.docx-editor .layout-table-resize-handle.dragging::after {
+  opacity: 1;
+}
+.docx-editor .layout-table-row-resize-handle,
+.docx-editor .layout-table-edge-handle-bottom {
+  background-color: transparent;
+  transition: background-color 0.15s;
+}
+.docx-editor .layout-table-row-resize-handle[data-active='true']::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--doc-primary);
+  opacity: 0.75;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+.docx-editor .layout-table-row-resize-handle:hover,
+.docx-editor .layout-table-row-resize-handle.dragging,
+.docx-editor .layout-table-edge-handle-bottom:hover,
+.docx-editor .layout-table-edge-handle-bottom.dragging {
+  background-color: transparent;
+}
+.docx-editor .layout-table-row-resize-handle:hover::after,
+.docx-editor .layout-table-row-resize-handle.dragging::after {
+  opacity: 1;
+}
+.docx-editor .layout-table-edge-handle-right {
+  background-color: transparent;
+  transition: background-color 0.15s;
+}
+.docx-editor .layout-table-edge-handle-right[data-active='true'] {
+  background-color: transparent;
+}
+.docx-editor .layout-table-edge-handle-right:hover,
+.docx-editor .layout-table-edge-handle-right.dragging {
+  background-color: transparent;
+}
+.docx-editor .layout-table-edge-handle-right:hover::after,
+.docx-editor .layout-table-edge-handle-right.dragging::after {
+  opacity: 1;
+}
+.docx-editor .paged-editor--readonly .layout-table-resize-handle,
+.docx-editor .paged-editor--readonly .layout-table-row-resize-handle,
+.docx-editor .paged-editor--readonly .layout-table-edge-handle-bottom,
+.docx-editor .paged-editor--readonly .layout-table-edge-handle-right {
+  display: none !important;
+}
+.docx-editor .paged-editor--readonly .layout-page-header,
+.docx-editor .paged-editor--readonly .layout-page-footer {
+  cursor: default;
+  pointer-events: none;
+}
+.docx-editor .paged-editor--readonly .layout-page-content {
+  cursor: default;
+}
+.docx-outline-heading-btn:hover {
+  background-color: var(--doc-bg-hover);
+}
+.docx-editor .docx-editor-toolbar-toggle:hover {
+  background-color: var(--doc-bg-hover);
+  color: var(--doc-text);
+}
+.docx-editor .docx-editor-toolbar-toggle[data-active='true'],
+.docx-editor .docx-editor-toolbar-toggle[data-active='true']:hover {
+  background-color: var(--doc-toggle-active-bg);
+  color: var(--doc-toggle-active-fg);
+}
+.docx-outline-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--doc-border-light);
+  background: var(--doc-bg-hover);
+  color: var(--doc-text-muted);
+  cursor: pointer;
+  transition: background-color 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.docx-outline-toggle:hover {
+  background: var(--doc-border);
+  color: var(--doc-text);
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.18);
+}
+.docx-outline-toggle:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: 2px;
+}
+.docx-editor .layout-page-content {
+  cursor: text;
+}
+.docx-editor .layout-block-sdt-box {
+  pointer-events: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.1s ease;
+  z-index: 1;
+}
+.docx-editor .layout-block-sdt-box.is-active,
+.docx-editor .layout-block-sdt-box.is-focused {
+  border-color: rgba(25, 103, 210, 0.5);
+}
+.docx-editor .layout-block-sdt-label {
+  position: absolute;
+  left: -1px;
+  bottom: 100%;
+  max-width: 160px;
+  height: 16px;
+  padding: 0 6px;
+  font-size: 10px;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+  background-color: rgba(25, 103, 210, 0.92);
+  border-radius: 4px 4px 0 0;
+  display: none;
+}
+.docx-editor .layout-block-sdt-box.is-active .layout-block-sdt-label,
+.docx-editor .layout-block-sdt-box.is-focused .layout-block-sdt-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.docx-editor .layout-page-header > *,
+.docx-editor .layout-page-footer > * {
+  pointer-events: none;
+}
+.docx-editor .paged-editor--editing-header .layout-page-header > *,
+.docx-editor .paged-editor--editing-footer .layout-page-footer > * {
+  pointer-events: auto;
+}
+.docx-editor .layout-page-header,
+.docx-editor .layout-page-footer {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.docx-editor .layout-page-header:hover,
+.docx-editor .layout-page-footer:hover {
+  background-color: rgba(37, 99, 235, 0.06);
+}
+.docx-editor .layout-page-header:empty:hover::after {
+  content: 'Double-click to add header';
+  display: block;
+  text-align: center;
+  color: var(--doc-text-subtle);
+  font-size: 11px;
+  padding: 4px 0;
+}
+.docx-editor .layout-page-footer:empty:hover::after {
+  content: 'Double-click to add footer';
+  display: block;
+  text-align: center;
+  color: var(--doc-text-subtle);
+  font-size: 11px;
+  padding: 4px 0;
+}
+.docx-editor .paged-editor--hf-editing .layout-page-content {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.docx-editor .paged-editor--hf-editing .layout-page-header,
+.docx-editor .paged-editor--hf-editing .layout-page-footer {
+  cursor: default;
+}
+.docx-editor .paged-editor--editing-header .layout-page-header {
+  border-bottom: 1px dotted var(--doc-primary);
+  cursor: text;
+}
+.docx-editor .paged-editor--editing-footer .layout-page-footer {
+  border-top: 1px dotted var(--doc-primary);
+  cursor: text;
+}
+.docx-editor .paged-editor--hf-editing .layout-page-header:hover,
+.docx-editor .paged-editor--hf-editing .layout-page-footer:hover {
+  background-color: transparent;
+}
+@keyframes docx-editor-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes hf-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.docx-section-break {
+  position: relative;
+}
+.docx-section-break::after {
+  content: 'Section Break (' attr(data-section-break) ')';
+  display: block;
+  text-align: center;
+  font-size: 9px;
+  color: var(--doc-text-muted);
+  border-top: 1px dashed var(--doc-border);
+  margin-top: 4px;
+  padding-top: 2px;
+  pointer-events: none;
+}
+.docx-editor-hyperlink-popup__icon-btn:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-editor .paged-editor__decoration-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 11;
+}
+.docx-editor .ProseMirror-yjs-cursor {
+  position: relative;
+  margin-left: -1px;
+  margin-right: -1px;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  word-break: normal;
+  pointer-events: none;
+}
+.docx-editor .ProseMirror-yjs-cursor > div {
+  position: absolute;
+  top: -1.05em;
+  left: -1px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 3px 3px 3px 0;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+.docx-editor .layout-sdt-widget {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--doc-primary);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(25, 103, 210, 0.5);
+  border-radius: 3px;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0.55;
+  transition: opacity 0.1s ease;
+}
+.docx-editor .layout-block-sdt-box.is-active .layout-sdt-widget,
+.docx-editor .layout-block-sdt-box.is-focused .layout-sdt-widget,
+.docx-editor .layout-sdt-widget:focus {
+  opacity: 1;
+}
+.docx-editor .layout-sdt-widget:hover {
+  background: var(--doc-primary-light);
+}
+.docx-editor .layout-inline-sdt-widget {
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 2px;
+  outline-offset: 1px;
+  user-select: none;
+}
+.docx-editor .layout-inline-sdt-widget:hover,
+.docx-editor .layout-inline-sdt-widget:focus {
+  background: var(--doc-primary-light);
+  outline: 1px solid rgba(25, 103, 210, 0.55);
+}
+.docx-editor .layout-sdt-widget-popup {
+  min-width: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border-light);
+  border-radius: 6px;
+  box-shadow: 0 2px 10px var(--doc-shadow);
+  padding: 4px;
+  font-size: 13px;
+}
+.docx-editor .layout-sdt-widget-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border: 0;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--doc-text);
+}
+.docx-editor .layout-sdt-widget-option:hover {
+  background: var(--doc-primary-light);
+}
+.docx-editor .layout-sdt-widget-empty {
+  padding: 6px 10px;
+  color: var(--doc-text-muted);
+}
+.docx-editor .layout-sdt-widget-date {
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--doc-border-light);
+  border-radius: 4px;
+}
+.docx-editor .layout-sdt-widget-option.is-selected {
+  font-weight: 600;
+  background: var(--doc-bg-hover);
+}
+.docx-editor .layout-sdt-repeat-controls {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  display: flex;
+  gap: 2px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.docx-editor .layout-block-sdt-box.is-active .layout-sdt-repeat-controls,
+.docx-editor .layout-block-sdt-box.is-focused .layout-sdt-repeat-controls {
+  opacity: 1;
+}
+.docx-editor .layout-sdt-repeat-btn {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--doc-primary);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(25, 103, 210, 0.5);
+  border-radius: 3px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.docx-editor .layout-sdt-repeat-btn:hover {
+  background: var(--doc-primary-light);
+}
+.docx-editor .layout-revision-bars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.docx-editor .layout-revision-change-bar {
+  position: absolute;
+  left: -10px;
+  width: 2px;
+  pointer-events: none;
+}
+.docx-editor .layout-revision-change-bar.layout-revision-ins {
+  background-color: var(--doc-revision-insertion);
+}
+.docx-editor .layout-revision-change-bar.layout-revision-del {
+  background-color: var(--doc-revision-deletion);
+}
+.docx-table-row--revision::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -8px;
+  width: 2px;
+  pointer-events: none;
+}
+.docx-table-row--revision.layout-revision-ins::before {
+  background-color: var(--doc-revision-insertion);
+}
+.docx-table-row--revision.layout-revision-del::before {
+  background-color: var(--doc-revision-deletion);
+}
+.docx-table-row--revision.layout-revision-ins .layout-run-text {
+  color: var(--doc-revision-insertion);
+}
+.docx-table-row--revision.layout-revision-del .layout-run-text {
+  color: var(--doc-revision-deletion);
+  text-decoration: line-through;
+}
+.docx-table-row--revision.layout-revision-ins {
+  background-color: var(--doc-revision-insertion-wash);
+}
+.docx-table-row--revision.layout-revision-del {
+  background-color: var(--doc-revision-deletion-wash);
+}
+.docx-field-atom--shaded,
+.docx-field-atom--active {
+  background-color: var(--doc-field-shading);
+}
+@media print {
+  .docx-field-atom--shaded,
+  .docx-field-atom--active {
+    background-color: transparent;
+  }
+}
+.docx-revision-format {
+  background-color: var(--doc-revision-format-wash);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--doc-revision-format);
+}
+.docx-editor .layout-revision-pmark {
+  position: relative;
+}
+.docx-editor .layout-revision-pmark-glyph {
+  display: inline;
+  margin-left: 2px;
+  font-weight: normal;
+  opacity: 0.75;
+  pointer-events: none;
+}
+.docx-editor .layout-revision-pmark-glyph.layout-revision-ins {
+  color: var(--doc-revision-insertion);
+}
+.docx-editor .layout-revision-pmark-glyph.layout-revision-del {
+  color: var(--doc-revision-deletion);
+  text-decoration: line-through;
+}
+.docx-editor-revision-cell.docx-editor-revision-ins {
+  box-shadow: inset 0 3px 0 var(--doc-revision-insertion);
+  background-color: var(--doc-revision-insertion-tint);
+}
+.docx-editor-revision-cell.docx-editor-revision-del {
+  box-shadow: inset 0 3px 0 var(--doc-revision-deletion);
+  background-color: var(--doc-revision-deletion-tint);
+  text-decoration: line-through;
+  text-decoration-color: var(--doc-revision-deletion);
+  @supports (color: color-mix(in lab, red, red)) {
+    text-decoration-color: color-mix(in srgb, var(--doc-revision-deletion) 60%, transparent);
+  }
+}
+.docx-editor-revision-cell.docx-editor-revision-merge {
+  box-shadow: inset 0 3px 0 var(--doc-text-muted);
+  background-color: var(--doc-text-muted);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in srgb, var(--doc-text-muted) 8%, transparent);
+  }
+}
+.docx-editor .layout-run-image.docx-insertion,
+.docx-editor .layout-run-image-wrapper.docx-insertion > .layout-run-image,
+.docx-editor .layout-block-image.docx-insertion,
+.docx-editor .layout-image.docx-insertion,
+.docx-editor .layout-page-floating-image.docx-insertion > img,
+.docx-editor .layout-cell-floating-image.docx-insertion > img,
+.docx-editor .layout-header-footer-floating-image.docx-insertion > img {
+  outline: 2px solid var(--doc-revision-insertion);
+  outline-offset: 1px;
+}
+.docx-editor .layout-run-image.docx-deletion,
+.docx-editor .layout-run-image-wrapper.docx-deletion > .layout-run-image,
+.docx-editor .layout-block-image.docx-deletion,
+.docx-editor .layout-image.docx-deletion,
+.docx-editor .layout-page-floating-image.docx-deletion > img,
+.docx-editor .layout-cell-floating-image.docx-deletion > img,
+.docx-editor .layout-header-footer-floating-image.docx-deletion > img {
+  outline: 2px solid var(--doc-revision-deletion);
+  outline-offset: 1px;
+  opacity: 0.6;
+}
+.docx-editor-one-surface {
+  position: relative;
+  --doc-page-gap: 24px;
+}
+.docx-editor-one-surface__viewport {
+  position: relative;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.docx-editor-one-surface__pages {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  margin-inline: auto;
+  gap: var(--doc-page-gap);
+  transform-origin: 0 0;
+}
+.docx-editor-one-surface__page {
+  position: relative;
+  flex: none;
+  background: var(--doc-page-bg);
+  box-shadow: 0 1px 3px var(--doc-shadow);
+  overflow: hidden;
+}
+.docx-editor-one-surface__content {
+  position: absolute;
+  inset: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.docx-editor-one-surface__content > * {
+  position: absolute;
+}
+.docx-editor-one-surface__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.docx-editor-one-surface__selection-rect {
+  position: absolute;
+  background: var(--doc-selection);
+}
+.docx-editor-one-surface__caret {
+  position: absolute;
+  width: 2px;
+  background: var(--doc-caret);
+  box-shadow: 0 0 0 1px var(--doc-caret-contrast);
+  animation: docx-editor-caret-blink 1.06s steps(1) infinite;
+}
+.docx-editor-one-surface__caret--steady {
+  animation: none;
+}
+.docx-editor-one-surface__caret--rtl {
+  direction: rtl;
+}
+.docx-editor-one-surface__composition {
+  position: absolute;
+  border-bottom: 1px solid var(--doc-text);
+  pointer-events: none;
+}
+.docx-editor-one-surface__overlay-control {
+  pointer-events: auto;
+}
+.docx-editor-one-surface__input-host * {
+  color: transparent;
+}
+.docx-editor-browser-first__page {
+  box-sizing: border-box;
+  width: 816px;
+  min-height: 1056px;
+  padding: 96px;
+  overflow: visible;
+  cursor: text;
+}
+.docx-editor-browser-first__mount,
+.docx-editor-browser-first__mount * {
+  color: var(--doc-caret);
+}
+.docx-editor-browser-first__mount .ProseMirror {
+  min-height: 864px;
+  outline: none;
+  font-size: 11pt;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.docx-editor-browser-first__mount .ProseMirror p {
+  margin: 0 0 0.75em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .docx-editor-one-surface__caret {
+    animation: none;
+  }
+}
+.docx-editor-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--doc-bg);
+  color: var(--doc-text);
+}
+.docx-editor-shell__title,
+.docx-editor-shell__toolbar {
+  flex: none;
+  border-bottom: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+}
+.docx-editor-shell__document {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--doc-bg);
+}
+.docx-editor-shell__ruler-h {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: 4px 20px;
+  background: var(--doc-bg);
+}
+.docx-editor-shell__canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+}
+.docx-editor-shell__ruler-v {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.docx-editor-shell__canvas > .docx-editor-one-surface {
+  flex: 1;
+  min-width: 0;
+}
+.docx-editor-shell__page-indicator {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+.docx-editor-shell .docx-editor-one-surface__viewport,
+.docx-editor__content .docx-editor-one-surface__viewport {
+  padding: 24px 0;
+  scrollbar-gutter: stable both-edges;
+}
+.docx-editor-one-surface__viewport--hosted {
+  overflow: visible;
+}
+.docx-editor__title-region {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  padding-left: 18px;
+}
+.docx-editor__scroll-container {
+  display: flex;
+  flex-direction: column;
+}
+.docx-editor__content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.docx-editor-shell__title-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+}
+.docx-editor-shell__title-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font: 500 15px/1.3 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: var(--doc-text);
+  background: transparent;
+}
+.docx-editor-shell__title-input:hover:not([readonly]) {
+  border-color: var(--doc-border);
+}
+.docx-editor-shell__title-input:focus {
+  outline: none;
+  border-color: var(--doc-primary);
+  box-shadow: 0 0 0 2px var(--doc-focus-ring);
+}
+.docx-editor-shell__title-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.docx-editor-shell__page-indicator-chip {
+  background: var(--doc-overlay);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font: 500 12px/1 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  white-space: nowrap;
+  user-select: none;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.docx-editor__page-number {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+.docx-editor__page-number[data-visible='true'] {
+  opacity: 1;
+}
+.docx-editor-ruler {
+  position: relative;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border-light);
+  border-radius: 2px;
+  user-select: none;
+  pointer-events: none;
+}
+.docx-editor-ruler--horizontal {
+  height: 22px;
+}
+.docx-horizontal-ruler {
+  transition: margin 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .docx-horizontal-ruler {
+    transition: none;
+  }
+}
+.docx-editor-ruler--vertical {
+  height: 100%;
+}
+.docx-editor-ruler__tick {
+  position: absolute;
+  background: var(--doc-text-subtle);
+}
+.docx-editor-ruler--horizontal .docx-editor-ruler__tick {
+  bottom: 0;
+  width: 1px;
+}
+.docx-editor-ruler--vertical .docx-editor-ruler__tick {
+  right: 0;
+  height: 1px;
+}
+.docx-editor-ruler__label {
+  position: absolute;
+  font: 400 9px/1 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: var(--doc-text-muted);
+}
+.docx-editor-ruler--horizontal .docx-editor-ruler__label {
+  left: 2px;
+  bottom: 11px;
+}
+.docx-editor-ruler--vertical .docx-editor-ruler__label {
+  right: 11px;
+  top: -4px;
+}
+.docx-editor-toolbar {
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.docx-editor-toolbar__group-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+.docx-editor-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.docx-editor-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.docx-editor-toolbar__separator {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 6px;
+  background: var(--doc-border);
+}
+.docx-editor-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  flex: none;
+  border-left: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+}
+.docx-editor-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--doc-border);
+}
+.docx-editor-sidebar__title {
+  font: 500 13px/1.2 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: var(--doc-text);
+}
+.docx-editor-sidebar__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor-sidebar__close:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-editor-sidebar__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+}
+.docx-editor__menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 10px 0;
+  flex-shrink: 0;
+}
+.docx-editor__menu-item {
+  padding: 3px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-subtle);
+  font-size: 13px;
+  cursor: default;
+}
+.docx-editor__sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+}
+.docx-editor__sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--doc-border);
+  font-size: 13px;
+  color: var(--doc-text);
+}
+.docx-editor__sidebar-empty {
+  padding: 10px;
+  font-size: 12px;
+  color: var(--doc-text-subtle);
+}
+.docx-editor__launchers {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+}
+.docx-editor__launcher {
+  text-align: left;
+  padding: 5px 8px;
+  border: 1px solid var(--doc-border);
+  border-radius: 4px;
+  background: var(--doc-surface);
+  color: var(--doc-text-subtle);
+  font-size: 12px;
+  cursor: default;
+  pointer-events: none;
+}
+.docx-editor__app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+}
+.docx-editor__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--doc-text);
+}
+.docx-editor__brand-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.docx-editor__app-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.docx-editor__app-action {
+  padding: 6px 12px;
+  border: 1px solid var(--doc-border);
+  border-radius: 6px;
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.15s;
+  cursor: default;
+  pointer-events: none;
+}
+.docx-editor__app-action:not(.docx-editor__app-action--primary):nth-of-type(2) {
+  background: var(--doc-bg-subtle);
+}
+.docx-editor__app-action--primary {
+  background: var(--doc-text);
+  border-color: var(--doc-text);
+  color: var(--doc-on-primary);
+}
+.docx-editor__content .docx-editor-one-surface__page {
+  box-shadow: 0 1px 3px rgb(60 64 67 / 30%),
+    0 4px 8px 3px rgb(60 64 67 / 15%);
+}
+.docx-editor__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.docx-editor__brand-by {
+  font-size: 10px;
+  color: var(--doc-text-subtle);
+}
+.docx-editor__framework,
+.docx-editor__theme {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 2px;
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  background: var(--doc-bg-subtle);
+  cursor: default;
+  pointer-events: none;
+}
+.docx-editor__framework-option {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--doc-text-subtle);
+  white-space: nowrap;
+}
+.docx-editor__theme-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 12px;
+  color: var(--doc-text-subtle);
+  transition: background 0.15s,
+    color 0.15s;
+}
+.docx-editor__framework-option--active,
+.docx-editor__theme-option--active {
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  box-shadow: 0 1px 2px var(--doc-shadow-subtle);
+}
+.docx-editor__theme {
+  margin-left: 0;
+  margin-right: 4px;
+}
+.docx-editor__theme-option {
+  padding: 3px 8px;
+}
+.docx-editor__title-region--indented {
+  padding-left: 18px;
+}
+.docx-editor__outline-toggle {
+  position: absolute;
+  left: 26px;
+  top: 44px;
+  z-index: var(--doc-z-chrome);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--doc-border);
+  border-radius: 50%;
+  background: var(--doc-surface);
+  color: var(--doc-text-subtle);
+  cursor: default;
+  pointer-events: none;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+}
+.docx-editor-toolbar {
+  background: var(--doc-bg-subtle);
+  border: 1px solid var(--doc-border);
+}
+.docx-editor-ruler__margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--doc-shadow-subtle);
+  pointer-events: none;
+}
+.docx-editor-ruler__margin--start {
+  left: 0;
+  border-right: 1px solid var(--doc-shadow-subtle);
+}
+.docx-editor-ruler__margin--end {
+  right: 0;
+  border-left: 1px solid var(--doc-shadow-subtle);
+}
+.docx-editor-ruler__margin--top {
+  left: 0;
+  right: 0;
+  bottom: auto;
+  border-bottom: 1px solid var(--doc-shadow-subtle);
+}
+.docx-editor-ruler__margin--bottom {
+  left: 0;
+  right: 0;
+  top: auto;
+  border-top: 1px solid var(--doc-shadow-subtle);
+}
+.docx-unknown-inline {
+  display: inline-block;
+  vertical-align: text-bottom;
+  min-width: 2.4em;
+  height: 1.15em;
+  margin: 0 0.15em;
+  border: 1px dashed var(--doc-border, #b4b8bf);
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--doc-border, #b4b8bf) 0 4px,
+    transparent 4px 8px
+  );
+  @supports (color: color-mix(in lab, red, red)) {
+    background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--doc-border, #b4b8bf) 22%, transparent) 0 4px,
+    transparent 4px 8px
+  );
+  }
+  cursor: default;
+  user-select: none;
+}
+.docx-tab {
+  display: inline-block;
+  min-width: 2em;
+  white-space: pre;
+  color: var(--doc-text-muted, #8a8f98);
+}
+.docx-paginated-surface {
+  position: relative;
+  outline: none;
+}
+.docx-editor.dark .docx-paginated-surface .docx-page {
+  background: var(--doc-page-bg-rendered);
+}
+@media print {
+  .docx-editor.dark .docx-page-content,
+  .docx-editor.dark .docx-page-content img,
+  .docx-editor.dark .docx-page-content svg,
+  .docx-editor.dark .docx-page-content canvas,
+  .docx-editor.dark .docx-page-content video,
+  .docx-editor.dark .docx-page-content [data-no-color-invert] {
+    filter: none !important;
+  }
+  .docx-paginated-surface .docx-page {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+.docx-paginated-surface .docx-page {
+  background: var(--doc-page-bg-rendered, #fff);
+  color: var(--doc-page-text, #000000);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  user-select: text;
+  -webkit-user-select: text;
+}
+.docx-paginated-surface .docx-pages {
+  outline: none;
+}
+.docx-paginated-surface .docx-hf:not([data-docx-hf-active]),
+.docx-pages .docx-hf:not([data-docx-hf-active]) {
+  cursor: text;
+}
+.docx-pages .docx-hf--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.docx-pages .docx-hf--placeholder:hover {
+  background: var(--doc-primary-light);
+  border-radius: 4px;
+}
+.docx-pages .docx-hf--placeholder:hover::after {
+  content: 'Double-click to add header';
+  font-family: system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 12px;
+  color: var(--doc-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.docx-pages .docx-hf--placeholder[data-docx-hf='footer']:hover::after {
+  content: 'Double-click to add footer';
+}
+.docx-pages .docx-hf:not([data-docx-hf-active]):not(.docx-hf--placeholder):hover {
+  background: var(--doc-primary-light);
+  border-radius: 4px;
+}
+.docx-pages .docx-hf-edit-hint {
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+.docx-pages .docx-hf:not([data-docx-hf-active]):hover + .docx-hf-edit-hint {
+  opacity: 1;
+}
+.docx-pages .docx-hf-edit-hint::after {
+  content: 'Double-click to edit header';
+  font-family: system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--doc-primary);
+  background: var(--doc-primary-light);
+  border-radius: 10px;
+  padding: 0 10px;
+  margin-top: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.docx-pages .docx-hf-edit-hint[data-docx-hf-hint='footer'] {
+  align-items: flex-end;
+}
+.docx-pages .docx-hf-edit-hint[data-docx-hf-hint='footer']::after {
+  content: 'Double-click to edit footer';
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+.docx-pages--hf-editing .docx-hf--placeholder:hover,
+.docx-paginated-surface--viewing .docx-hf--placeholder:hover,
+.docx-pages--hf-editing .docx-hf:not([data-docx-hf-active]):hover,
+.docx-paginated-surface--viewing .docx-hf:not([data-docx-hf-active]):hover {
+  background: none;
+}
+.docx-pages--hf-editing .docx-hf--placeholder:hover::after,
+.docx-paginated-surface--viewing .docx-hf--placeholder:hover::after {
+  content: none;
+}
+.docx-pages--hf-editing .docx-hf-edit-hint,
+.docx-paginated-surface--viewing .docx-hf-edit-hint {
+  display: none;
+}
+@media print {
+  .docx-hf--placeholder,
+  .docx-hf-edit-hint {
+    display: none !important;
+  }
+}
+.docx-pages--hf-editing .docx-page-content {
+  opacity: var(--doc-hf-dim-opacity);
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.docx-pages--hf-editing .docx-hf:not([data-docx-hf-active]) {
+  opacity: var(--doc-hf-dim-opacity);
+  cursor: default;
+  transition: opacity 0.15s ease;
+}
+.docx-pages--hf-editing .docx-hf[data-docx-hf-active] {
+  cursor: text;
+  opacity: 1;
+}
+.docx-pages--hf-editing .docx-hf[data-docx-hf-active][data-docx-hf='header'] {
+  border-bottom: 1px dotted var(--doc-primary);
+}
+.docx-pages--hf-editing .docx-hf[data-docx-hf-active][data-docx-hf='footer'] {
+  border-top: 1px dotted var(--doc-primary);
+}
+@media print {
+  .docx-pages--hf-editing .docx-page-content,
+  .docx-pages--hf-editing .docx-hf {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    border: none !important;
+  }
+}
+.docx-paginated-surface .docx-selection-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.docx-paginated-surface .docx-cell-selection-rect {
+  background-color: var(--doc-cell-selection);
+}
+.docx-paginated-surface .docx-retained-selection-rect {
+  background-color: var(--doc-selection);
+}
+.docx-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 2px;
+  min-height: 36px;
+  padding: 4px 8px;
+  background: hsl(var(--muted));
+  border-radius: 9999px;
+  color: var(--doc-text);
+  font: 400 13px/1 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+.docx-toolbar__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+  transition: background-color 0.12s ease,
+    color 0.12s ease;
+}
+.docx-toolbar__button:hover:not(:disabled) {
+  background: var(--doc-border);
+  color: var(--doc-text);
+}
+.docx-toolbar__button[data-active],
+.docx-toolbar__button[data-active]:hover {
+  background: var(--doc-toggle-active-bg);
+  color: var(--doc-toggle-active-fg);
+}
+.docx-toolbar__button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-toolbar[data-overflow] {
+  flex-wrap: nowrap;
+}
+.docx-toolbar__group {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 2px;
+}
+.docx-toolbar__more {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  margin-inline-start: auto;
+}
+.docx-toolbar__more-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: var(--doc-z-overlay);
+  box-sizing: border-box;
+  inline-size: min(340px, calc(100vw - 16px));
+  min-inline-size: min(260px, calc(100vw - 16px));
+  max-inline-size: min(340px, calc(100vw - 16px));
+  max-height: min(72vh, 560px);
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: var(--doc-shadow-lg);
+}
+.docx-toolbar__more-panel:has(.docx-toolbar__zoom-menu) {
+  overflow-y: visible;
+}
+.docx-toolbar__more-section + .docx-toolbar__more-section {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--doc-border-light);
+}
+.docx-toolbar__more-heading {
+  display: block;
+  padding: 6px 10px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--doc-text-muted);
+  user-select: none;
+}
+.docx-toolbar__more-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 2px 6px 2px 10px;
+}
+.docx-toolbar__more-control-label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--doc-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.docx-toolbar__more-control-body {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 2px;
+}
+.docx-toolbar__more-command {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: start;
+}
+.docx-toolbar__more-command:hover:not(:disabled) {
+  background: var(--doc-border);
+}
+.docx-toolbar__more-command[data-active],
+.docx-toolbar__more-command[data-active]:hover {
+  background: var(--doc-toggle-active-bg);
+  color: var(--doc-toggle-active-fg);
+}
+.docx-toolbar__more-command:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-toolbar__more-command-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--doc-text-muted);
+}
+.docx-toolbar__more-command-label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.docx-toolbar__separator {
+  width: 1px;
+  height: 24px;
+  flex: none;
+  margin: 0 6px;
+  background: var(--doc-border);
+}
+.docx-toolbar__picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 8px;
+  flex: none;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  white-space: nowrap;
+  user-select: none;
+}
+.docx-toolbar__picker[aria-disabled='true'] {
+  opacity: 0.5;
+}
+.docx-toolbar__picker-caret {
+  font-size: 10px;
+  color: var(--doc-text-muted);
+}
+.docx-toolbar__font-family,
+.docx-toolbar__style {
+  flex: none;
+}
+.docx-toolbar__style-trigger {
+  width: 132px;
+  flex: none;
+}
+.docx-toolbar__style-trigger > span:first-child,
+.docx-toolbar__font-family-trigger > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.docx-toolbar__font-family-trigger,
+.docx-toolbar__style-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  height: 32px;
+  min-width: 64px;
+  max-width: 180px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.docx-toolbar__font-family-trigger::after,
+.docx-toolbar__style-trigger::after {
+  content: '▾';
+  font-size: 10px;
+  color: var(--doc-text-muted);
+}
+.docx-toolbar__font-family-trigger:hover:not(:disabled),
+.docx-toolbar__style-trigger:hover:not(:disabled) {
+  background: var(--doc-border);
+}
+.docx-toolbar__font-family-trigger:disabled,
+.docx-toolbar__style-trigger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.docx-toolbar__menu {
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: var(--doc-shadow-lg);
+  padding: 4px;
+  color: var(--doc-text);
+}
+.docx-toolbar__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 112px;
+  text-align: left;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+.docx-toolbar__menu-item:hover:not(:disabled) {
+  background: var(--doc-bg-hover);
+}
+.docx-toolbar__menu-item:disabled,
+
+.docx-toolbar__menu-item[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+.docx-editor .docx-menubar__item[aria-disabled='true']:hover {
+  background: transparent;
+}
+.docx-toolbar__menu-label {
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--doc-text-muted);
+  user-select: none;
+}
+.docx-toolbar__menu-separator {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--doc-border);
+}
+.docx-toolbar__menu-check {
+  margin-left: auto;
+  padding-left: 16px;
+  font-size: 12px;
+  color: var(--doc-text);
+}
+.docx-toolbar__font-family-content,
+.docx-toolbar__style-content {
+  margin-top: 4px;
+}
+.docx-toolbar__font-family-item,
+.docx-toolbar__style-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+.docx-toolbar__font-family-item:hover,
+.docx-toolbar__style-item:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-toolbar__stepper {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  flex: none;
+}
+.docx-toolbar__stepper-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.docx-toolbar__stepper-button:hover:not(:disabled) {
+  background: var(--doc-border);
+  color: var(--doc-text);
+}
+.docx-toolbar__stepper-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-toolbar__stepper-value {
+  min-width: 34px;
+  text-align: center;
+  color: var(--doc-text);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+.docx-toolbar__stepper-value--boxed {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 28px;
+  border: 1px solid var(--doc-border);
+  border-radius: 0;
+  background: var(--doc-surface);
+  font-size: 13px;
+}
+.docx-toolbar__font-size {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.docx-toolbar__font-size-input {
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: text;
+}
+.docx-toolbar__font-size-input:focus {
+  outline: 2px solid var(--doc-accent);
+  outline-offset: -2px;
+}
+.docx-toolbar__font-size-input:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.docx-toolbar__font-size-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  min-width: 72px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.docx-toolbar__font-size-menu .docx-toolbar__menu-item {
+  min-width: 64px;
+  justify-content: flex-start;
+  font-variant-numeric: tabular-nums;
+}
+.docx-toolbar__line-spacing {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.docx-toolbar__line-spacing-trigger {
+  gap: 2px;
+  width: auto;
+  padding: 0 4px;
+}
+.docx-toolbar__line-spacing-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  min-width: 232px;
+}
+.docx-toolbar__stepper-value--menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 52px;
+  height: 28px;
+  padding: 0 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.docx-toolbar__stepper-value--menu:hover:not(:disabled) {
+  background: var(--doc-border);
+}
+.docx-toolbar__zoom {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.docx-toolbar__zoom-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  min-width: 132px;
+}
+.docx-toolbar__alignment {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.docx-toolbar__alignment-trigger {
+  width: auto;
+  padding: 0 3px 0 5px;
+  gap: 1px;
+}
+.docx-toolbar__alignment-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+}
+.docx-toolbar__alignment-option {
+  width: 32px;
+  height: 32px;
+  color: var(--doc-text);
+}
+.docx-toolbar__alignment-option[data-active],
+.docx-toolbar__alignment-option[data-active]:hover {
+  background: var(--doc-primary-light);
+  color: var(--doc-primary);
+}
+.docx-toolbar__colorsplit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+.docx-toolbar__colorsplit-main {
+  flex-direction: column;
+  gap: 0;
+}
+.docx-toolbar__colorsplit-bar {
+  width: 16px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 1px;
+  pointer-events: none;
+}
+.docx-toolbar__colorsplit-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.docx-toolbar__colorsplit-caret:hover:not(:disabled) {
+  background: var(--doc-border);
+}
+.docx-toolbar__colorsplit-caret:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-toolbar__swatch-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: var(--doc-shadow-lg);
+}
+.docx-toolbar__swatch-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.docx-toolbar__swatch-heading {
+  font-size: 11px;
+  color: var(--doc-text-muted);
+  user-select: none;
+  white-space: nowrap;
+}
+.docx-toolbar__swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 18px);
+  gap: 3px;
+}
+.docx-toolbar__swatch-grid--theme > .docx-toolbar__swatch:nth-child(10) {
+  margin-bottom: 3px;
+}
+.docx-toolbar__swatch-grid--highlight {
+  grid-template-columns: repeat(5, 18px);
+}
+.docx-toolbar__swatch-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.docx-toolbar__swatch-clear:hover {
+  background: var(--doc-border);
+}
+.docx-toolbar__swatch-clear-chip {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--doc-border-dark);
+  border-radius: 2px;
+  background: #000000;
+}
+.docx-toolbar__swatch-clear-chip--none {
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      #d83b01 calc(50% - 1px),
+      #d83b01 calc(50% + 1px),
+      transparent calc(50% + 1px)
+    ),
+    #ffffff;
+}
+.docx-toolbar__swatch {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.1s,
+    box-shadow 0.1s;
+}
+.docx-toolbar__swatch[data-light] {
+  box-shadow: inset 0 0 0 1px var(--doc-border-dark);
+}
+.docx-toolbar__swatch:hover {
+  transform: scale(1.15);
+  box-shadow: inset 0 0 0 1px var(--doc-text);
+}
+.docx-toolbar__swatch[data-selected] {
+  outline: 2px solid var(--doc-accent);
+  outline-offset: 1px;
+}
+.docx-toolbar__swatch-custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.docx-toolbar__swatch-hash {
+  color: var(--doc-text-muted);
+  font-size: 12px;
+  user-select: none;
+}
+.docx-toolbar__swatch-hex {
+  width: 72px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--doc-border-dark);
+  border-radius: 4px;
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  font-size: 12px;
+  font-family: inherit;
+}
+.docx-toolbar__swatch-apply {
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--doc-border-dark);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font-size: 12px;
+  cursor: pointer;
+}
+.docx-toolbar__swatch-apply:hover:not(:disabled) {
+  background: var(--doc-border);
+}
+.docx-toolbar__swatch-apply:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.docx-context-bar {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+  box-sizing: border-box;
+  padding: 0 2px 5px;
+  color: var(--doc-primary);
+  background: var(--doc-page-bg-rendered);
+  border: 0;
+  border-bottom: 1px dashed var(--doc-primary);
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.docx-context-bar__label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.docx-context-bar__title {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+.docx-context-bar__status {
+  max-width: 150px;
+  overflow: hidden;
+  color: var(--doc-text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+}
+.docx-context-bar__options-trigger {
+  padding: 2px 0 2px 8px;
+  font: inherit;
+  font-weight: 500;
+  color: var(--doc-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.docx-context-bar__options-trigger::after {
+  content: ' ▾';
+  font-size: 9px;
+}
+.docx-context-bar__options-trigger:hover {
+  text-decoration: underline;
+}
+.docx-context-bar__options-trigger:focus-visible {
+  outline: 2px solid var(--doc-focus-ring);
+  outline-offset: 2px;
+}
+.docx-hf-chrome__options {
+  position: relative;
+  pointer-events: auto;
+}
+.docx-hf-chrome__options-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 260px;
+  padding: 6px 0;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px var(--doc-shadow);
+  z-index: var(--doc-z-dropdown, 100);
+}
+.docx-hf-chrome__menu-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--doc-text);
+  cursor: pointer;
+}
+.docx-hf-chrome__menu-row--distance {
+  align-items: center;
+}
+.docx-hf-chrome__menu-row input[type='checkbox'] {
+  margin-top: 2px;
+  flex: none;
+}
+.docx-hf-chrome__menu-row input[type='number'] {
+  width: 64px;
+  padding: 4px 6px;
+  font-size: 13px;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-surface);
+  color: var(--doc-text);
+}
+.docx-hf-chrome__menu-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--doc-text-subtle);
+}
+.docx-hf-chrome__menu-item {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: var(--doc-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.docx-hf-chrome__menu-item:hover:not(:disabled) {
+  background: var(--doc-bg-hover);
+}
+.docx-hf-chrome__menu-item:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.docx-hf-chrome__menu-separator {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--doc-border);
+}
+.docx-hf-chrome__unit {
+  font-size: 11px;
+  color: var(--doc-text-muted);
+}
+.docx-note-properties {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 20px;
+  background: var(--doc-overlay);
+}
+.docx-note-properties__panel {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  color: var(--doc-text);
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 36px var(--doc-shadow-strong);
+}
+.docx-note-properties__title {
+  margin: 0;
+  padding: 18px 20px 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--doc-border);
+}
+.docx-note-properties__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px;
+}
+.docx-note-properties__scope {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.docx-note-properties__section {
+  min-width: 0;
+  margin: 0;
+  padding: 14px 16px 16px;
+  background: var(--doc-bg-subtle);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+}
+.docx-note-properties__legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.docx-note-properties__badge {
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--doc-text-muted);
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 9999px;
+}
+.docx-note-properties__fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.docx-note-properties__field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--doc-text-muted);
+}
+.docx-note-properties__select {
+  width: 100%;
+  min-height: 34px;
+  box-sizing: border-box;
+  padding: 6px 30px 6px 9px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-text);
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border-input);
+  border-radius: 5px;
+}
+.docx-note-properties__select:focus-visible {
+  border-color: var(--doc-primary);
+  outline: 2px solid var(--doc-focus-ring);
+  outline-offset: 1px;
+}
+.docx-note-properties__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--doc-border);
+}
+.docx-note-properties__button {
+  min-height: 32px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-text);
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.docx-note-properties__button:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-note-properties__button--primary {
+  color: var(--doc-on-primary);
+  background: var(--doc-primary);
+  border-color: var(--doc-primary);
+}
+.docx-note-properties__button--primary:hover {
+  background: var(--doc-primary-hover);
+  border-color: var(--doc-primary-hover);
+}
+@media (max-width: 640px) {
+  .docx-context-bar__status {
+    display: none;
+  }
+  .docx-context-bar {
+    max-width: calc(100vw - 16px) !important;
+  }
+  .docx-note-properties {
+    padding: 12px;
+  }
+  .docx-note-properties__panel {
+    max-height: calc(100vh - 24px);
+  }
+  .docx-note-properties__scope,
+  .docx-note-properties__fields {
+    grid-template-columns: 1fr;
+  }
+}
+@media print {
+  .docx-context-bar {
+    display: none !important;
+  }
+}
+.docx-editor-toolbar__stepper {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  flex: none;
+}
+.docx-editor-toolbar__stepper[aria-disabled='true'] {
+  opacity: 0.5;
+}
+.docx-editor-toolbar__stepper-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 28px;
+  color: var(--doc-text-muted);
+  font-size: 14px;
+  user-select: none;
+}
+.docx-editor-toolbar__stepper-value {
+  min-width: 34px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+.docx-editor-toolbar__alignment {
+  position: relative;
+  display: inline-flex;
+}
+.docx-editor-toolbar__alignment-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: var(--doc-shadow-lg);
+}
+.docx-editor__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  color: var(--doc-text-muted);
+  font-size: 14px;
+}
+.docx-editor__loading-spinner {
+  display: block;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--doc-border);
+  border-top-color: var(--doc-primary);
+  border-radius: 50%;
+  animation: docx-editor-loading-spin 0.8s linear infinite;
+}
+@keyframes docx-editor-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docx-editor__loading-spinner {
+    animation: none;
+  }
+}
+.docx-hyperlink-popup {
+  position: absolute;
+  z-index: var(--doc-z-overlay);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 420px;
+  padding: 6px 8px;
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+  background: var(--doc-surface);
+  color: var(--doc-text);
+  box-shadow: 0 2px 10px var(--doc-shadow);
+  font-size: 13px;
+  margin-top: 4px;
+}
+.docx-hyperlink-popup[data-mode='editing'] {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 280px;
+}
+.docx-hyperlink-popup__url {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 260px;
+  overflow: hidden;
+  padding: 2px 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-link);
+  font: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.docx-hyperlink-popup__url:hover:not([data-inert]) {
+  text-decoration: underline;
+}
+.docx-hyperlink-popup__url[data-inert] {
+  color: var(--doc-text-muted);
+  cursor: default;
+}
+.docx-hyperlink-popup__actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+.docx-hyperlink-popup__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+  transition: background-color 0.12s ease,
+    color 0.12s ease;
+}
+.docx-hyperlink-popup__action:hover {
+  background: var(--doc-border);
+  color: var(--doc-text);
+}
+.docx-hyperlink-popup__action[data-copied] {
+  color: var(--doc-text);
+}
+.docx-hyperlink-popup__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.docx-hyperlink-popup__input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-bg-input);
+  color: var(--doc-text);
+  font: inherit;
+}
+.docx-hyperlink-popup__input:focus-visible {
+  outline: 2px solid var(--doc-focus-ring);
+  outline-offset: -1px;
+}
+.docx-hyperlink-popup__apply,
+.docx-hyperlink-popup__cancel {
+  padding: 4px 10px;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-bg-input);
+  color: var(--doc-text);
+  font: inherit;
+  cursor: pointer;
+}
+.docx-hyperlink-popup__apply:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.docx-hyperlink-popup[data-mode='editing'] .docx-hyperlink-popup__actions {
+  justify-content: flex-end;
+  gap: 6px;
+}
+.docx-hyperlink-popup__error {
+  color: var(--doc-error);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.docx-editor__scroll-container[data-review-pane='open'] {
+  padding-right: 316px;
+}
+.docx-editor__scroll-container[data-review-pane='closed'] {
+  padding-right: 44px;
+}
+.docx-review {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  pointer-events: none;
+  z-index: 3;
+}
+.docx-review:not([data-open]) {
+  width: 32px;
+}
+.docx-review__add {
+  margin-left: calc(-16px - 17px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--doc-border, #e3e5e8);
+  border-radius: 8px;
+  background: var(--doc-surface, #fff);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+  color: var(--doc-primary, #1a73e8);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.docx-review__add:hover {
+  background: var(--doc-primary, #1a73e8);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-primary, #1a73e8) 8%, var(--doc-surface, #fff));
+  }
+  border-color: var(--doc-primary, #1a73e8);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in srgb, var(--doc-primary, #1a73e8) 35%, var(--doc-border, #e3e5e8));
+  }
+  box-shadow: 0 2px 6px rgb(0 0 0 / 14%);
+}
+.docx-review__card[data-draft] {
+  border-color: var(--doc-primary, #1a73e8);
+}
+.docx-review__balloon-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.docx-review__balloon {
+  position: absolute;
+  width: 280px;
+  pointer-events: auto;
+  z-index: 6;
+}
+.docx-review__balloon .docx-review__card {
+  margin: 0;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+}
+.docx-review__markers {
+  position: absolute;
+  inset: 0;
+}
+.docx-review__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--doc-text-muted, #8a8f98);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.docx-editor .docx-editor__scroll-container,
+.docx-editor.docx-editor__scroll-container {
+  padding-inline-start: var(--docx-nav-shift, 0px);
+  transition: padding-inline-start 0.2s ease;
+}
+.docx-editor .docx-editor__scroll-container[data-zoom-fit],
+.docx-editor.docx-editor__scroll-container[data-zoom-fit] {
+  transition: none;
+}
+.docx-editor .docx-nav {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--docx-nav-reservation, 328px);
+  z-index: var(--doc-z-chrome);
+  pointer-events: none;
+  font-size: 13px;
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav > * {
+  pointer-events: auto;
+}
+.docx-editor .docx-nav__panel-shell {
+  display: none;
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--docx-nav-inset, 32px);
+  width: var(--docx-nav-width, 280px);
+  flex-direction: column;
+  background: var(--doc-bg);
+}
+.docx-editor .docx-nav--open .docx-nav__panel-shell {
+  display: flex;
+}
+.docx-editor .docx-nav__toggle {
+  position: absolute;
+  inset-block-start: 24px;
+  inset-inline-start: var(--docx-nav-inset, 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--doc-border-light);
+  background: var(--doc-bg-hover);
+  color: var(--doc-text-muted);
+  cursor: pointer;
+  transition: background-color 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.docx-editor .docx-nav__toggle:hover {
+  background: var(--doc-border);
+  color: var(--doc-text);
+  box-shadow: 0 1px 3px var(--doc-shadow);
+}
+.docx-editor .docx-nav__toggle:focus-visible,
+.docx-editor .docx-nav__close:focus-visible,
+.docx-editor .docx-nav__tab:focus-visible,
+.docx-editor .docx-nav__stepper:focus-visible,
+.docx-editor .docx-nav__heading:focus-visible,
+.docx-editor .docx-nav__result:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: 2px;
+}
+.docx-editor .docx-nav__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px 8px 0;
+  flex: none;
+}
+.docx-editor .docx-nav__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor .docx-nav__close:hover {
+  background: var(--doc-bg-hover);
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  padding-inline: 4px;
+  margin-block-end: 10px;
+  border-block-end: 1px solid var(--doc-border-light);
+  flex: none;
+}
+.docx-editor .docx-nav__tab {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+  border-block-end: 2px solid transparent;
+  margin-block-end: -1px;
+}
+.docx-editor .docx-nav__tab:hover {
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__tab--selected {
+  color: var(--doc-primary);
+  border-block-end-color: var(--doc-primary);
+  font-weight: 600;
+}
+.docx-editor .docx-nav__panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  padding-inline: 4px;
+  gap: 8px;
+}
+.docx-editor .docx-nav__panel[hidden] {
+  display: none;
+}
+.docx-editor .docx-nav__empty {
+  margin: 0;
+  padding: 8px;
+  color: var(--doc-text-subtle);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.docx-editor .docx-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+}
+.docx-editor .docx-nav__searchbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 5px 8px;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-bg-input);
+}
+.docx-editor .docx-nav__searchbox:focus-within {
+  border-color: var(--doc-primary);
+  box-shadow: 0 0 0 1px var(--doc-primary);
+}
+.docx-editor .docx-nav__search-icon {
+  color: var(--doc-text-muted);
+  flex: none;
+}
+.docx-editor .docx-nav__search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__search-input::placeholder {
+  color: var(--doc-text-placeholder);
+}
+.docx-editor .docx-nav__search-input::-webkit-search-cancel-button {
+  appearance: none;
+}
+.docx-editor .docx-nav__search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor .docx-nav__search-clear:hover {
+  background: var(--doc-bg-hover);
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  flex: none;
+  padding-inline: 2px;
+}
+.docx-editor .docx-nav__option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor .docx-nav__resultbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: none;
+  min-height: 28px;
+  padding-inline: 2px;
+}
+.docx-editor .docx-nav__count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__steppers {
+  display: flex;
+  gap: 4px;
+}
+.docx-editor .docx-nav__stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-bg-input);
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-review__marker:hover {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 6%));
+  color: var(--doc-text, #1f2328);
+}
+.docx-review__furniture {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+.docx-review__list {
+  position: absolute;
+  inset: 0;
+}
+.docx-review__slot {
+  width: 100%;
+  pointer-events: auto;
+  transition: top 120ms ease-out;
+}
+.docx-review[data-scrolling] .docx-review__slot {
+  transition: none;
+}
+.docx-review__card:not([data-active]) .docx-review__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.docx-review__slot[data-collapsed] .docx-review__summary,
+.docx-review__slot[data-collapsed] .docx-review__replies,
+.docx-review__slot[data-collapsed] .docx-review__reply-box {
+  display: none;
+}
+.docx-review__card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--doc-border, #e3e5e8);
+  border-radius: 12px;
+  background: var(--doc-surface, #fff);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+  color: var(--doc-text, #1f2328);
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: box-shadow 120ms ease-out,
+    border-color 120ms ease-out;
+}
+.docx-review__card:focus-visible {
+  outline: 2px solid var(--doc-focus-ring, #3b82f6);
+  outline-offset: 1px;
+}
+.docx-review__card[data-active] {
+  box-shadow: 0 4px 14px rgb(0 0 0 / 12%);
+  border-color: var(--doc-border-strong, #c8ccd2);
+}
+.docx-review__card[data-resolved] {
+  opacity: 0.55;
+}
+.docx-review__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.docx-review__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--doc-review-author, #c0392b);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-review-author, #c0392b) 82%, white);
+  }
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.docx-review__meta {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+.docx-review__author {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.docx-review__time {
+  color: var(--doc-text-muted, #8a8f98);
+  font-size: 12px;
+}
+.docx-review__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+}
+.docx-review__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--doc-text-muted, #8a8f98);
+  cursor: pointer;
+}
+.docx-review__action:hover:not(:disabled) {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 6%));
+  color: var(--doc-text, #1f2328);
+}
+.docx-review__action:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.docx-review__action[data-testid='review-delete']:hover:not(:disabled) {
+  background: var(--doc-destructive-hover-bg);
+  color: var(--doc-destructive);
+}
+.docx-review__action[data-testid='review-delete'] {
+  visibility: hidden;
+}
+.docx-review__reply:hover > .docx-review__head [data-testid='review-delete'],
+.docx-review__reply:focus-within > .docx-review__head [data-testid='review-delete'] {
+  visibility: visible;
+}
+.docx-review__card:hover:not(:has(.docx-review__reply:hover))
+  > .docx-review__head
+  [data-testid='review-delete'],
+.docx-review__card:focus-within:not(:has(.docx-review__reply:focus-within))
+  > .docx-review__head
+  [data-testid='review-delete'] {
+  visibility: visible;
+}
+.docx-review__action[data-testid='review-delete']:focus-visible {
+  visibility: visible;
+}
+.docx-review__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 7em;
+  overflow: hidden;
+}
+.docx-review__label {
+  color: var(--doc-text-muted, #8a8f98);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.docx-review__label[data-kind='insert'],
+.docx-review__label[data-kind='moveTo'] {
+  color: var(--doc-revision-insertion);
+}
+.docx-review__label[data-kind='delete'],
+.docx-review__label[data-kind='moveFrom'] {
+  color: var(--doc-revision-deletion);
+}
+.docx-review__text {
+  overflow-wrap: anywhere;
+}
+.docx-review__card:not([data-kind='comment']) .docx-review__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.docx-review__replies {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 2px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--doc-border, #e3e5e8);
+  list-style: none;
+}
+.docx-review__reply-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.docx-review__input {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding: 7px 14px;
+  border: 1px solid var(--doc-border, #e3e5e8);
+  border-radius: 999px;
+  background: var(--doc-surface, #fff);
+  color: inherit;
+  font: inherit;
+}
+.docx-review__input:focus-visible {
+  outline: 2px solid var(--doc-focus-ring, #3b82f6);
+  outline-offset: -1px;
+}
+.docx-review__reply-actions {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.docx-review__text-button {
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--doc-primary, #1a73e8);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.docx-review__text-button:hover {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 6%));
+}
+.docx-review__submit {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--doc-primary, #1a73e8);
+  color: #fff;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.docx-review__submit:disabled {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 8%));
+  color: var(--doc-text-muted, #8a8f98);
+  cursor: default;
+}
+.docx-review__refused {
+  flex: 1 0 100%;
+  color: var(--doc-danger, #b3261e);
+  font-size: 11px;
+}
+.docx-review__empty {
+  padding: 12px;
+  color: var(--doc-text-muted, #8a8f98);
+  font-size: 12px;
+}
+.docx-comment-overlay {
+  mix-blend-mode: multiply;
+}
+.docx-comment-band {
+  background: var(--doc-comment-bg);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-comment-bg) 80%, transparent);
+  }
+  box-shadow: inset 0 -1px 0 var(--doc-comment-border);
+  @supports (color: color-mix(in lab, red, red)) {
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--doc-comment-border) 55%, transparent);
+  }
+}
+.docx-comment-band--active {
+  background: var(--doc-comment-active-bg);
+  box-shadow: inset 0 -1px 0 var(--doc-comment-active-border);
+}
+.docx-revision-band--insert,
+.docx-revision-band--delete {
+  background: transparent;
+}
+.docx-revision-band--insert.docx-revision-band--active {
+  background: var(--doc-revision-insertion-tint);
+  box-shadow: inset 0 -1px 0 var(--doc-revision-insertion);
+}
+.docx-revision-band--delete.docx-revision-band--active {
+  background: var(--doc-revision-deletion-tint);
+  box-shadow: inset 0 -1px 0 var(--doc-revision-deletion);
+}
+.docx-revision-band--other {
+  background: transparent;
+}
+.docx-revision-band--other.docx-revision-band--active {
+  background: var(--doc-text-muted, #8a8f98);
+  @supports (color: color-mix(in lab, red, red)) {
+    background: color-mix(in srgb, var(--doc-text-muted, #8a8f98) 14%, transparent);
+  }
+}
+.docx-editor.dark .docx-comment-overlay {
+  mix-blend-mode: screen;
+}
+.docx-toolbar__mode {
+  position: relative;
+  display: inline-flex;
+}
+.docx-toolbar__mode-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: var(--doc-z-overlay);
+  display: flex;
+  min-width: 260px;
+  flex-direction: column;
+  padding: 6px;
+  border: 1px solid var(--doc-border, #e3e5e8);
+  border-radius: 10px;
+  background: var(--doc-surface, #fff);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+.docx-toolbar__mode-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--doc-text, #1f2328);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.docx-toolbar__mode-item:hover {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 6%));
+}
+.docx-toolbar__mode-text {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+.docx-toolbar__mode-label {
+  font-weight: 500;
+}
+.docx-toolbar__mode-hint {
+  color: var(--doc-text-muted, #8a8f98);
+  font-size: 12px;
+}
+.docx-toolbar__mode-check {
+  display: inline-flex;
+  width: 18px;
+  flex: 0 0 auto;
+  color: var(--doc-accent, #1a73e8);
+}
+.docx-review__removed {
+  color: var(--doc-revision-deletion);
+  font-weight: 500;
+}
+.docx-review__added {
+  color: var(--doc-revision-insertion);
+  font-weight: 500;
+  border: 1px solid var(--doc-border-input);
+  border-radius: 4px;
+  background: var(--doc-bg-input);
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor .docx-nav__stepper:hover:not(:disabled) {
+  background: var(--doc-bg-hover);
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__stepper:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.docx-editor .docx-nav__result {
+  display: block;
+  width: 100%;
+  text-align: start;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  padding: 7px 8px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--doc-text-muted);
+  cursor: pointer;
+}
+.docx-editor .docx-nav__result:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-editor .docx-nav__result--active {
+  border-color: var(--doc-primary);
+  color: var(--doc-text);
+}
+.docx-editor .docx-nav__result-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.docx-editor .docx-nav__result-hit {
+  background: none;
+  color: var(--doc-text);
+  font-weight: 700;
+}
+.docx-editor .docx-nav__heading {
+  display: block;
+  width: 100%;
+  text-align: start;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  padding-block: 5px;
+  padding-inline-end: 8px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--doc-text);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.docx-editor .docx-nav__heading:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-editor .docx-nav__heading--current {
+  background: var(--doc-primary-light);
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .docx-editor .docx-editor__scroll-container,
+  .docx-editor.docx-editor__scroll-container {
+    transition-duration: 0s;
+  }
+}
+.docx-editor .docx-menubar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  color: var(--doc-text);
+  font: 400 13px/1 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+.docx-editor .docx-menubar__menu-root {
+  position: relative;
+}
+.docx-editor .docx-menubar__trigger {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  font: inherit;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.docx-editor .docx-menubar__trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+  vertical-align: -2px;
+  color: inherit;
+}
+.docx-editor .docx-menubar__trigger:hover,
+.docx-editor .docx-menubar__trigger[data-open] {
+  background: var(--doc-bg-hover);
+}
+.docx-editor .docx-menubar__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  margin-top: 4px;
+  min-width: 220px;
+}
+.docx-editor .docx-menubar__item {
+  gap: 12px;
+}
+.docx-editor .docx-menubar__item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--doc-text-muted);
+}
+.docx-editor .docx-menubar__item-label {
+  flex: 1;
+  text-align: left;
+}
+.docx-editor .docx-menubar__item-shortcut,
+.docx-editor .docx-menubar__item-caret {
+  flex: none;
+  margin-left: 24px;
+  color: var(--doc-text-muted);
+  font-size: 12px;
+}
+.docx-editor .docx-menubar__item-caret {
+  margin-left: 16px;
+  font-size: 14px;
+}
+.docx-editor .docx-menubar__item[data-active] {
+  background: var(--doc-primary-light);
+}
+.docx-editor .docx-menubar__submenu {
+  position: relative;
+}
+.docx-editor .docx-menubar__submenu > .docx-menubar__item[data-open] {
+  background: var(--doc-bg-hover);
+}
+.docx-editor .docx-menubar__submenu-panel {
+  top: -4px;
+  left: 100%;
+  margin-top: 0;
+  margin-left: 0;
+  min-width: 240px;
+}
+.docx-editor .docx-menubar__group-label {
+  padding: 8px 12px 4px;
+  color: var(--doc-text-subtle, #8a8f98);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.docx-editor .docx-menubar__group:first-child > .docx-menubar__group-label {
+  padding-top: 2px;
+}
+.docx-editor .docx-menubar__grid {
+  padding: 8px;
+}
+.docx-editor .docx-menubar__grid-cells {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.docx-editor .docx-menubar__grid-row {
+  display: flex;
+  gap: 3px;
+}
+.docx-editor .docx-menubar__grid-cell {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--doc-border);
+  border-radius: 2px;
+  background: var(--doc-surface);
+  cursor: pointer;
+  transition: background-color 0.06s ease,
+    border-color 0.06s ease;
+}
+.docx-editor .docx-menubar__grid-cell[data-filled] {
+  background: var(--doc-primary);
+  border-color: var(--doc-primary);
+}
+.docx-editor .docx-menubar__grid-caption {
+  min-height: 18px;
+  padding-top: 6px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--doc-text-muted);
+}
+:where(.docx-paginated-surface) {
+  margin: 24px auto;
+}
+.docx-editor .docx-contextmenu,
+.docx-contextmenu {
+  z-index: var(--doc-z-context);
+  min-width: 240px;
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+}
+.docx-contextmenu:focus {
+  outline: none;
+}
+.docx-contextmenu .docx-menubar__item {
+  gap: 12px;
+  width: 100%;
+}
+.docx-contextmenu__table-align {
+  padding: 6px 12px 8px;
+}
+.docx-contextmenu__table-align-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--doc-text-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+.docx-contextmenu__table-align-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.docx-contextmenu__table-align-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--doc-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--doc-text);
+  cursor: pointer;
+}
+.docx-contextmenu__table-align-button:hover:not([aria-disabled='true']) {
+  background: var(--doc-bg-hover);
+}
+.docx-contextmenu__table-align-button[aria-disabled='true'] {
+  opacity: 0.3;
+  cursor: default;
+}
+.docx-contextmenu__table-align-button:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: 1px;
+}
+.docx-contextmenu__custom-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 280px;
+  padding: 6px 12px 8px;
+}
+.docx-contextmenu__custom-title {
+  color: var(--doc-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+.docx-contextmenu__custom-detail {
+  color: var(--doc-text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+.docx-image-insert__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.docx-editor .docx-toolbar__image-wrap,
+.docx-toolbar__image-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.docx-editor .docx-toolbar__image-wrap-menu,
+.docx-toolbar__image-wrap-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: var(--doc-z-overlay);
+  min-width: 220px;
+  padding: 4px 0;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px var(--doc-shadow);
+}
+.docx-editor .docx-toolbar__image-wrap-item,
+.docx-toolbar__image-wrap-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--doc-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.docx-editor .docx-toolbar__image-wrap-item[data-active],
+.docx-toolbar__image-wrap-item[data-active] {
+  background: var(--doc-surface-hover, rgb(0 0 0 / 6%));
+}
+.docx-editor .docx-toolbar__alt-text,
+.docx-toolbar__alt-text {
+  position: relative;
+  display: inline-flex;
+}
+.docx-editor .docx-toolbar__alt-text-panel,
+.docx-toolbar__alt-text-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: var(--doc-z-overlay);
+  width: 280px;
+  padding: 12px;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px var(--doc-shadow);
+}
+.docx-font-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  background: var(--doc-warning-bg);
+  color: var(--doc-warning-text);
+  border-bottom: 1px solid var(--doc-border);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.docx-font-notice__text {
+  flex: 1;
+  min-width: 0;
+}
+.docx-font-notice__dismiss {
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid var(--doc-warning);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.docx-font-notice__dismiss:hover {
+  background: var(--doc-bg-hover);
+}
+.docx-font-notice__dismiss:focus-visible {
+  outline: 2px solid var(--doc-primary);
+  outline-offset: 1px;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-drop-shadow-size {
+  syntax: "*";
+  inherits: false;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    .docx-editor :is(*), .docx-editor :is(::before), .docx-editor :is(::after), .docx-editor :is(::backdrop) {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-border-style: solid;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
+      --tw-blur: initial;
+      --tw-brightness: initial;
+      --tw-contrast: initial;
+      --tw-grayscale: initial;
+      --tw-hue-rotate: initial;
+      --tw-invert: initial;
+      --tw-opacity: initial;
+      --tw-saturate: initial;
+      --tw-sepia: initial;
+      --tw-drop-shadow: initial;
+      --tw-drop-shadow-color: initial;
+      --tw-drop-shadow-alpha: 100%;
+      --tw-drop-shadow-size: initial;
+    }
+  }
+}

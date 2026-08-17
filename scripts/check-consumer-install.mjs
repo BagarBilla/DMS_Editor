@@ -1,0 +1,199 @@
+#!/usr/bin/env node
+//
+// Installs the packages the way a consumer does — from tarballs, into an empty project,
+// with npm resolving what it finds inside them — and builds a real app against the result.
+//
+// This is the only check that reads a published manifest rather than a workspace one, so
+// it is the only place a `workspace:` range, a missing `exports` subpath or a `files` list
+// that drops a needed file can fail before a user hits it.
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+const ROOT = path.resolve(import.meta.dirname, '..');
+const tempRoot = mkdtempSync(path.join(tmpdir(), 'docx-editor-consumers-'));
+const packDir = path.join(tempRoot, 'packs');
+// The Vue consumer app that used to sit alongside the React one is gone while
+// @docx-editor.dev/vue is WIP and unpublished — there is no tarball for a real
+// consumer to install. Restore it when the package ships again.
+const reactAppDir = path.join(tempRoot, 'react-app');
+
+function run(command, args, options = {}) {
+  const result = spawnSync(command, args, {
+    cwd: options.cwd ?? ROOT,
+    encoding: 'utf8',
+    stdio: options.capture ? 'pipe' : 'inherit',
+    env: { ...process.env, ...options.env },
+  });
+  if (result.status !== 0) {
+    if (options.capture) {
+      process.stderr.write(result.stdout ?? '');
+      process.stderr.write(result.stderr ?? '');
+    }
+    throw new Error(`${command} ${args.join(' ')} failed with exit code ${result.status}`);
+  }
+  return result.stdout ?? '';
+}
+
+function packPackage(packagePath) {
+  const output = run(
+    'npm',
+    ['pack', path.join(ROOT, packagePath), '--json', '--pack-destination', packDir],
+    { capture: true }
+  );
+  const [packed] = JSON.parse(output);
+  if (!packed?.filename) throw new Error(`npm pack returned no filename for ${packagePath}`);
+  return path.join(packDir, packed.filename);
+}
+
+try {
+  if (process.env.SKIP_CONSUMER_INSTALL_BUILD !== '1') {
+    run('bun', ['run', 'build'], {
+      env: { NODE_OPTIONS: process.env.NODE_OPTIONS ?? '--max-old-space-size=8192' },
+    });
+  }
+
+  mkdirSync(packDir, { recursive: true });
+
+  // Every published package, including the ones the app below only imports for their
+  // types: an unpublished version of any of them turns into a registry lookup during
+  // install, and the registry has nothing to give.
+  const tarballs = [
+    packPackage('packages/i18n'),
+    packPackage('packages/core'),
+    packPackage('packages/react'),
+    packPackage('packages/fonts'),
+    packPackage('packages/editor-api'),
+    packPackage('packages/pro'),
+  ];
+
+  mkdirSync(path.join(reactAppDir, 'src'), { recursive: true });
+  writeFileSync(
+    path.join(reactAppDir, 'package.json'),
+    JSON.stringify(
+      {
+        private: true,
+        type: 'module',
+        scripts: {
+          typecheck: 'tsc --noEmit',
+          build: 'npm run typecheck && vite build',
+        },
+        dependencies: {},
+        devDependencies: {},
+      },
+      null,
+      2
+    )
+  );
+  writeFileSync(
+    path.join(reactAppDir, 'index.html'),
+    '<div id="root"></div><script type="module" src="/src/main.tsx"></script>\n'
+  );
+  // The imports are the contract: the packaged editor, the engine the adapter holds as a
+  // peer, the stylesheet (which ships from the engine, not the adapter), the fonts, and
+  // the two licensed packages. A subpath that stops being exported fails here.
+  writeFileSync(
+    path.join(reactAppDir, 'src/main.tsx'),
+    `import { createRoot } from 'react-dom/client';
+import { DocxEditor } from '@docx-editor.dev/react';
+import * as Engine from '@docx-editor.dev/core';
+import * as EngineEditor from '@docx-editor.dev/core/editor';
+import * as Fonts from '@docx-editor.dev/fonts';
+import * as EditorApi from '@docx-editor.dev/editor-api';
+import * as Pro from '@docx-editor.dev/pro';
+import * as ProReact from '@docx-editor.dev/pro/react';
+import '@docx-editor.dev/core/styles/editor.css';
+
+const exportedSurfaceChecks = [Engine, EngineEditor, Fonts, EditorApi, Pro, ProReact];
+console.assert(exportedSurfaceChecks.every((entry) => typeof entry === 'object' && entry !== null));
+void exportedSurfaceChecks;
+
+createRoot(document.getElementById('root')!).render(<DocxEditor />);
+`
+  );
+  writeFileSync(
+    path.join(reactAppDir, 'src/vite-env.d.ts'),
+    '/// <reference types="vite/client" />\n'
+  );
+  writeFileSync(
+    path.join(reactAppDir, 'vite.config.ts'),
+    `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({ plugins: [react()] });
+`
+  );
+  writeFileSync(
+    path.join(reactAppDir, 'tsconfig.json'),
+    JSON.stringify(
+      {
+        compilerOptions: {
+          strict: true,
+          target: 'ES2022',
+          module: 'ESNext',
+          moduleResolution: 'Bundler',
+          jsx: 'react-jsx',
+          skipLibCheck: true,
+        },
+        include: ['src/**/*.ts', 'src/**/*.tsx'],
+      },
+      null,
+      2
+    )
+  );
+  run(
+    'npm',
+    [
+      'install',
+      '--ignore-scripts',
+      'react',
+      'react-dom',
+      '@types/react',
+      '@types/react-dom',
+      '@vitejs/plugin-react',
+      'vite',
+      'typescript',
+      ...tarballs,
+    ],
+    { cwd: reactAppDir }
+  );
+  run('npm', ['run', 'build'], { cwd: reactAppDir });
+
+  // The consumer has NO Tailwind and no PostCSS — exactly the host the shipped
+  // stylesheet must carry on its own. Assert the CSS vite emitted is the compiled,
+  // `.docx-editor`-scoped artifact: a raw `@tailwind` directive here means the chrome
+  // ships unstyled to Tailwind-less hosts and doubly-styled to Tailwind hosts.
+  const assetsDir = path.join(reactAppDir, 'dist', 'assets');
+  const emittedCss = readdirSync(assetsDir)
+    .filter((name) => name.endsWith('.css'))
+    .map((name) => readFileSync(path.join(assetsDir, name), 'utf8'))
+    .join('\n');
+  if (emittedCss.length === 0) {
+    throw new Error('consumer build emitted no CSS asset');
+  }
+  // The emitted CSS is MINIFIED: quotes drop from attribute selectors and the file is
+  // one line, so every check below is written against the minified shape.
+  const minified = emittedCss.replace(/\/\*[\s\S]*?\*\//g, '');
+  if (/@tailwind\b/.test(minified)) {
+    throw new Error('consumer CSS still contains a raw @tailwind directive');
+  }
+  if (!/\.docx-editor \.flex\b/.test(minified)) {
+    throw new Error('consumer CSS is missing .docx-editor-scoped utilities');
+  }
+  if (!/\.docx-editor \[contenteditable=["']?true["']?\]/.test(minified)) {
+    throw new Error('consumer CSS is missing the scoped [contenteditable] caret rule');
+  }
+  // A selector STARTING with [contenteditable (after {, }, comma, or file start)
+  // would reach every rich-text field in a host app.
+  if (/(^|[{},])\s*\[contenteditable/.test(minified)) {
+    throw new Error('consumer CSS contains an unscoped [contenteditable] rule');
+  }
+  console.log('Fresh React consumer install/build passed (CSS compiled and scoped).');
+} finally {
+  if (process.env.KEEP_CONSUMER_INSTALL_TEMP !== '1') {
+    rmSync(tempRoot, { recursive: true, force: true });
+  } else {
+    console.log(`Kept temp app at ${reactAppDir}`);
+  }
+}

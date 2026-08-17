@@ -1,0 +1,651 @@
+// zh-CN.json
+var zh_CN_default = {
+  _lang: "zh-CN",
+  common: {
+    cancel: "取消",
+    apply: "应用",
+    close: "关闭",
+    comment: "批注",
+    dismiss: "忽略"
+  },
+  toolbar: {
+    ariaLabel: "格式工具栏",
+    file: "文件",
+    format: "格式",
+    insert: "插入",
+    open: "打开",
+    openShortcut: "Ctrl+O",
+    save: "保存",
+    saveShortcut: "Ctrl+S",
+    print: "打印",
+    printShortcut: "Ctrl+P",
+    pageSetup: "页面设置",
+    leftToRight: "文本从左到右",
+    rightToLeft: "文本从右到左",
+    image: "图片",
+    table: "表格",
+    pageBreak: "分页符",
+    tableOfContents: "目录",
+    help: "帮助",
+    reportIssue: "反馈问题",
+    watermark: "水印",
+    break: "分隔符",
+    sectionBreakContinuous: "分节符（连续）",
+    sectionBreakNextPage: "分节符（下一页）",
+    insertFootnote: "插入脚注",
+    insertEndnote: "插入尾注"
+  },
+  formattingBar: {
+    groups: {
+      history: "历史记录",
+      zoom: "缩放",
+      styles: "样式",
+      font: "字体",
+      textFormatting: "文本格式",
+      script: "上下标",
+      alignment: "对齐",
+      listFormatting: "列表格式",
+      image: "图片",
+      table: "表格"
+    },
+    undo: "撤销",
+    undoShortcut: "撤销(Ctrl+Z)",
+    redo: "恢复",
+    redoShortcut: "恢复(Ctrl+Y)",
+    bold: "加粗",
+    boldShortcut: "加粗(Ctrl+B)",
+    italic: "倾斜",
+    italicShortcut: "倾斜(Ctrl+I)",
+    underline: "下划线",
+    underlineShortcut: "下划线(Ctrl+U)",
+    strikethrough: "删除线",
+    fontColor: "字体颜色",
+    highlightColor: "文本突出显示颜色",
+    insertLink: "插入链接",
+    insertLinkShortcut: "插入链接(Ctrl+K)",
+    superscript: "上标",
+    superscriptShortcut: "上标(Ctrl+Shift+=)",
+    subscript: "下标",
+    subscriptShortcut: "下标(Ctrl+=)",
+    imageProperties: "图片属性",
+    imagePropertiesShortcut: "图片属性(替代文本、边框)...",
+    clearFormatting: "清除格式",
+    commentsAndChanges: "批注和更改",
+    unavailableInPreview: "此预览版本中不可用",
+    more: "更多",
+    altText: "替换文字",
+    imageWrap: "环绕文字"
+  },
+  alignment: {
+    alignLeft: "左对齐",
+    alignLeftShortcut: "Ctrl+L",
+    center: "居中",
+    centerShortcut: "Ctrl+E",
+    alignRight: "右对齐",
+    alignRightShortcut: "Ctrl+R",
+    justify: "两端对齐",
+    justifyShortcut: "Ctrl+J"
+  },
+  lists: {
+    ariaLabel: "列表格式",
+    typeAriaLabel: "列表类型",
+    indentationAriaLabel: "列表缩进",
+    bulletList: "项目符号",
+    numberedList: "编号",
+    decreaseIndent: "减少缩进",
+    increaseIndent: "增加缩进"
+  },
+  lineSpacing: {
+    single: "单倍行距",
+    double: "双倍行距",
+    lineSpacingTitle: "行距: {label}",
+    blockSpacingRules: "段间距",
+    label: "行距",
+    addSpaceAfter: "增加段后间距",
+    addSpaceBefore: "增加段前间距",
+    removeSpaceAfter: "删除段后间距",
+    removeSpaceBefore: "删除段前间距"
+  },
+  styles: {
+    selectAriaLabel: "选择段落样式",
+    normalText: "正文",
+    title: "标题",
+    subtitle: "副标题",
+    heading1: "标题 1",
+    heading2: "标题 2",
+    heading3: "标题 3"
+  },
+  font: {
+    selectAriaLabel: "选择字体",
+    sansSerif: "Sans Serif",
+    serif: "Serif",
+    monospace: "Monospace",
+    documentFonts: "文档字体"
+  },
+  fontSize: {
+    decrease: "减小字号",
+    increase: "增大字号",
+    label: "字号",
+    listLabel: "字号列表"
+  },
+  zoom: {
+    ariaLabel: "缩放: {label}",
+    zoomIn: "放大",
+    zoomLevel: "缩放级别",
+    zoomOut: "缩小",
+    automatic: null,
+    fitWidth: null
+  },
+  colorPicker: {
+    highlightColors: "突出显示颜色",
+    customColor: "自定义颜色",
+    noColor: "无颜色",
+    automatic: "自动",
+    themeColors: "主题颜色",
+    standardColors: "标准颜色",
+    colors: {
+      black: "黑色",
+      darkRed: "深红",
+      red: "红色",
+      orange: "橙色",
+      yellow: "黄色",
+      darkYellow: "深黄",
+      green: "绿色",
+      darkGreen: "深绿",
+      blue: "蓝色",
+      darkBlue: "深蓝",
+      purple: "紫色",
+      white: "白色",
+      lightGreen: "浅绿",
+      lightBlue: "浅蓝",
+      darkGray: "深灰",
+      cyan: "青色",
+      magenta: "品红",
+      brightGreen: "亮绿",
+      darkCyan: "深青",
+      darkMagenta: "深品红",
+      lightGray: "浅灰"
+    },
+    apply: "应用",
+    theme: {
+      accent1: "着色 1",
+      accent2: "着色 2",
+      accent3: "着色 3",
+      accent4: "着色 4",
+      accent5: "着色 5",
+      accent6: "着色 6",
+      background1: "背景 1",
+      background2: "背景 2",
+      text1: "文字 1",
+      text2: "文字 2"
+    }
+  },
+  dialogs: {
+    imageProperties: {
+      title: "图片属性",
+      altText: "替代文本",
+      altTextPlaceholder: "描述图片内容以供无障碍访问...",
+      dimensions: "尺寸",
+      heightLabel: "高度:",
+      lockAspectRatio: "锁定纵横比",
+      textWrapping: "文字环绕",
+      widthLabel: "宽度:"
+    },
+    imagePosition: {
+      relativeOptions: {
+        page: "页面",
+        column: "列",
+        margin: "页边距",
+        character: "字符",
+        paragraph: "段落",
+        line: "行"
+      }
+    },
+    pageSetup: {
+      title: "页面设置",
+      pageSize: "纸张大小",
+      sizeLabel: "大小",
+      custom: "自定义",
+      orientation: "方向",
+      portrait: "纵向",
+      landscape: "横向",
+      margins: "页边距",
+      top: "上",
+      bottom: "下",
+      left: "左",
+      right: "右",
+      pageSizes: {
+        letter: '信纸 (8.5" × 11")',
+        a4: 'A4 (8.27" × 11.69")',
+        legal: '法律专用纸 (8.5" × 14")',
+        a3: 'A3 (11.69" × 16.54")',
+        a5: 'A5 (5.83" × 8.27")',
+        b5: 'B5 (6.93" × 9.84")',
+        executive: 'Executive (7.25" × 10.5")'
+      },
+      applyTo: "应用于",
+      applyToDocument: "整篇文档",
+      applyToSection: "本节"
+    },
+    footnoteProperties: {
+      title: "脚注和尾注属性",
+      footnotes: "脚注",
+      endnotes: "尾注",
+      position: "位置",
+      numberFormat: "编号格式",
+      numbering: "编号方式",
+      footnotePositions: {
+        bottomOfPage: "页面底端",
+        belowText: "文本下方"
+      },
+      endnotePositions: {
+        endOfDocument: "文档末尾",
+        endOfSection: "节末尾"
+      },
+      numberingOptions: {
+        continuous: "连续",
+        restartSection: "每节重新编号",
+        restartPage: "每页重新编号"
+      },
+      formats: {
+        decimal: "1, 2, 3, ...",
+        lowerRoman: "i, ii, iii, ...",
+        upperRoman: "I, II, III, ..."
+      }
+    }
+  },
+  comments: {
+    unknown: "未知",
+    addComment: "添加批注",
+    replyPlaceholder: "回复或使用 @ 提及他人..."
+  },
+  contextMenu: {
+    ariaLabel: "AI 操作菜单",
+    cut: "剪切",
+    cutShortcut: "Ctrl+X",
+    copy: "复制",
+    copyShortcut: "Ctrl+C",
+    paste: "粘贴",
+    pasteShortcut: "Ctrl+V",
+    delete: "删除",
+    deleteShortcut: "Del",
+    selectAll: "全选",
+    selectAllShortcut: "Ctrl+A",
+    editCustomNode: "编辑{label}",
+    removeCustomNode: "删除{label}"
+  },
+  documentOutline: {
+    ariaLabel: "文档大纲",
+    closeAriaLabel: "关闭大纲",
+    closeTitle: "关闭大纲",
+    title: "大纲",
+    noHeadings: "未找到标题。请在文档中添加标题以在此处显示。"
+  },
+  titleBar: {
+    untitled: "未命名",
+    documentNameAriaLabel: "文档名称",
+    menuBarAriaLabel: "菜单栏"
+  },
+  errors: {
+    unableToParse: "无法解析文档",
+    somethingWentWrong: "发生错误",
+    errorDescription: "渲染此组件时发生错误。请重试，如果问题仍然存在，请联系支持人员。",
+    errorLabel: "错误:",
+    componentStack: "组件堆栈:",
+    tryAgain: "请重试",
+    showDetails: "显示详情",
+    hideDetails: "隐藏详情"
+  },
+  table: {
+    insertRowAbove: "在上方插入行",
+    insertRowBelow: "在下方插入行",
+    insertColumnLeft: "在左侧插入列",
+    insertColumnRight: "在右侧插入列",
+    deleteRow: "删除行",
+    deleteColumn: "删除列",
+    deleteTable: "删除表格",
+    mergeCells: "合并单元格",
+    splitCell: "拆分单元格",
+    editingTools: "表格编辑工具",
+    label: "表格",
+    cellFillColor: "单元格填充颜色",
+    borderColor: "边框颜色",
+    borderWidth: "边框宽度",
+    borders: {
+      all: "所有框线",
+      outside: "外侧框线",
+      inside: "内侧框线",
+      none: "无框线",
+      top: "上框线",
+      bottom: "下框线",
+      left: "左框线",
+      right: "右框线",
+      styleAriaLabel: "边框样式",
+      tooltip: "边框"
+    },
+    moreOptions: "更多表格选项",
+    selectTable: "选择整个表格",
+    borderStyles: {
+      dashed: "虚线",
+      dotted: "点线",
+      double: "双线",
+      single: "实线",
+      thick: "粗线",
+      triple: "三线"
+    },
+    borderWidths: {
+      halfPt: "0.5 磅",
+      oneHalfPt: "1.5 磅",
+      onePt: "1 磅",
+      threePt: "3 磅",
+      twoPt: "2 磅"
+    },
+    clearCellFill: "清除单元格填充"
+  },
+  tableAdvanced: {
+    verticalAlignment: "垂直对齐",
+    top: "顶端对齐",
+    middle: "居中对齐",
+    bottom: "底端对齐",
+    toggleNoWrap: "切换文本换行",
+    toggleHeaderRow: "切换标题行",
+    distributeColumns: "平均分布各列",
+    autoFit: "根据内容自动调整",
+    tableProperties: "表格属性...",
+    tableAlignment: "表格对齐方式",
+    alignTableLeft: "表格左对齐",
+    alignTableCenter: "表格居中对齐",
+    alignTableRight: "表格右对齐"
+  },
+  imageTransform: {
+    tooltip: "变换",
+    rotateClockwise: "向右旋转",
+    rotateCounterClockwise: "向左旋转",
+    flipHorizontal: "水平翻转",
+    flipVertical: "垂直翻转"
+  },
+  imageWrap: {
+    inline: "嵌入型",
+    floatLeft: "浮于左侧(文字环绕右侧)",
+    floatRight: "浮于右侧(文字环绕左侧)",
+    topAndBottom: "上下型环绕",
+    behindText: "衬于文字下方",
+    inFrontOfText: "浮于文字上方",
+    tooltipPrefix: "环绕方式：{label}",
+    menu: {
+      ariaLabel: "图像布局选项",
+      inLineWithText: "嵌入型",
+      squareLeft: "四周型靠左",
+      squareRight: "四周型靠右"
+    },
+    square: "四周型",
+    targets: {
+      behind: "衬于文字下方",
+      inFront: "浮于文字上方",
+      inline: "嵌入型",
+      square: "四周型",
+      squareLeft: "四周型（左）",
+      squareRight: "四周型（右）",
+      through: "穿越型",
+      tight: "紧密型",
+      topAndBottom: "上下型"
+    },
+    through: "穿越型",
+    tight: "紧密型"
+  },
+  editor: {
+    showDocumentOutline: "显示文档大纲",
+    linkCopied: "链接已复制到剪贴板",
+    fontSubstitutionNotice: "此文档中的某些字体不可用，已显示替代字体：{fonts}"
+  },
+  hyperlinkPopup: {
+    displayTextPlaceholder: "显示文本",
+    urlPlaceholder: "https://example.com",
+    copyLink: "复制链接",
+    editLink: "编辑链接",
+    removeLink: "删除链接",
+    apply: "应用",
+    bookmarkTarget: "转到本文档中的某个位置",
+    cancel: "取消",
+    editTitle: "编辑链接",
+    inertTarget: "此链接指向编辑器不会打开的位置",
+    insertTitle: "插入链接",
+    openLink: "打开链接",
+    refused: "无法应用该链接。请检查地址后重试。",
+    urlLabel: "URL"
+  },
+  headerFooter: {
+    header: "页眉",
+    footer: "页脚",
+    options: "选项",
+    insertPageNumber: "插入当前页码",
+    insertTotalPages: "插入总页数",
+    chromeAriaLabel: "页眉页脚编辑",
+    firstPageHeader: "首页页眉",
+    firstPageFooter: "首页页脚",
+    evenPageHeader: "偶数页页眉",
+    evenPageFooter: "偶数页页脚",
+    sameAsPrevious: "与上一节相同",
+    sameAsPreviousHint: "编辑也会应用于上一节的页面。",
+    differentFirstPage: "首页不同",
+    differentOddEven: "奇偶页不同",
+    differentOddEvenHint: "应用于整个文档。",
+    linkToPrevious: "链接到上一节",
+    unlinkFromPrevious: "取消与上一节的链接",
+    headerDistance: "页眉距边缘的距离",
+    footerDistance: "页脚距边缘的距离",
+    removeHeader: "删除页眉",
+    removeFooter: "删除页脚",
+    insertSectionPages: "插入本节页数",
+    insertPageXofY: "插入第 X 页，共 Y 页"
+  },
+  image: {
+    contentMismatch: "图像内容与其类型不匹配",
+    decodeFailed: "无法解码图像",
+    externalResource: "未加载外部图像",
+    invalidResource: "无效图像",
+    missingResource: "缺少图像",
+    nonPictureGraphic: "不受支持的图形（{kind}）",
+    pendingResource: "正在加载图像",
+    resourceLimit: "图像超出大小限制",
+    unsupportedFormat: "不受支持的图像格式（{format}）"
+  },
+  ruler: {
+    horizontal: "水平标尺",
+    vertical: "垂直标尺",
+    firstLineIndent: "首行缩进",
+    leftIndent: "左缩进",
+    rightIndent: "右缩进",
+    topMargin: "上边距",
+    bottomMargin: "下边距",
+    hangingIndent: "悬挂缩进"
+  },
+  loading: {
+    label: "正在加载"
+  },
+  viewer: {
+    pageIndicator: "第 {current} 页，共 {total} 页"
+  },
+  imageOverlay: {
+    handle: {
+      e: "调整右边缘大小",
+      n: "调整上边缘大小",
+      ne: "调整右上角大小",
+      nw: "调整左上角大小",
+      s: "调整下边缘大小",
+      se: "调整右下角大小",
+      sw: "调整左下角大小",
+      w: "调整左边缘大小"
+    },
+    selection: "选定的图像"
+  },
+  revisions: {
+    paragraphMarkInserted: "已插入段落标记",
+    runPropertiesChanged: "已更改文本格式"
+  },
+  toc: {
+    refresh: "更新整个目录",
+    refreshPageNumbers: "仅更新页码"
+  },
+  editingMode: {
+    editing: "编辑",
+    label: "编辑模式",
+    editingHint: "直接编辑文档",
+    suggesting: "建议",
+    suggestingHint: "编辑将成为建议",
+    viewing: "查看",
+    viewingHint: "只读，不可编辑"
+  },
+  navigation: {
+    ariaLabel: "文档导航",
+    closeAriaLabel: "关闭导航",
+    closeTitle: "关闭导航",
+    find: {
+      clearAriaLabel: "清除搜索",
+      counter: "第 {current} 个结果，共 {total} 个",
+      counterTruncated: "第 {current} 个结果，共 {total}+ 个",
+      inputAriaLabel: "搜索文档",
+      matchCase: "区分大小写",
+      nextAriaLabel: "下一个结果",
+      noResults: "无结果",
+      optionsAriaLabel: "搜索选项",
+      placeholder: "搜索文档",
+      previousAriaLabel: "上一个结果",
+      resultsAriaLabel: "搜索结果",
+      searching: "正在搜索…",
+      wholeWord: "全字匹配",
+      total: "{total, plural, other {# 个结果}}",
+      totalTruncated: "{total, plural, other {#+ 个结果}}"
+    },
+    headings: {
+      noHeadings: "未找到标题。在文档中添加标题即可在此处查看。"
+    },
+    openAriaLabel: "打开导航",
+    openTitle: "导航",
+    tabs: {
+      find: "查找",
+      headings: "标题"
+    },
+    title: "导航"
+  },
+  contentControl: {
+    formFill: "表单填写模式",
+    group: "内容控件",
+    inspector: "内容控件属性",
+    inspectorPanel: {
+      alias: "标题",
+      bound: "已绑定数据",
+      boundNote: "此控件已绑定外部数据，无法编辑。",
+      empty: "—",
+      lock: "锁定",
+      lockedNote: "此控件已锁定内容编辑。",
+      no: "否",
+      placeholder: "占位符",
+      tag: "标记",
+      title: "内容控件",
+      type: "类型",
+      yes: "是"
+    },
+    lock: {
+      contentLocked: "内容已锁定",
+      sdtContentLocked: "内容控件和内容均已锁定",
+      sdtLocked: "内容控件已锁定",
+      unlocked: "未锁定"
+    },
+    remove: "删除内容控件",
+    showAll: "显示内容控件边框",
+    types: {
+      checkbox: "复选框",
+      comboBox: "组合框",
+      date: "日期",
+      dropdown: "下拉列表",
+      picture: "图片",
+      plainText: "纯文本",
+      repeatingSection: "重复节",
+      richText: "格式文本"
+    }
+  },
+  notes: {
+    delete: "删除脚注/尾注",
+    convertToEndnote: "转换为尾注",
+    convertToFootnote: "转换为脚注",
+    scope: "应用于",
+    scopeDocument: "整个文档",
+    scopeSection: "本节",
+    previewFallback: "脚注",
+    chromeAriaLabel: "脚注/尾注编辑",
+    editingRegion: "{kind} {number}",
+    footnoteKind: "脚注",
+    endnoteKind: "尾注",
+    convertAllFootnotes: "将所有脚注转换为尾注",
+    convertAllEndnotes: "将所有尾注转换为脚注",
+    inheritedValue: "（继承）"
+  },
+  review: {
+    accept: "接受",
+    ariaLabel: "审阅",
+    commentRefused: "无法添加批注",
+    deleted: "已删除",
+    empty: "没有更改或批注",
+    inserted: "已添加",
+    movedFrom: "从此处移动",
+    movedTo: "移动到此处",
+    reject: "拒绝",
+    replaced: "已替换",
+    replacedWith: "为",
+    reply: "答复",
+    replyRefused: "无法发布答复",
+    showPane: "显示批注",
+    structural: "已更改文档结构",
+    deleteComment: "删除批注",
+    discardChange: "放弃更改"
+  },
+  imageAltText: {
+    description: "说明",
+    panelTitle: "替换文字",
+    title: "标题"
+  },
+  imageInsert: {
+    errors: {
+      emptyFile: "所选文件为空。",
+      invalidSignature: "该文件不是受支持的 PNG、JPEG 或 GIF 图像。",
+      oversize: "图像超过允许的最大大小。",
+      refused: "无法插入图像。",
+      unsupportedFormat: "不支持插入此图像格式。"
+    }
+  },
+  imageProperties: {
+    crop: "裁剪",
+    cropBottom: "下（%）",
+    cropLeft: "左（%）",
+    cropRight: "右（%）",
+    cropTop: "上（%）",
+    errors: {
+      invalidCrop: "裁剪值必须是 0 到 100 之间的百分比。",
+      invalidDimensions: "请输入正的宽度和高度值。",
+      refused: "无法应用这些属性。",
+      invalidPosition: "请输入有效的水平和垂直位置值。"
+    },
+    hyperlink: "超链接",
+    nonPictureHint: "裁剪和恢复原始大小仅适用于图片。",
+    resetNaturalSize: "恢复原始大小",
+    units: {
+      points: "磅"
+    },
+    horizontalOffset: "水平偏移",
+    position: "位置",
+    positionLocked: "无法移动此绘图。",
+    positionUnavailable: "位置仅适用于浮动图像。",
+    relativeToHorizontal: "相对于（水平）",
+    relativeToVertical: "相对于（垂直）",
+    verticalOffset: "垂直偏移"
+  }
+};
+
+// src/zh-CN.ts
+var zhCN = zh_CN_default;
+var zh_CN_default2 = zhCN;
+export {
+  zh_CN_default2 as default,
+  zhCN
+};

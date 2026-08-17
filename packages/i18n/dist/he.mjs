@@ -1,0 +1,651 @@
+// he.json
+var he_default = {
+  _lang: "he",
+  common: {
+    cancel: "ביטול",
+    apply: "החלה",
+    close: "סגירה",
+    comment: "הערה",
+    dismiss: "סגירה"
+  },
+  toolbar: {
+    ariaLabel: "סרגל כלים לעיצוב",
+    file: "קובץ",
+    format: "עצב",
+    insert: "הוספה",
+    print: "הדפסה",
+    printShortcut: "Ctrl+P",
+    pageSetup: "הגדרות דף",
+    leftToRight: "טקסט משמאל לימין",
+    rightToLeft: "טקסט מימין לשמאל",
+    image: "תמונה",
+    table: "טבלה",
+    pageBreak: "מעבר עמוד",
+    tableOfContents: "תוכן עניינים",
+    help: "עזרה",
+    reportIssue: "דיווח בעיה",
+    open: "פתיחה",
+    openShortcut: "Ctrl+O",
+    save: "שמירה",
+    saveShortcut: "Ctrl+S",
+    watermark: "סימן מים",
+    break: "מעבר",
+    sectionBreakContinuous: "מעבר מקטע (רציף)",
+    sectionBreakNextPage: "מעבר מקטע (עמוד הבא)",
+    insertFootnote: "הוסף הערת שוליים",
+    insertEndnote: "הוסף הערת סוף"
+  },
+  formattingBar: {
+    groups: {
+      history: "היסטוריה",
+      zoom: "זום",
+      styles: "עיצובים",
+      font: "גופן",
+      textFormatting: "עיצוב טקסט",
+      script: "סקריפט",
+      alignment: "יישור טקסט",
+      listFormatting: "עיצוב רשימה",
+      image: "תמונה",
+      table: "טבלה"
+    },
+    undo: "בטל",
+    undoShortcut: "בטל (Ctrl+Z)",
+    redo: "בצע שוב",
+    redoShortcut: "בצע שוב (Ctrl+Y)",
+    bold: "הדגש",
+    boldShortcut: "הדגש (Ctrl+B)",
+    italic: "הטה",
+    italicShortcut: "הטה (Ctrl+I)",
+    underline: "קו תחתון",
+    underlineShortcut: "קו תחתון (Ctrl+U)",
+    strikethrough: "קו חוצה",
+    fontColor: "צבע טקסט",
+    highlightColor: "צבע הדגשה",
+    insertLink: "הוסף קישור",
+    insertLinkShortcut: "הוסף קישור (Ctrl+K)",
+    superscript: "כתב עילי",
+    superscriptShortcut: "כתב עילי",
+    subscript: "כתב תחתי",
+    subscriptShortcut: "כתב תחתי",
+    imageProperties: "מאפייני תמונה",
+    imagePropertiesShortcut: "מאפייני תמונה",
+    clearFormatting: "נקה עיצוב",
+    commentsAndChanges: "הערות ושינויים",
+    unavailableInPreview: "לא זמין בגרסת תצוגה מקדימה זו",
+    more: "עוד",
+    altText: "טקסט חלופי",
+    imageWrap: "גלישת טקסט"
+  },
+  alignment: {
+    alignLeft: "יישור לשמאל",
+    alignLeftShortcut: "יישור לשמאל (Ctrl+L)",
+    center: "יישור למרכז",
+    centerShortcut: "יישור למרכז (Ctrl+E)",
+    alignRight: "יישור לימין",
+    alignRightShortcut: "יישור לימין (Ctrl+R)",
+    justify: "יישור מלא",
+    justifyShortcut: "יישור מלא (Ctrl+J)"
+  },
+  lists: {
+    ariaLabel: "עיצוב רשימות",
+    typeAriaLabel: "סוג רשימה",
+    indentationAriaLabel: "הזחת רשימה",
+    bulletList: "רשימת תבליטים",
+    numberedList: "רשימה ממוספרת",
+    decreaseIndent: "הקטן הזחה",
+    increaseIndent: "הגדל הזחה"
+  },
+  lineSpacing: {
+    single: "יחיד",
+    double: "כפול",
+    lineSpacingTitle: "מרחק בין שורות: {label}",
+    blockSpacingRules: "מרחק בין פסקאות",
+    label: "מרווח בין שורות",
+    addSpaceAfter: "הוסף רווח אחרי פסקה",
+    addSpaceBefore: "הוסף רווח לפני פסקה",
+    removeSpaceAfter: "הסר רווח אחרי פסקה",
+    removeSpaceBefore: "הסר רווח לפני פסקה"
+  },
+  styles: {
+    selectAriaLabel: "בחר סגנון פסקה",
+    normalText: "טקסט רגיל",
+    title: "כותרת",
+    subtitle: "כותרת משנה",
+    heading1: "כותרת 1",
+    heading2: "כותרת 2",
+    heading3: "כותרת 3"
+  },
+  font: {
+    selectAriaLabel: "בחר סוג גופן",
+    sansSerif: "Sans Serif",
+    serif: "Serif",
+    monospace: "Monospace",
+    documentFonts: "גופני המסמך"
+  },
+  fontSize: {
+    decrease: "הקטנת גופן",
+    increase: "הגדלת גופן",
+    label: "גודל גופן",
+    listLabel: "גדלי גופן"
+  },
+  zoom: {
+    ariaLabel: "זום: {label}",
+    zoomIn: "הגדל תצוגה",
+    zoomLevel: "רמת זום",
+    zoomOut: "הקטן תצוגה",
+    automatic: null,
+    fitWidth: null
+  },
+  colorPicker: {
+    highlightColors: "צבע סימון",
+    customColor: "בהתאמה אישית",
+    noColor: "ללא צבע",
+    automatic: "אוטומטי",
+    themeColors: "צבעי ערכת נושא",
+    standardColors: "צבעים סטנדרטיים",
+    colors: {
+      black: "שחור",
+      darkRed: "אדום כהה",
+      red: "אדום",
+      orange: "כתום",
+      yellow: "צהוב",
+      darkYellow: "צהוב כהה",
+      green: "ירוק",
+      darkGreen: "ירוק כהה",
+      blue: "כחול",
+      darkBlue: "כחול כהה",
+      purple: "סגול",
+      white: "לבן",
+      lightGreen: "ירוק בהיר",
+      lightBlue: "כחול בהיר",
+      darkGray: "אפור כהה",
+      cyan: "ציאן",
+      magenta: "מג'נטה",
+      brightGreen: "ירוק בהיר",
+      darkCyan: "ציאן כהה",
+      darkMagenta: "מג'נטה כהה",
+      lightGray: "אפור בהיר"
+    },
+    apply: "החל",
+    theme: {
+      accent1: "הדגשה 1",
+      accent2: "הדגשה 2",
+      accent3: "הדגשה 3",
+      accent4: "הדגשה 4",
+      accent5: "הדגשה 5",
+      accent6: "הדגשה 6",
+      background1: "רקע 1",
+      background2: "רקע 2",
+      text1: "טקסט 1",
+      text2: "טקסט 2"
+    }
+  },
+  dialogs: {
+    imageProperties: {
+      title: "מאפייני תמונה",
+      altText: "טקסט חלופי",
+      altTextPlaceholder: "תאר את התמונה לצורכי נגישות...",
+      dimensions: "ממדים",
+      heightLabel: "גובה:",
+      lockAspectRatio: "נעל יחס גובה-רוחב",
+      textWrapping: "גלישת טקסט",
+      widthLabel: "רוחב:"
+    },
+    imagePosition: {
+      relativeOptions: {
+        page: "עמוד",
+        column: "עמודה",
+        margin: "שוליים",
+        character: "תו",
+        paragraph: "פסקה",
+        line: "שורה"
+      }
+    },
+    pageSetup: {
+      title: "הגדרת עמוד",
+      pageSize: "גודל עמוד",
+      sizeLabel: "גודל",
+      custom: "מותאם אישית",
+      orientation: "כיוון",
+      portrait: "לאורך",
+      landscape: "לרוחב",
+      margins: "שוליים",
+      top: "עליון",
+      bottom: "תחתון",
+      left: "שמאל",
+      right: "ימין",
+      pageSizes: {
+        letter: 'Letter (8.5" × 11")',
+        a4: 'A4 (8.27" × 11.69")',
+        legal: 'Legal (8.5" × 14")',
+        a3: 'A3 (11.69" × 16.54")',
+        a5: 'A5 (5.83" × 8.27")',
+        b5: 'B5 (6.93" × 9.84")',
+        executive: 'Executive (7.25" × 10.5")'
+      },
+      applyTo: "החל על",
+      applyToDocument: "כל המסמך",
+      applyToSection: "מקטע זה"
+    },
+    footnoteProperties: {
+      title: "מאפייני הערות שוליים והערות סיום",
+      footnotes: "הערות שוליים",
+      endnotes: "הערות סיום",
+      position: "מיקום",
+      numberFormat: "פורמט מספר",
+      numbering: "מספור",
+      footnotePositions: {
+        bottomOfPage: "בתחתית העמוד",
+        belowText: "מתחת לטקסט"
+      },
+      endnotePositions: {
+        endOfDocument: "בסוף המסמך",
+        endOfSection: "בסוף מקטע"
+      },
+      numberingOptions: {
+        continuous: "רציף",
+        restartSection: "התחל מחדש בכל מקטע",
+        restartPage: "התחל מחדש בכל עמוד"
+      },
+      formats: {
+        decimal: "1, 2, 3, ...",
+        lowerRoman: "i, ii, iii, ...",
+        upperRoman: "I, II, III, ..."
+      }
+    }
+  },
+  comments: {
+    unknown: "לא ידוע",
+    addComment: "הוסף תגובה...",
+    replyPlaceholder: "השב או הוסף אחרים עם @"
+  },
+  contextMenu: {
+    ariaLabel: "תפריט פעולות AI",
+    cut: "גזור",
+    cutShortcut: "Ctrl+X",
+    copy: "העתק",
+    copyShortcut: "Ctrl+C",
+    paste: "הדבק",
+    pasteShortcut: "Ctrl+V",
+    delete: "מחק",
+    deleteShortcut: "Del",
+    selectAll: "בחר הכל",
+    selectAllShortcut: "Ctrl+A",
+    editCustomNode: "ערוך {label}",
+    removeCustomNode: "הסר {label}"
+  },
+  documentOutline: {
+    ariaLabel: "מתווה המסמך",
+    closeAriaLabel: "סגור מתווה",
+    closeTitle: "סגור מתווה",
+    title: "מתווה",
+    noHeadings: "לא נמצאו כותרות. הוסף כותרות למסמך כדי לראות אותן כאן."
+  },
+  titleBar: {
+    untitled: "ללא שם",
+    documentNameAriaLabel: "שם המסמך",
+    menuBarAriaLabel: "שורת התפריטים"
+  },
+  errors: {
+    unableToParse: "לא ניתן לעבד את המסמך",
+    somethingWentWrong: "משהו השתבש",
+    errorDescription: "אירעה שגיאה בעת הצגת רכיב זה. נסה שוב או פנה לתמיכה אם הבעיה נמשכת.",
+    errorLabel: "שגיאה:",
+    componentStack: "מחסנית רכיבים:",
+    tryAgain: "נסה שוב",
+    showDetails: "הצג פרטים",
+    hideDetails: "הסתר פרטים"
+  },
+  table: {
+    insertRowAbove: "הוסף שורה מעל",
+    insertRowBelow: "הוסף שורה מתחת",
+    insertColumnLeft: "הוסף עמודה שמאלה",
+    insertColumnRight: "הוסף עמודה ימינה",
+    deleteRow: "מחק שורה",
+    deleteColumn: "מחק עמודה",
+    deleteTable: "מחק טבלה",
+    mergeCells: "מזג תאים",
+    splitCell: "פצל תא",
+    editingTools: "כלי עריכת טבלה",
+    label: "טבלה:",
+    cellFillColor: "צבע מילוי תא",
+    borderColor: "צבע מסגרת",
+    borderWidth: "עובי מסגרת",
+    borders: {
+      all: "כל המסגרות",
+      outside: "מסגרות חיצוניות",
+      inside: "מסגרות פנימיות",
+      none: "ללא מסגרות",
+      top: "מסגרת עליונה",
+      bottom: "מסגרת תחתונה",
+      left: "מסגרת שמאלית",
+      right: "מסגרת ימנית",
+      styleAriaLabel: "סגנון מסגרת",
+      tooltip: "מסגרות"
+    },
+    moreOptions: "אפשרויות טבלה נוספות",
+    selectTable: "בחר את הטבלה כולה",
+    borderStyles: {
+      dashed: "מקווקו",
+      dotted: "מנוקד",
+      double: "כפול",
+      single: "רציף",
+      thick: "עבה",
+      triple: "משולש"
+    },
+    borderWidths: {
+      halfPt: "0.5 נק'",
+      oneHalfPt: "1.5 נק'",
+      onePt: "1 נק'",
+      threePt: "3 נק'",
+      twoPt: "2 נק'"
+    },
+    clearCellFill: "נקה מילוי תא"
+  },
+  tableAdvanced: {
+    verticalAlignment: "יישור אנכי",
+    top: "למעלה",
+    middle: "מרכז",
+    bottom: "למטה",
+    toggleNoWrap: "הפעל/בטל גלישת טקסט",
+    toggleHeaderRow: "הפעל/בטל שורת כותרת",
+    distributeColumns: "פזר עמודות באופן שווה",
+    autoFit: "התאם אוטומטית לתוכן",
+    tableProperties: "מאפייני טבלה...",
+    tableAlignment: "יישור טבלה",
+    alignTableLeft: "יישר טבלה לשמאל",
+    alignTableCenter: "יישר טבלה למרכז",
+    alignTableRight: "יישר טבלה לימין"
+  },
+  imageTransform: {
+    tooltip: "טרנספורמציה",
+    rotateClockwise: "סובב עם כיוון השעון",
+    rotateCounterClockwise: "סובב נגד כיוון השעון",
+    flipHorizontal: "הפוך אופקית",
+    flipVertical: "הפוך אנכית"
+  },
+  imageWrap: {
+    inline: "בתוך שורת הטקסט",
+    floatLeft: "צף שמאל (טקסט מימין)",
+    floatRight: "צף ימין (טקסט משמאל)",
+    topAndBottom: "מעל ומתחת",
+    behindText: "מאחורי הטקסט",
+    inFrontOfText: "מעל הטקסט",
+    tooltipPrefix: "גלישה: {label}",
+    menu: {
+      ariaLabel: "אפשרויות פריסת תמונה",
+      inLineWithText: "בתוך שורת הטקסט",
+      squareLeft: "ריבוע משמאל",
+      squareRight: "ריבוע מימין"
+    },
+    square: "ריבוע",
+    targets: {
+      behind: "מאחורי הטקסט",
+      inFront: "לפני הטקסט",
+      inline: "בשורה עם הטקסט",
+      square: "ריבוע",
+      squareLeft: "ריבוע משמאל",
+      squareRight: "ריבוע מימין",
+      through: "דרך",
+      tight: "הדוק",
+      topAndBottom: "למעלה ולמטה"
+    },
+    through: "דרך",
+    tight: "הדוק"
+  },
+  editor: {
+    showDocumentOutline: "הצג מתאר מסמך",
+    linkCopied: "הקישור הועתק ללוח",
+    fontSubstitutionNotice: "חלק מהגופנים במסמך זה אינם זמינים, ולכן מוצגים גופנים חלופיים: {fonts}"
+  },
+  hyperlinkPopup: {
+    displayTextPlaceholder: "טקסט לתצוגה",
+    urlPlaceholder: "https://example.com",
+    copyLink: "העתק קישור",
+    editLink: "ערוך קישור",
+    removeLink: "הסר קישור",
+    apply: "החל",
+    bookmarkTarget: "מוביל למיקום במסמך זה",
+    cancel: "ביטול",
+    editTitle: "ערוך קישור",
+    inertTarget: "קישור זה מצביע על יעד שהעורך לא יפתח",
+    insertTitle: "הוסף קישור",
+    openLink: "פתח קישור",
+    refused: "לא ניתן להחיל את הקישור. בדוק את הכתובת ונסה שוב.",
+    urlLabel: "כתובת URL"
+  },
+  headerFooter: {
+    header: "כותרת עליונה",
+    footer: "כותרת תחתונה",
+    options: "אפשרויות",
+    insertPageNumber: "הוסף מספר עמוד נוכחי",
+    insertTotalPages: "הוסף סך כל העמודים",
+    chromeAriaLabel: "עריכת כותרות עליונה ותחתונה",
+    firstPageHeader: "כותרת עליונה של העמוד הראשון",
+    firstPageFooter: "כותרת תחתונה של העמוד הראשון",
+    evenPageHeader: "כותרת עליונה של עמודים זוגיים",
+    evenPageFooter: "כותרת תחתונה של עמודים זוגיים",
+    sameAsPrevious: "זהה לקודם",
+    sameAsPreviousHint: "עריכות חלות גם על עמודי המקטע הקודם.",
+    differentFirstPage: "עמוד ראשון שונה",
+    differentOddEven: "עמודים זוגיים ואי-זוגיים שונים",
+    differentOddEvenHint: "חל על כל המסמך.",
+    linkToPrevious: "קשר לקודם",
+    unlinkFromPrevious: "נתק מהקודם",
+    headerDistance: "מרחק כותרת עליונה מהקצה",
+    footerDistance: "מרחק כותרת תחתונה מהקצה",
+    removeHeader: "הסר כותרת עליונה",
+    removeFooter: "הסר כותרת תחתונה",
+    insertSectionPages: "הוסף מספר עמודים במקטע",
+    insertPageXofY: "הוסף עמוד X מתוך Y"
+  },
+  image: {
+    contentMismatch: "תוכן התמונה אינו תואם לסוג שלה",
+    decodeFailed: "לא ניתן לפענח את התמונה",
+    externalResource: "תמונה חיצונית לא נטענה",
+    invalidResource: "תמונה לא חוקית",
+    missingResource: "תמונה חסרה",
+    nonPictureGraphic: "גרפיקה לא נתמכת ({kind})",
+    pendingResource: "טוען תמונה",
+    resourceLimit: "התמונה חורגת ממגבלות הגודל",
+    unsupportedFormat: "תבנית תמונה לא נתמכת ({format})"
+  },
+  ruler: {
+    horizontal: "סרגל אופקי",
+    vertical: "סרגל אנכי",
+    firstLineIndent: "כניסת שורה ראשונה",
+    leftIndent: "כניסה שמאלית",
+    rightIndent: "כניסה ימנית",
+    topMargin: "שוליים עליונים",
+    bottomMargin: "שוליים תחתונים",
+    hangingIndent: "כניסה תלויה"
+  },
+  loading: {
+    label: "טוען"
+  },
+  viewer: {
+    pageIndicator: "{current} מתוך {total}"
+  },
+  imageOverlay: {
+    handle: {
+      e: "שנה גודל בקצה הימני",
+      n: "שנה גודל בקצה העליון",
+      ne: "שנה גודל בפינה הימנית העליונה",
+      nw: "שנה גודל בפינה השמאלית העליונה",
+      s: "שנה גודל בקצה התחתון",
+      se: "שנה גודל בפינה הימנית התחתונה",
+      sw: "שנה גודל בפינה השמאלית התחתונה",
+      w: "שנה גודל בקצה השמאלי"
+    },
+    selection: "תמונה נבחרת"
+  },
+  revisions: {
+    paragraphMarkInserted: "סימן פסקה נוסף",
+    runPropertiesChanged: "עיצוב הטקסט שונה"
+  },
+  toc: {
+    refresh: "עדכון הטבלה כולה",
+    refreshPageNumbers: "עדכון מספרי עמודים בלבד"
+  },
+  editingMode: {
+    editing: "עריכה",
+    label: "מצב עריכה",
+    editingHint: "ערוך את המסמך ישירות",
+    suggesting: "הצעות",
+    suggestingHint: "עריכות הופכות להצעות",
+    viewing: "תצוגה",
+    viewingHint: "לקריאה בלבד, ללא עריכות"
+  },
+  navigation: {
+    ariaLabel: "ניווט במסמך",
+    closeAriaLabel: "סגור ניווט",
+    closeTitle: "סגור ניווט",
+    find: {
+      clearAriaLabel: "נקה חיפוש",
+      counter: "תוצאה {current} מתוך {total}",
+      counterTruncated: "תוצאה {current} מתוך {total}+",
+      inputAriaLabel: "חפש במסמך",
+      matchCase: "התאם רישיות",
+      nextAriaLabel: "התוצאה הבאה",
+      noResults: "אין תוצאות",
+      optionsAriaLabel: "אפשרויות חיפוש",
+      placeholder: "חפש במסמך",
+      previousAriaLabel: "התוצאה הקודמת",
+      resultsAriaLabel: "תוצאות חיפוש",
+      searching: "מחפש…",
+      wholeWord: "מילים שלמות בלבד",
+      total: "{total, plural, one {תוצאה אחת} other {# תוצאות}}",
+      totalTruncated: "{total, plural, other {#+ תוצאות}}"
+    },
+    headings: {
+      noHeadings: "לא נמצאו כותרות. הוסף כותרות למסמך כדי לראות אותן כאן."
+    },
+    openAriaLabel: "פתח ניווט",
+    openTitle: "ניווט",
+    tabs: {
+      find: "חיפוש",
+      headings: "כותרות"
+    },
+    title: "ניווט"
+  },
+  contentControl: {
+    formFill: "מצב מילוי טפסים",
+    group: "מפקדי תוכן",
+    inspector: "מאפייני מפקד תוכן",
+    inspectorPanel: {
+      alias: "כותרת",
+      bound: "קשור לנתונים",
+      boundNote: "מפקד זה קשור לנתונים חיצוניים. עריכה נדחית.",
+      empty: "—",
+      lock: "נעילה",
+      lockedNote: "עריכת התוכן נעולה במפקד זה.",
+      no: "לא",
+      placeholder: "טקסט מציין מיקום",
+      tag: "תג",
+      title: "מפקד תוכן",
+      type: "סוג",
+      yes: "כן"
+    },
+    lock: {
+      contentLocked: "תוכן נעול",
+      sdtContentLocked: "מפקד תוכן ותוכן נעולים",
+      sdtLocked: "מפקד תוכן נעול",
+      unlocked: "לא נעול"
+    },
+    remove: "הסר מפקד תוכן",
+    showAll: "הצג גבולות מפקדי תוכן",
+    types: {
+      checkbox: "תיבת סימון",
+      comboBox: "תיבה משולבת",
+      date: "תאריך",
+      dropdown: "רשימה נפתחת",
+      picture: "תמונה",
+      plainText: "טקסט רגיל",
+      repeatingSection: "מקטע חוזר",
+      richText: "טקסט מעוצב"
+    }
+  },
+  notes: {
+    delete: "מחק הערה",
+    convertToEndnote: "המר להערת סוף",
+    convertToFootnote: "המר להערת שוליים",
+    scope: "החל על",
+    scopeDocument: "כל המסמך",
+    scopeSection: "מקטע זה",
+    previewFallback: "הערת שוליים",
+    chromeAriaLabel: "עריכת הערות",
+    editingRegion: "{kind} {number}",
+    footnoteKind: "הערת שוליים",
+    endnoteKind: "הערת סוף",
+    convertAllFootnotes: "המר את כל הערות השוליים להערות סוף",
+    convertAllEndnotes: "המר את כל הערות הסוף להערות שוליים",
+    inheritedValue: "(בירושה)"
+  },
+  review: {
+    accept: "קבל",
+    ariaLabel: "סקירה",
+    commentRefused: "לא ניתן להוסיף את ההערה",
+    deleted: "נמחק",
+    empty: "אין שינויים או הערות",
+    inserted: "נוסף",
+    movedFrom: "הועבר מכאן",
+    movedTo: "הועבר לכאן",
+    reject: "דחה",
+    replaced: "הוחלף",
+    replacedWith: "ב-",
+    reply: "השב",
+    replyRefused: "לא ניתן לפרסם את התשובה",
+    showPane: "הצג הערות",
+    structural: "מבנה המסמך שונה",
+    deleteComment: "מחק הערה",
+    discardChange: "בטל שינוי"
+  },
+  imageAltText: {
+    description: "תיאור",
+    panelTitle: "טקסט חלופי",
+    title: "כותרת"
+  },
+  imageInsert: {
+    errors: {
+      emptyFile: "הקובץ שנבחר ריק.",
+      invalidSignature: "הקובץ אינו תמונת PNG, JPEG או GIF נתמכת.",
+      oversize: "התמונה חורגת מהגודל המרבי המותר.",
+      refused: "לא ניתן להוסיף את התמונה.",
+      unsupportedFormat: "תבנית תמונה זו אינה נתמכת להוספה."
+    }
+  },
+  imageProperties: {
+    crop: "חיתוך",
+    cropBottom: "למטה (%)",
+    cropLeft: "שמאל (%)",
+    cropRight: "ימין (%)",
+    cropTop: "למעלה (%)",
+    errors: {
+      invalidCrop: "ערכי החיתוך חייבים להיות אחוזים בין 0 ל-100.",
+      invalidDimensions: "הזן ערכי רוחב וגובה חיוביים.",
+      refused: "לא ניתן להחיל מאפיינים אלה.",
+      invalidPosition: "הזן ערכי מיקום אופקי ואנכי חוקיים."
+    },
+    hyperlink: "היפר-קישור",
+    nonPictureHint: "חיתוך ואיפוס לגודל המקורי זמינים רק עבור תמונות.",
+    resetNaturalSize: "אפס לגודל המקורי",
+    units: {
+      points: "נק'"
+    },
+    horizontalOffset: "היסט אופקי",
+    position: "מיקום",
+    positionLocked: "לא ניתן להזיז ציור זה.",
+    positionUnavailable: "מיקום זמין רק עבור תמונות צפות.",
+    relativeToHorizontal: "ביחס ל (אופקי)",
+    relativeToVertical: "ביחס ל (אנכי)",
+    verticalOffset: "היסט אנכי"
+  }
+};
+
+// src/he.ts
+var he = he_default;
+var he_default2 = he;
+export {
+  he_default2 as default,
+  he
+};

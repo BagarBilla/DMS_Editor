@@ -1,0 +1,1 @@
+var r=class extends Error{name="EditorFontError";code;request;diagnostic;constructor(t,o,e={}){super(o,{cause:e.cause}),this.code=t,this.request=e.request,this.diagnostic=e.diagnostic;}};export{r as a};

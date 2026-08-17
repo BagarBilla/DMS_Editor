@@ -1,0 +1,651 @@
+// hi.json
+var hi_default = {
+  _lang: "hi",
+  common: {
+    cancel: "रद्द करें",
+    apply: "लागू करें",
+    close: "बंद करें",
+    comment: "टिप्पणी",
+    dismiss: "खारिज करें"
+  },
+  toolbar: {
+    ariaLabel: "प्रारूपण टूलबार",
+    file: "फ़ाइल",
+    format: "प्रारूप",
+    insert: "डालें",
+    open: "खोलें",
+    openShortcut: "Ctrl+O",
+    save: "सहेजें",
+    saveShortcut: "Ctrl+S",
+    print: "प्रिंट करें",
+    printShortcut: "Ctrl+P",
+    pageSetup: "पेज सेटअप",
+    leftToRight: "बाएं से दाएं टेक्स्ट",
+    rightToLeft: "दाएं से बाएं टेक्स्ट",
+    image: "चित्र",
+    table: "तालिका",
+    pageBreak: "पेज ब्रेक",
+    tableOfContents: "विषय-सूची",
+    help: "सहायता",
+    reportIssue: "समस्या की रिपोर्ट करें",
+    watermark: "वॉटरमार्क",
+    break: "ब्रेक",
+    sectionBreakContinuous: "अनुभाग ब्रेक (निरंतर)",
+    sectionBreakNextPage: "अनुभाग ब्रेक (अगला पृष्ठ)",
+    insertFootnote: "फ़ुटनोट डालें",
+    insertEndnote: "एंडनोट डालें"
+  },
+  formattingBar: {
+    groups: {
+      history: "इतिहास",
+      zoom: "ज़ूम",
+      styles: "शैली",
+      font: "फ़ॉन्ट",
+      textFormatting: "टेक्स्ट प्रारूपण",
+      script: "स्क्रिप्ट",
+      alignment: "संरेखण",
+      listFormatting: "सूची प्रारूपण",
+      image: "चित्र",
+      table: "तालिका"
+    },
+    undo: "पूर्ववत करें",
+    undoShortcut: "पूर्ववत करें (Ctrl+Z)",
+    redo: "पुनः करें",
+    redoShortcut: "पुनः करें (Ctrl+Y)",
+    bold: "बोल्ड",
+    boldShortcut: "बोल्ड (Ctrl+B)",
+    italic: "इटैलिक",
+    italicShortcut: "इटैलिक (Ctrl+I)",
+    underline: "रेखांकित",
+    underlineShortcut: "रेखांकित (Ctrl+U)",
+    strikethrough: "बीच से काटें",
+    fontColor: "फ़ॉन्ट का रंग",
+    highlightColor: "टेक्स्ट हाइलाइट का रंग",
+    insertLink: "लिंक डालें",
+    insertLinkShortcut: "लिंक डालें (Ctrl+K)",
+    superscript: "सुपरस्क्रिप्ट",
+    superscriptShortcut: "सुपरस्क्रिप्ट (Ctrl+Shift+=)",
+    subscript: "सबस्क्रिप्ट",
+    subscriptShortcut: "सबस्क्रिप्ट (Ctrl+=)",
+    imageProperties: "चित्र की विशेषताएँ",
+    imagePropertiesShortcut: "चित्र की विशेषताएँ (ऑल्ट टेक्स्ट, बॉर्डर)...",
+    clearFormatting: "प्रारूपण साफ करें",
+    commentsAndChanges: "टिप्पणियाँ और परिवर्तन",
+    unavailableInPreview: "इस पूर्वावलोकन बिल्ड में उपलब्ध नहीं है",
+    more: "अधिक",
+    altText: "वैकल्पिक पाठ",
+    imageWrap: "पाठ रैप करें"
+  },
+  alignment: {
+    alignLeft: "बाएं संरेखित करें",
+    alignLeftShortcut: "Ctrl+L",
+    center: "केंद्रित करें",
+    centerShortcut: "Ctrl+E",
+    alignRight: "दाएं संरेखित करें",
+    alignRightShortcut: "Ctrl+R",
+    justify: "दोनों ओर संरेखित करें",
+    justifyShortcut: "Ctrl+J"
+  },
+  lists: {
+    ariaLabel: "सूची प्रारूपण",
+    typeAriaLabel: "सूची का प्रकार",
+    indentationAriaLabel: "सूची इंडेंटेशन",
+    bulletList: "बुलेट सूची",
+    numberedList: "नंबर वाली सूची",
+    decreaseIndent: "इंडेंट कम करें",
+    increaseIndent: "इंडेंट बढ़ाएं"
+  },
+  lineSpacing: {
+    single: "एकल",
+    double: "दुगुना",
+    lineSpacingTitle: "लाइन स्पेसिंग: {label}",
+    blockSpacingRules: "पैराग्राफ स्पेसिंग",
+    label: "पंक्ति रिक्ति",
+    addSpaceAfter: "अनुच्छेद के बाद स्थान जोड़ें",
+    addSpaceBefore: "अनुच्छेद से पहले स्थान जोड़ें",
+    removeSpaceAfter: "अनुच्छेद के बाद स्थान हटाएँ",
+    removeSpaceBefore: "अनुच्छेद से पहले स्थान हटाएँ"
+  },
+  styles: {
+    selectAriaLabel: "पैराग्राफ शैली चुनें",
+    normalText: "सामान्य टेक्स्ट",
+    title: "शीर्षक",
+    subtitle: "उपशीर्षक",
+    heading1: "शीर्षक 1",
+    heading2: "शीर्षक 2",
+    heading3: "शीर्षक 3"
+  },
+  font: {
+    selectAriaLabel: "फ़ॉन्ट फैमिली चुनें",
+    sansSerif: "Sans Serif",
+    serif: "Serif",
+    monospace: "Monospace",
+    documentFonts: "दस्तावेज़ फ़ॉन्ट"
+  },
+  fontSize: {
+    decrease: "फ़ॉन्ट आकार घटाएं",
+    increase: "फ़ॉन्ट आकार बढ़ाएं",
+    label: "फ़ॉन्ट का आकार",
+    listLabel: "फ़ॉन्ट आकार"
+  },
+  zoom: {
+    ariaLabel: "ज़ूम: {label}",
+    zoomIn: "ज़ूम इन",
+    zoomLevel: "ज़ूम स्तर",
+    zoomOut: "ज़ूम आउट",
+    automatic: null,
+    fitWidth: null
+  },
+  colorPicker: {
+    highlightColors: "हाइलाइट रंग",
+    customColor: "कस्टम रंग",
+    noColor: "कोई रंग नहीं",
+    automatic: "स्वचालित",
+    themeColors: "थीम के रंग",
+    standardColors: "मानक रंग",
+    colors: {
+      black: "काला",
+      darkRed: "गहरा लाल",
+      red: "लाल",
+      orange: "नारंगी",
+      yellow: "पीला",
+      darkYellow: "गहरा पीला",
+      green: "हरा",
+      darkGreen: "गहरा हरा",
+      blue: "नीला",
+      darkBlue: "गहरा नीला",
+      purple: "बैंगनी",
+      white: "सफ़ेद",
+      lightGreen: "हल्का हरा",
+      lightBlue: "हल्का नीला",
+      darkGray: "गहरा ग्रे",
+      cyan: "स्यान",
+      magenta: "मैजेंटा",
+      brightGreen: "चमकीला हरा",
+      darkCyan: "गहरा स्यान",
+      darkMagenta: "गहरा मैजेंटा",
+      lightGray: "हल्का ग्रे"
+    },
+    apply: "लागू करें",
+    theme: {
+      accent1: "एक्सेंट 1",
+      accent2: "एक्सेंट 2",
+      accent3: "एक्सेंट 3",
+      accent4: "एक्सेंट 4",
+      accent5: "एक्सेंट 5",
+      accent6: "एक्सेंट 6",
+      background1: "पृष्ठभूमि 1",
+      background2: "पृष्ठभूमि 2",
+      text1: "पाठ 1",
+      text2: "पाठ 2"
+    }
+  },
+  dialogs: {
+    imageProperties: {
+      title: "चित्र की विशेषताएँ",
+      altText: "वैकल्पिक टेक्स्ट",
+      altTextPlaceholder: "पहुंच-योग्यता के लिए इस चित्र का वर्णन करें...",
+      textWrapping: "टेक्स्ट रैपिंग",
+      dimensions: "आयाम",
+      widthLabel: "चौड़ाई:",
+      heightLabel: "ऊंचाई:",
+      lockAspectRatio: "पहलू अनुपात लॉक करें"
+    },
+    imagePosition: {
+      relativeOptions: {
+        page: "पेज",
+        column: "स्तंभ",
+        margin: "हाशिया",
+        character: "वर्ण",
+        paragraph: "पैराग्राफ",
+        line: "लाइन"
+      }
+    },
+    pageSetup: {
+      title: "पेज सेटअप",
+      pageSize: "पेज का आकार",
+      sizeLabel: "आकार",
+      custom: "कस्टम",
+      orientation: "अभिमुखता",
+      portrait: "पोर्ट्रेट",
+      landscape: "लैंडस्केप",
+      margins: "हाशिया (मार्जिन)",
+      top: "ऊपर",
+      bottom: "नीचे",
+      left: "बाएं",
+      right: "दाएं",
+      pageSizes: {
+        letter: 'Letter (8.5" × 11")',
+        a4: 'A4 (8.27" × 11.69")',
+        legal: 'Legal (8.5" × 14")',
+        a3: 'A3 (11.69" × 16.54")',
+        a5: 'A5 (5.83" × 8.27")',
+        b5: 'B5 (6.93" × 9.84")',
+        executive: 'Executive (7.25" × 10.5")'
+      },
+      applyTo: "इस पर लागू करें",
+      applyToDocument: "संपूर्ण दस्तावेज़",
+      applyToSection: "यह अनुभाग"
+    },
+    footnoteProperties: {
+      title: "पाद-टिप्पणी और अंत-टिप्पणी की विशेषताएँ",
+      footnotes: "पाद-टिप्पणियाँ",
+      endnotes: "अंत-टिप्पणियाँ",
+      position: "स्थिति",
+      numberFormat: "संख्या प्रारूप",
+      numbering: "क्रमांकन",
+      footnotePositions: {
+        bottomOfPage: "पेज के नीचे",
+        belowText: "टेक्स्ट के नीचे"
+      },
+      endnotePositions: {
+        endOfDocument: "दस्तावेज़ के अंत में",
+        endOfSection: "अनुभाग के अंत में"
+      },
+      numberingOptions: {
+        continuous: "निरंतर",
+        restartSection: "प्रत्येक अनुभाग को पुनरारंभ करें",
+        restartPage: "प्रत्येक पृष्ठ को पुनरारंभ करें"
+      },
+      formats: {
+        decimal: "1, 2, 3, ...",
+        lowerRoman: "i, ii, iii, ...",
+        upperRoman: "I, II, III, ..."
+      }
+    }
+  },
+  comments: {
+    unknown: "अज्ञात",
+    addComment: "एक टिप्पणी जोड़ें...",
+    replyPlaceholder: "जवाब दें या @ के साथ दूसरों को जोड़ें"
+  },
+  contextMenu: {
+    ariaLabel: "AI क्रियाएँ मेनू",
+    cut: "काटें",
+    cutShortcut: "Ctrl+X",
+    copy: "कॉपी करें",
+    copyShortcut: "Ctrl+C",
+    paste: "पेस्ट करें",
+    pasteShortcut: "Ctrl+V",
+    delete: "हटाएं",
+    deleteShortcut: "Del",
+    selectAll: "सभी चुनें",
+    selectAllShortcut: "Ctrl+A",
+    editCustomNode: "{label} संपादित करें",
+    removeCustomNode: "{label} निकालें"
+  },
+  documentOutline: {
+    ariaLabel: "दस्तावेज़ की रूपरेखा",
+    closeAriaLabel: "रूपरेखा बंद करें",
+    closeTitle: "रूपरेखा बंद करें",
+    title: "रूपरेखा",
+    noHeadings: "कोई शीर्षक नहीं मिला। उन्हें यहाँ देखने के लिए अपने दस्तावेज़ में शीर्षक जोड़ें।"
+  },
+  viewer: {
+    pageIndicator: "{total} में से {current}"
+  },
+  titleBar: {
+    untitled: "बिना शीर्षक वाला",
+    documentNameAriaLabel: "दस्तावेज़ का नाम",
+    menuBarAriaLabel: "मेनू बार"
+  },
+  errors: {
+    unableToParse: "दस्तावेज़ का विश्लेषण करने में असमर्थ",
+    somethingWentWrong: "कुछ गलत हो गया",
+    errorDescription: "इस घटक को प्रस्तुत करते समय एक त्रुटि हुई। कृपया पुन: प्रयास करें या समस्या बने रहने पर सहायता से संपर्क करें।",
+    errorLabel: "त्रुटि:",
+    componentStack: "घटक स्टैक:",
+    tryAgain: "पुनः प्रयास करें",
+    showDetails: "विवरण दिखाएं",
+    hideDetails: "विवरण छिपाएं"
+  },
+  table: {
+    insertRowAbove: "पंक्ति ऊपर डालें",
+    insertRowBelow: "पंक्ति नीचे डालें",
+    insertColumnLeft: "स्तंभ बाईं ओर डालें",
+    insertColumnRight: "स्तंभ दाईं ओर डालें",
+    deleteRow: "पंक्ति हटाएं",
+    deleteColumn: "स्तंभ हटाएं",
+    deleteTable: "तालिका हटाएं",
+    mergeCells: "सेल मर्ज करें",
+    splitCell: "सेल विभाजित करें",
+    editingTools: "तालिका संपादन उपकरण",
+    label: "तालिका:",
+    cellFillColor: "सेल भरने का रंग",
+    borderColor: "बॉर्डर का रंग",
+    borderWidth: "बॉर्डर की चौड़ाई",
+    borders: {
+      all: "सभी बॉर्डर",
+      outside: "बाहरी बॉर्डर",
+      inside: "आंतरिक बॉर्डर",
+      none: "कोई बॉर्डर नहीं",
+      top: "शीर्ष बॉर्डर",
+      bottom: "तल बॉर्डर",
+      left: "बायां बॉर्डर",
+      right: "दायां बॉर्डर",
+      styleAriaLabel: "बॉर्डर शैली",
+      tooltip: "बॉर्डर"
+    },
+    moreOptions: "अधिक तालिका विकल्प",
+    selectTable: "संपूर्ण तालिका चुनें",
+    borderStyles: {
+      dashed: "डैश",
+      dotted: "बिंदीदार",
+      double: "दोहरा",
+      single: "ठोस",
+      thick: "मोटा",
+      triple: "तिहरा"
+    },
+    borderWidths: {
+      halfPt: "0.5 pt",
+      oneHalfPt: "1.5 pt",
+      onePt: "1 pt",
+      threePt: "3 pt",
+      twoPt: "2 pt"
+    },
+    clearCellFill: "कक्ष भरण साफ़ करें"
+  },
+  tableAdvanced: {
+    verticalAlignment: "लंबवत संरेखण",
+    top: "ऊपर",
+    middle: "मध्य",
+    bottom: "नीचे",
+    toggleNoWrap: "नो-रैप टॉगल करें",
+    toggleHeaderRow: "हेडर पंक्ति टॉगल करें",
+    distributeColumns: "स्तंभों को समान रूप से वितरित करें",
+    autoFit: "सामग्री के अनुसार स्वतः फिट करें",
+    tableProperties: "तालिका की विशेषताएँ...",
+    tableAlignment: "तालिका संरेखण",
+    alignTableLeft: "तालिका को बाएं संरेखित करें",
+    alignTableCenter: "तालिका को केंद्रित करें",
+    alignTableRight: "तालिका को दाएं संरेखित करें"
+  },
+  imageTransform: {
+    tooltip: "रूपांतरित करें",
+    rotateClockwise: "दक्षिणावर्त घुमाएं",
+    rotateCounterClockwise: "वामावर्त घुमाएं",
+    flipHorizontal: "क्षैतिज रूप से पलटें",
+    flipVertical: "लंबवत रूप से पलटें"
+  },
+  imageWrap: {
+    inline: "टेक्स्ट के साथ इनलाइन",
+    floatLeft: "स्क्वायर लेफ्ट",
+    floatRight: "स्क्वायर राइट",
+    topAndBottom: "ऊपर और नीचे",
+    behindText: "टेक्स्ट के पीछे",
+    inFrontOfText: "टेक्स्ट के सामने",
+    tooltipPrefix: "रैप: {label}",
+    menu: {
+      inLineWithText: "टेक्स्ट के साथ इनलाइन",
+      squareLeft: "स्क्वायर लेफ्ट",
+      squareRight: "स्क्वायर राइट",
+      ariaLabel: "चित्र लेआउट विकल्प"
+    },
+    square: "वर्गाकार",
+    targets: {
+      behind: "पाठ के पीछे",
+      inFront: "पाठ के सामने",
+      inline: "पाठ के साथ पंक्ति में",
+      square: "वर्गाकार",
+      squareLeft: "वर्गाकार बाएँ",
+      squareRight: "वर्गाकार दाएँ",
+      through: "आर-पार",
+      tight: "सटा हुआ",
+      topAndBottom: "ऊपर और नीचे"
+    },
+    through: "आर-पार",
+    tight: "सटा हुआ"
+  },
+  editor: {
+    showDocumentOutline: "दस्तावेज़ की रूपरेखा दिखाएं",
+    linkCopied: "लिंक क्लिपबोर्ड पर कॉपी किया गया",
+    fontSubstitutionNotice: "इस दस्तावेज़ के कुछ फ़ॉन्ट उपलब्ध नहीं हैं, इसलिए विकल्प दिखाए जा रहे हैं: {fonts}"
+  },
+  hyperlinkPopup: {
+    displayTextPlaceholder: "दिखाया जाने वाला टेक्स्ट",
+    urlPlaceholder: "https://example.com",
+    copyLink: "लिंक कॉपी करें",
+    editLink: "लिंक संपादित करें",
+    removeLink: "लिंक हटाएं",
+    apply: "लागू करें",
+    bookmarkTarget: "इस दस्तावेज़ में किसी स्थान पर ले जाता है",
+    cancel: "रद्द करें",
+    editTitle: "लिंक संपादित करें",
+    inertTarget: "यह लिंक ऐसी जगह ले जाता है जिसे संपादक नहीं खोलेगा",
+    insertTitle: "लिंक सम्मिलित करें",
+    openLink: "लिंक खोलें",
+    refused: "वह लिंक लागू नहीं किया जा सका. पता जाँचें और पुनः प्रयास करें.",
+    urlLabel: "URL"
+  },
+  headerFooter: {
+    header: "हेडर",
+    footer: "फुटर",
+    options: "विकल्प",
+    insertPageNumber: "वर्तमान पेज नंबर डालें",
+    insertTotalPages: "कुल पेज संख्या डालें",
+    chromeAriaLabel: "हेडर और फ़ुटर संपादन",
+    firstPageHeader: "पहले पृष्ठ का हेडर",
+    firstPageFooter: "पहले पृष्ठ का फ़ुटर",
+    evenPageHeader: "सम पृष्ठ का हेडर",
+    evenPageFooter: "सम पृष्ठ का फ़ुटर",
+    sameAsPrevious: "पिछले जैसा",
+    sameAsPreviousHint: "संपादन पिछले अनुभाग के पृष्ठों पर भी लागू होते हैं।",
+    differentFirstPage: "अलग पहला पृष्ठ",
+    differentOddEven: "अलग विषम और सम पृष्ठ",
+    differentOddEvenHint: "पूरे दस्तावेज़ पर लागू होता है।",
+    linkToPrevious: "पिछले से लिंक करें",
+    unlinkFromPrevious: "पिछले से अनलिंक करें",
+    headerDistance: "हेडर की दूरी किनारे से",
+    footerDistance: "फ़ुटर की दूरी किनारे से",
+    removeHeader: "हेडर हटाएं",
+    removeFooter: "फ़ुटर हटाएं",
+    insertSectionPages: "अनुभाग पृष्ठ संख्या डालें",
+    insertPageXofY: "पृष्ठ X of Y डालें"
+  },
+  image: {
+    contentMismatch: "छवि की सामग्री उसके प्रकार से मेल नहीं खाती",
+    decodeFailed: "छवि को डिकोड नहीं किया जा सका",
+    externalResource: "बाहरी छवि लोड नहीं की गई",
+    invalidResource: "अमान्य छवि",
+    missingResource: "छवि अनुपलब्ध",
+    nonPictureGraphic: "असमर्थित ग्राफ़िक ({kind})",
+    pendingResource: "छवि लोड हो रही है",
+    resourceLimit: "छवि आकार सीमा से अधिक है",
+    unsupportedFormat: "असमर्थित छवि स्वरूप ({format})"
+  },
+  imageOverlay: {
+    handle: {
+      e: "दाएँ किनारे का आकार बदलें",
+      n: "ऊपरी किनारे का आकार बदलें",
+      ne: "ऊपरी-दाएँ कोने का आकार बदलें",
+      nw: "ऊपरी-बाएँ कोने का आकार बदलें",
+      s: "निचले किनारे का आकार बदलें",
+      se: "निचले-दाएँ कोने का आकार बदलें",
+      sw: "निचले-बाएँ कोने का आकार बदलें",
+      w: "बाएँ किनारे का आकार बदलें"
+    },
+    selection: "चयनित छवि"
+  },
+  ruler: {
+    horizontal: "क्षैतिज रूलर",
+    vertical: "लंबवत रूलर",
+    firstLineIndent: "पहली लाइन का इंडेंट",
+    leftIndent: "बायां इंडेंट",
+    rightIndent: "दायां इंडेंट",
+    topMargin: "शीर्ष मार्जिन",
+    bottomMargin: "तल मार्जिन",
+    hangingIndent: "हैंगिंग इंडेंट"
+  },
+  loading: {
+    label: "लोड हो रहा है"
+  },
+  revisions: {
+    paragraphMarkInserted: "अनुच्छेद चिह्न सम्मिलित किया गया",
+    runPropertiesChanged: "पाठ स्वरूपण बदला गया"
+  },
+  toc: {
+    refresh: "पूरी तालिका अपडेट करें",
+    refreshPageNumbers: "केवल पृष्ठ संख्याएँ अपडेट करें"
+  },
+  editingMode: {
+    editing: "संपादन",
+    label: "संपादन मोड",
+    editingHint: "दस्तावेज़ सीधे संपादित करें",
+    suggesting: "सुझाव",
+    suggestingHint: "संपादन सुझाव बन जाते हैं",
+    viewing: "देखना",
+    viewingHint: "केवल पढ़ने के लिए, कोई संपादन नहीं"
+  },
+  navigation: {
+    ariaLabel: "दस्तावेज़ नेविगेशन",
+    closeAriaLabel: "नेविगेशन बंद करें",
+    closeTitle: "नेविगेशन बंद करें",
+    find: {
+      clearAriaLabel: "खोज साफ़ करें",
+      counter: "{total} में से परिणाम {current}",
+      counterTruncated: "{total}+ में से परिणाम {current}",
+      inputAriaLabel: "दस्तावेज़ में खोजें",
+      matchCase: "केस का मिलान करें",
+      nextAriaLabel: "अगला परिणाम",
+      noResults: "कोई परिणाम नहीं",
+      optionsAriaLabel: "खोज विकल्प",
+      placeholder: "दस्तावेज़ में खोजें",
+      previousAriaLabel: "पिछला परिणाम",
+      resultsAriaLabel: "खोज परिणाम",
+      searching: "खोजा जा रहा है…",
+      wholeWord: "केवल पूर्ण शब्द",
+      total: "{total, plural, one {# परिणाम} other {# परिणाम}}",
+      totalTruncated: "{total, plural, other {#+ परिणाम}}"
+    },
+    headings: {
+      noHeadings: "कोई शीर्षक नहीं मिला. उन्हें यहाँ देखने के लिए दस्तावेज़ में शीर्षक जोड़ें."
+    },
+    openAriaLabel: "नेविगेशन खोलें",
+    openTitle: "नेविगेशन",
+    tabs: {
+      find: "ढूँढें",
+      headings: "शीर्षक"
+    },
+    title: "नेविगेशन"
+  },
+  contentControl: {
+    formFill: "फ़ॉर्म भरने का मोड",
+    group: "सामग्री नियंत्रण",
+    inspector: "सामग्री नियंत्रण की विशेषताएँ",
+    inspectorPanel: {
+      alias: "शीर्षक",
+      bound: "डेटा बाध्य",
+      boundNote: "यह नियंत्रण बाहरी डेटा से बाध्य है। संपादन अस्वीकार कर दिया गया।",
+      empty: "—",
+      lock: "लॉक",
+      lockedNote: "इस नियंत्रण पर सामग्री संपादन लॉक है।",
+      no: "नहीं",
+      placeholder: "प्लेसहोल्डर",
+      tag: "टैग",
+      title: "सामग्री नियंत्रण",
+      type: "प्रकार",
+      yes: "हाँ"
+    },
+    lock: {
+      contentLocked: "सामग्री लॉक है",
+      sdtContentLocked: "सामग्री नियंत्रण और सामग्री लॉक हैं",
+      sdtLocked: "सामग्री नियंत्रण लॉक है",
+      unlocked: "अनलॉक"
+    },
+    remove: "सामग्री नियंत्रण हटाएँ",
+    showAll: "सामग्री नियंत्रण की सीमाएँ दिखाएँ",
+    types: {
+      checkbox: "चेक बॉक्स",
+      comboBox: "कॉम्बो बॉक्स",
+      date: "दिनांक",
+      dropdown: "ड्रॉपडाउन सूची",
+      picture: "चित्र",
+      plainText: "सादा पाठ",
+      repeatingSection: "दोहराया जाने वाला अनुभाग",
+      richText: "रिच टेक्स्ट"
+    }
+  },
+  notes: {
+    delete: "नोट हटाएं",
+    convertToEndnote: "एंडनोट में बदलें",
+    convertToFootnote: "फ़ुटनोट में बदलें",
+    scope: "लागू करें",
+    scopeDocument: "पूरा दस्तावेज़",
+    scopeSection: "यह अनुभाग",
+    previewFallback: "फ़ुटनोट",
+    chromeAriaLabel: "नोट संपादन",
+    editingRegion: "{kind} {number}",
+    footnoteKind: "फ़ुटनोट",
+    endnoteKind: "एंडनोट",
+    convertAllFootnotes: "सभी फ़ुटनोट को एंडनोट में बदलें",
+    convertAllEndnotes: "सभी एंडनोट को फ़ुटनोट में बदलें",
+    inheritedValue: "(विरासत में)"
+  },
+  review: {
+    accept: "स्वीकार करें",
+    ariaLabel: "समीक्षा",
+    commentRefused: "टिप्पणी नहीं जोड़ी जा सकी",
+    deleted: "हटाया गया",
+    empty: "कोई परिवर्तन या टिप्पणी नहीं",
+    inserted: "जोड़ा गया",
+    movedFrom: "यहाँ से स्थानांतरित किया गया",
+    movedTo: "यहाँ स्थानांतरित किया गया",
+    reject: "अस्वीकार करें",
+    replaced: "प्रतिस्थापित किया गया",
+    replacedWith: "इससे:",
+    reply: "उत्तर दें",
+    replyRefused: "उत्तर पोस्ट नहीं किया जा सका",
+    showPane: "टिप्पणियाँ दिखाएँ",
+    structural: "दस्तावेज़ संरचना बदली गई",
+    deleteComment: "टिप्पणी हटाएँ",
+    discardChange: "परिवर्तन छोड़ें"
+  },
+  imageAltText: {
+    description: "विवरण",
+    panelTitle: "वैकल्पिक पाठ",
+    title: "शीर्षक"
+  },
+  imageInsert: {
+    errors: {
+      emptyFile: "चयनित फ़ाइल खाली है.",
+      invalidSignature: "फ़ाइल समर्थित PNG, JPEG या GIF छवि नहीं है.",
+      oversize: "छवि अधिकतम अनुमत आकार से अधिक है.",
+      refused: "छवि सम्मिलित नहीं की जा सकी.",
+      unsupportedFormat: "यह छवि स्वरूप सम्मिलन के लिए समर्थित नहीं है."
+    }
+  },
+  imageProperties: {
+    crop: "क्रॉप",
+    cropBottom: "नीचे (%)",
+    cropLeft: "बाएँ (%)",
+    cropRight: "दाएँ (%)",
+    cropTop: "ऊपर (%)",
+    errors: {
+      invalidCrop: "क्रॉप मान 0 से 100 तक के प्रतिशत होने चाहिए.",
+      invalidDimensions: "धनात्मक चौड़ाई और ऊँचाई मान दर्ज करें.",
+      refused: "ये गुण लागू नहीं किए जा सके.",
+      invalidPosition: "मान्य क्षैतिज और लंबवत स्थिति मान दर्ज करें."
+    },
+    hyperlink: "हाइपरलिंक",
+    nonPictureHint: "क्रॉप और मूल आकार रीसेट केवल चित्रों के लिए उपलब्ध हैं.",
+    resetNaturalSize: "मूल आकार पर रीसेट करें",
+    units: {
+      points: "pt"
+    },
+    horizontalOffset: "क्षैतिज ऑफ़सेट",
+    position: "स्थिति",
+    positionLocked: "यह आरेखण स्थानांतरित नहीं किया जा सकता.",
+    positionUnavailable: "स्थिति केवल फ़्लोटिंग छवियों के लिए उपलब्ध है.",
+    relativeToHorizontal: "सापेक्ष (क्षैतिज)",
+    relativeToVertical: "सापेक्ष (लंबवत)",
+    verticalOffset: "लंबवत ऑफ़सेट"
+  }
+};
+
+// src/hi.ts
+var hi = hi_default;
+var hi_default2 = hi;
+export {
+  hi_default2 as default,
+  hi
+};
