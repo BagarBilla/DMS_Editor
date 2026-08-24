@@ -7,6 +7,7 @@ import {
   DRAWING_REL_FROM_H,
   DRAWING_REL_FROM_V,
   IMAGE_WRAP_TARGETS,
+  executeImageCommand,
   positionInputFromPropertiesCommand,
   validateDrawingPositionInput,
 } from '@docx-editor.dev/core/editor';
@@ -15,7 +16,7 @@ import { useDocxEditor } from '../context';
 import { useEditorState } from '../useEditorState';
 import { chromeControlForSlot, chromeIcon, guardToolbarMousedown } from '../toolbar/ToolbarButton';
 import { Slot } from '../toolbar/Slot';
-import { emuToPoints, pointsToEmu } from './normalizeImageFile';
+import { emuToPoints, normalizeImageBytes, pointsToEmu } from './normalizeImageFile';
 
 const selectImage = (snapshot: EditorSnapshot) => snapshot.image;
 
@@ -190,8 +191,19 @@ function parsePoints(value: string): number | null {
   return parsed;
 }
 
+const WRAP_OPTIONS: Array<{ key: ImageWrapTarget; label: string; icon: string; desc: string }> = [
+  { key: 'inline', label: 'In Line', icon: '📄', desc: 'Moves with text like a word' },
+  { key: 'square', label: 'Square', icon: '🔲', desc: 'Text flows around rectangular bounds' },
+  { key: 'tight', label: 'Tight', icon: '📐', desc: 'Text wraps closely around shape' },
+  { key: 'behind', label: 'Behind Text', icon: '🔽', desc: 'Sits behind document text' },
+  { key: 'inFront', label: 'In Front of Text', icon: '🔼', desc: 'Floats freely above text' },
+  { key: 'topAndBottom', label: 'Top & Bottom', icon: '⏸️', desc: 'Text stops above and resumes below' },
+];
+
+type DialogTab = 'dimensions' | 'wrap' | 'crop' | 'details' | 'replace';
+
 /**
- * Properties dialog for the selected picture.
+ * Enhanced Properties and Image Editor dialog for the selected picture.
  *
  * @public
  */
@@ -205,14 +217,17 @@ export function DocxEditorImagePropertiesDialog({
   const { t } = useTranslation();
   const image = useEditorState(selectImage);
   const titleId = useId();
-  const wrapSelectId = useId();
   const hyperlinkInputId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
+  const replaceFileInputRef = useRef<HTMLInputElement | null>(null);
   const targetRef = useRef<SelectedImageState | null>(null);
   const selectionRef = useRef<{ paragraphId: string; offset: number } | null>(null);
   const packageRevisionRef = useRef<number | null>(null);
   const [draft, setDraft] = useState<DraftState | null>(null);
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<DialogTab>('dimensions');
+  const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
+  const [isReplacing, setIsReplacing] = useState(false);
 
   const target = targetRef.current;
   const pictureOnlyDisabled = target?.canCrop === false;
@@ -227,6 +242,7 @@ export function DocxEditorImagePropertiesDialog({
       targetRef.current = null;
       selectionRef.current = null;
       packageRevisionRef.current = null;
+      setImagePreviewSrc(null);
       return;
     }
     if (!image) return;
@@ -253,6 +269,14 @@ export function DocxEditorImagePropertiesDialog({
       lockAspect: image.locks.changeAspect,
       ...positionDraft,
     });
+
+    // Extract live image preview element src
+    const imgEl = document.querySelector<HTMLImageElement>(
+      `[data-drawing-node-id="${image.id}"] img`
+    );
+    if (imgEl?.src) {
+      setImagePreviewSrc(imgEl.src);
+    }
   }, [open, image?.id, image?.widthEmu, image?.heightEmu, editor]);
 
   const restoreFocus = useCallback(() => {
@@ -347,7 +371,72 @@ export function DocxEditorImagePropertiesDialog({
           }
         : current
     );
-  }, [image]);
+  }, []);
+
+  const scaleByPercent = useCallback(
+    (percent: number) => {
+      const basis = targetRef.current;
+      if (!basis) return;
+      const baseWidth = basis.intrinsic
+        ? (basis.intrinsic.pixelWidth * 72) / basis.intrinsic.dpiX
+        : emuToPoints(basis.widthEmu);
+      const baseHeight = basis.intrinsic
+        ? (basis.intrinsic.pixelHeight * 72) / basis.intrinsic.dpiY
+        : emuToPoints(basis.heightEmu);
+      const targetWidth = Math.round(((baseWidth * percent) / 100) * 100) / 100;
+      const targetHeight = Math.round(((baseHeight * percent) / 100) * 100) / 100;
+      setDraft((current) =>
+        current
+          ? {
+              ...current,
+              widthPoints: String(targetWidth),
+              heightPoints: String(targetHeight),
+            }
+          : current
+      );
+    },
+    []
+  );
+
+  const deleteCurrentDrawing = useCallback(() => {
+    if (!editor) return;
+    if (window.confirm('Are you sure you want to delete this image?')) {
+      editor.exec({ type: 'deleteImage' });
+      dismiss();
+    }
+  }, [editor, dismiss]);
+
+  const handleReplaceFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file || !editor) return;
+      setIsReplacing(true);
+      try {
+        const buffer = await file.arrayBuffer();
+        const normalized = normalizeImageBytes(new Uint8Array(buffer));
+        if (!normalized.ok) {
+          setErrorKey(normalized.reasonKey);
+          return;
+        }
+        const res = await executeImageCommand(editor, {
+          type: 'replaceImage',
+          data: normalized.bytes,
+          mime: normalized.mime,
+        });
+        if (!res.ok) {
+          setErrorKey(res.reason ?? 'imageInsert.errors.refused');
+        } else {
+          dismiss();
+        }
+      } catch {
+        setErrorKey('imageInsert.errors.refused');
+      } finally {
+        setIsReplacing(false);
+        if (event.target) event.target.value = '';
+      }
+    },
+    [editor, dismiss]
+  );
 
   const apply = useCallback(() => {
     const basis = targetRef.current;
@@ -479,86 +568,199 @@ export function DocxEditorImagePropertiesDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="docx-dialog docx-image-properties-dialog"
+        className="docx-dialog docx-image-editor-dialog"
         onClick={(event) => event.stopPropagation()}
         onMouseDown={(event) => event.stopPropagation()}
       >
+        {/* Header */}
         <div id={titleId} className="docx-dialog__header">
-          {t('dialogs.imageProperties.title')}
+          <h3 className="docx-dialog__title">
+            <span>🖼️</span> Image Editor & Properties
+          </h3>
+          <button
+            type="button"
+            className="docx-dialog__close"
+            onClick={dismiss}
+            aria-label="Close"
+          >
+            ✕
+          </button>
         </div>
+
+        {/* Tab Bar */}
+        <div className="docx-dialog__tabs">
+          <button
+            type="button"
+            className={`docx-dialog__tab ${activeTab === 'dimensions' ? 'docx-dialog__tab--active' : ''}`}
+            onClick={() => setActiveTab('dimensions')}
+          >
+            📐 Size & Scale
+          </button>
+          <button
+            type="button"
+            className={`docx-dialog__tab ${activeTab === 'wrap' ? 'docx-dialog__tab--active' : ''}`}
+            onClick={() => setActiveTab('wrap')}
+          >
+            🔲 Wrapping & Layout
+          </button>
+          <button
+            type="button"
+            className={`docx-dialog__tab ${activeTab === 'crop' ? 'docx-dialog__tab--active' : ''}`}
+            onClick={() => setActiveTab('crop')}
+          >
+            ✂️ Crop
+          </button>
+          <button
+            type="button"
+            className={`docx-dialog__tab ${activeTab === 'details' ? 'docx-dialog__tab--active' : ''}`}
+            onClick={() => setActiveTab('details')}
+          >
+            🏷️ Alt Text & Link
+          </button>
+          <button
+            type="button"
+            className={`docx-dialog__tab ${activeTab === 'replace' ? 'docx-dialog__tab--active' : ''}`}
+            onClick={() => setActiveTab('replace')}
+          >
+            🔄 Replace
+          </button>
+        </div>
+
+        {/* Dialog Body */}
         <div className="docx-dialog__body">
           {errorKey ? (
-            <p className="docx-dialog__error">
-              {t(errorKey as 'imageProperties.errors.invalidDimensions')}
-            </p>
+            <div className="p-3 bg-red-50 text-red-700 text-xs rounded-md border border-red-200">
+              ⚠️ {t(errorKey as 'imageProperties.errors.invalidDimensions') || errorKey}
+            </div>
           ) : null}
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">
-              {t('dialogs.imageProperties.dimensions')}
-            </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-prop-width">
-                {t('dialogs.imageProperties.widthLabel')}
-              </label>
-              <input
-                id="image-prop-width"
-                className="docx-dialog__input"
-                value={draft.widthPoints}
-                disabled={resizeDisabled}
-                onChange={(event) => setWidth(event.target.value)}
+
+          {/* Live Preview Panel */}
+          {imagePreviewSrc && (
+            <div className="docx-dialog__preview-container">
+              <img
+                src={imagePreviewSrc}
+                alt="Selected Image Preview"
+                className="docx-dialog__preview-img"
               />
-              <span className="docx-dialog__unit">{t('imageProperties.units.points')}</span>
+              <div className="docx-dialog__preview-badge">
+                Current: {Math.round(Number(draft.widthPoints))} × {Math.round(Number(draft.heightPoints))} pt
+                {target?.intrinsic
+                  ? ` (Original: ${target.intrinsic.pixelWidth} × ${target.intrinsic.pixelHeight} px)`
+                  : ''}
+              </div>
             </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-prop-height">
-                {t('dialogs.imageProperties.heightLabel')}
-              </label>
-              <input
-                id="image-prop-height"
-                className="docx-dialog__input"
-                value={draft.heightPoints}
-                disabled={resizeDisabled}
-                onChange={(event) => setHeight(event.target.value)}
-              />
-              <span className="docx-dialog__unit">{t('imageProperties.units.points')}</span>
-            </div>
-            <label className="docx-dialog__checkbox-row">
-              <input
-                type="checkbox"
-                checked={draft.lockAspect}
-                disabled={aspectLockDisabled}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, lockAspect: event.target.checked } : current
-                  )
-                }
-              />
-              {t('dialogs.imageProperties.lockAspectRatio')}
-            </label>
-            <button
-              type="button"
-              className="docx-dialog__link-button"
-              disabled={pictureOnlyDisabled || !target?.intrinsic}
-              onClick={resetNatural}
-            >
-              {t('imageProperties.resetNaturalSize')}
-            </button>
-          </section>
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">{t('imageProperties.position')}</div>
-            {positionUnavailable ? (
-              <p className="docx-dialog__hint">{t('imageProperties.positionUnavailable')}</p>
-            ) : null}
-            {positionLocked ? (
-              <p className="docx-dialog__hint">{t('imageProperties.positionLocked')}</p>
-            ) : null}
-            {positionEditable ? (
-              <>
-                {draft.positionMode === 'frame' ? (
-                  <>
-                    <div className="docx-dialog__row">
-                      <label className="docx-dialog__field-label" htmlFor="image-pos-rel-h">
-                        {t('imageProperties.relativeToHorizontal')}
+          )}
+
+          {/* Tab 1: Dimensions & Sizing */}
+          {activeTab === 'dimensions' && (
+            <section className="docx-dialog__section">
+              <div className="docx-dialog__section-title">Dimensions</div>
+              <div className="docx-dialog__grid-2">
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-prop-width">
+                    Width
+                  </label>
+                  <div className="docx-dialog__input-group">
+                    <input
+                      id="image-prop-width"
+                      className="docx-dialog__input"
+                      value={draft.widthPoints}
+                      disabled={resizeDisabled}
+                      onChange={(event) => setWidth(event.target.value)}
+                    />
+                    <span className="docx-dialog__unit">pt</span>
+                  </div>
+                </div>
+
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-prop-height">
+                    Height
+                  </label>
+                  <div className="docx-dialog__input-group">
+                    <input
+                      id="image-prop-height"
+                      className="docx-dialog__input"
+                      value={draft.heightPoints}
+                      disabled={resizeDisabled}
+                      onChange={(event) => setHeight(event.target.value)}
+                    />
+                    <span className="docx-dialog__unit">pt</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={draft.lockAspect}
+                    disabled={aspectLockDisabled}
+                    onChange={(event) =>
+                      setDraft((current) =>
+                        current ? { ...current, lockAspect: event.target.checked } : current
+                      )
+                    }
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>🔒 Lock aspect ratio</span>
+                </label>
+
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                  disabled={pictureOnlyDisabled || !target?.intrinsic}
+                  onClick={resetNatural}
+                >
+                  ↩️ Reset to original size
+                </button>
+              </div>
+
+              <div className="docx-dialog__section-title mt-2">Scale Presets</div>
+              <div className="docx-dialog__preset-group">
+                {[25, 50, 75, 100, 150, 200].map((percent) => (
+                  <button
+                    key={percent}
+                    type="button"
+                    className="docx-dialog__preset-btn"
+                    onClick={() => scaleByPercent(percent)}
+                  >
+                    {percent}%
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Tab 2: Text Wrapping & Layout */}
+          {activeTab === 'wrap' && (
+            <section className="docx-dialog__section">
+              <div className="docx-dialog__section-title">Text Wrapping Style</div>
+              <div className="docx-dialog__wrap-cards">
+                {WRAP_OPTIONS.map((item) => (
+                  <div
+                    key={item.key}
+                    className={`docx-dialog__wrap-card ${draft.wrap === item.key ? 'docx-dialog__wrap-card--active' : ''}`}
+                    onClick={() => {
+                      if (target?.canChangeWrap !== false) {
+                        setDraft((current) =>
+                          current ? { ...current, wrap: item.key } : current
+                        );
+                      }
+                    }}
+                  >
+                    <span className="docx-dialog__wrap-card-icon">{item.icon}</span>
+                    <span className="docx-dialog__wrap-card-label">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {positionEditable && draft.positionMode === 'frame' && (
+                <>
+                  <div className="docx-dialog__section-title mt-2">Position & Offsets</div>
+                  <div className="docx-dialog__grid-2">
+                    <div className="docx-dialog__field">
+                      <label className="docx-dialog__label" htmlFor="image-pos-rel-h">
+                        Horizontal Anchor
                       </label>
                       <select
                         id="image-pos-rel-h"
@@ -578,16 +780,15 @@ export function DocxEditorImagePropertiesDialog({
                       >
                         {DRAWING_REL_FROM_H.map((frame) => (
                           <option key={frame} value={frame}>
-                            {t(
-                              `dialogs.imagePosition.relativeOptions.${frame}` as 'dialogs.imagePosition.relativeOptions.page'
-                            )}
+                            Relative to {frame}
                           </option>
                         ))}
                       </select>
                     </div>
-                    <div className="docx-dialog__row">
-                      <label className="docx-dialog__field-label" htmlFor="image-pos-rel-v">
-                        {t('imageProperties.relativeToVertical')}
+
+                    <div className="docx-dialog__field">
+                      <label className="docx-dialog__label" htmlFor="image-pos-rel-v">
+                        Vertical Anchor
                       </label>
                       <select
                         id="image-pos-rel-v"
@@ -607,208 +808,272 @@ export function DocxEditorImagePropertiesDialog({
                       >
                         {DRAWING_REL_FROM_V.map((frame) => (
                           <option key={frame} value={frame}>
-                            {t(
-                              `dialogs.imagePosition.relativeOptions.${frame}` as 'dialogs.imagePosition.relativeOptions.page'
-                            )}
+                            Relative to {frame}
                           </option>
                         ))}
                       </select>
                     </div>
-                  </>
-                ) : null}
-                <div className="docx-dialog__row">
-                  <label className="docx-dialog__field-label" htmlFor="image-pos-h">
-                    {t('imageProperties.horizontalOffset')}
+                  </div>
+
+                  <div className="docx-dialog__grid-2">
+                    <div className="docx-dialog__field">
+                      <label className="docx-dialog__label" htmlFor="image-pos-h">
+                        Horizontal Offset
+                      </label>
+                      <div className="docx-dialog__input-group">
+                        <input
+                          id="image-pos-h"
+                          className="docx-dialog__input"
+                          value={draft.horizontalPoints}
+                          onChange={(event) =>
+                            setDraft((current) =>
+                              current ? { ...current, horizontalPoints: event.target.value } : current
+                            )
+                          }
+                        />
+                        <span className="docx-dialog__unit">pt</span>
+                      </div>
+                    </div>
+
+                    <div className="docx-dialog__field">
+                      <label className="docx-dialog__label" htmlFor="image-pos-v">
+                        Vertical Offset
+                      </label>
+                      <div className="docx-dialog__input-group">
+                        <input
+                          id="image-pos-v"
+                          className="docx-dialog__input"
+                          value={draft.verticalPoints}
+                          onChange={(event) =>
+                            setDraft((current) =>
+                              current ? { ...current, verticalPoints: event.target.value } : current
+                            )
+                          }
+                        />
+                        <span className="docx-dialog__unit">pt</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </section>
+          )}
+
+          {/* Tab 3: Crop */}
+          {activeTab === 'crop' && (
+            <section className="docx-dialog__section">
+              <div className="docx-dialog__section-title">Crop Percentage (%)</div>
+              <div className="docx-dialog__grid-2">
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-crop-left">
+                    Left Crop ({draft.cropLeft}%)
                   </label>
                   <input
-                    id="image-pos-h"
-                    className="docx-dialog__input"
-                    value={draft.horizontalPoints}
-                    onChange={(event) =>
-                      setDraft((current) =>
-                        current ? { ...current, horizontalPoints: event.target.value } : current
-                      )
+                    type="range"
+                    min="0"
+                    max="80"
+                    value={draft.cropLeft}
+                    disabled={pictureOnlyDisabled}
+                    onChange={(e) =>
+                      setDraft((curr) => (curr ? { ...curr, cropLeft: e.target.value } : curr))
                     }
+                    className="w-full"
                   />
-                  <span className="docx-dialog__unit">{t('imageProperties.units.points')}</span>
                 </div>
-                <div className="docx-dialog__row">
-                  <label className="docx-dialog__field-label" htmlFor="image-pos-v">
-                    {t('imageProperties.verticalOffset')}
+
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-crop-top">
+                    Top Crop ({draft.cropTop}%)
                   </label>
                   <input
-                    id="image-pos-v"
-                    className="docx-dialog__input"
-                    value={draft.verticalPoints}
-                    onChange={(event) =>
-                      setDraft((current) =>
-                        current ? { ...current, verticalPoints: event.target.value } : current
-                      )
+                    type="range"
+                    min="0"
+                    max="80"
+                    value={draft.cropTop}
+                    disabled={pictureOnlyDisabled}
+                    onChange={(e) =>
+                      setDraft((curr) => (curr ? { ...curr, cropTop: e.target.value } : curr))
                     }
+                    className="w-full"
                   />
-                  <span className="docx-dialog__unit">{t('imageProperties.units.points')}</span>
                 </div>
-              </>
-            ) : null}
-          </section>
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">{t('dialogs.imageProperties.altText')}</div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-prop-title">
-                {t('imageAltText.title')}
-              </label>
+
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-crop-right">
+                    Right Crop ({draft.cropRight}%)
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="80"
+                    value={draft.cropRight}
+                    disabled={pictureOnlyDisabled}
+                    onChange={(e) =>
+                      setDraft((curr) => (curr ? { ...curr, cropRight: e.target.value } : curr))
+                    }
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="docx-dialog__field">
+                  <label className="docx-dialog__label" htmlFor="image-crop-bottom">
+                    Bottom Crop ({draft.cropBottom}%)
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="80"
+                    value={draft.cropBottom}
+                    disabled={pictureOnlyDisabled}
+                    onChange={(e) =>
+                      setDraft((curr) => (curr ? { ...curr, cropBottom: e.target.value } : curr))
+                    }
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-blue-600 hover:text-blue-800"
+                  onClick={() =>
+                    setDraft((curr) =>
+                      curr
+                        ? {
+                            ...curr,
+                            cropLeft: '0',
+                            cropTop: '0',
+                            cropRight: '0',
+                            cropBottom: '0',
+                          }
+                        : curr
+                    )
+                  }
+                >
+                  ✂️ Reset all crop to 0%
+                </button>
+              </div>
+            </section>
+          )}
+
+          {/* Tab 4: Details & Link */}
+          {activeTab === 'details' && (
+            <section className="docx-dialog__section">
+              <div className="docx-dialog__section-title">Alt Text (Accessibility)</div>
+              <div className="docx-dialog__field">
+                <label className="docx-dialog__label" htmlFor="image-prop-title">
+                  Title
+                </label>
+                <input
+                  id="image-prop-title"
+                  className="docx-dialog__input-group docx-dialog__input"
+                  style={{ border: '1px solid #cbd5e1' }}
+                  value={draft.title}
+                  placeholder="Short image title"
+                  onChange={(event) =>
+                    setDraft((current) =>
+                      current ? { ...current, title: event.target.value } : current
+                    )
+                  }
+                />
+              </div>
+
+              <div className="docx-dialog__field">
+                <label className="docx-dialog__label" htmlFor="image-prop-description">
+                  Description / Caption
+                </label>
+                <textarea
+                  id="image-prop-description"
+                  className="docx-dialog__textarea"
+                  value={draft.description}
+                  placeholder="Detailed description for screen readers"
+                  onChange={(event) =>
+                    setDraft((current) =>
+                      current ? { ...current, description: event.target.value } : current
+                    )
+                  }
+                />
+              </div>
+
+              <div className="docx-dialog__section-title mt-2">Hyperlink</div>
+              <div className="docx-dialog__field">
+                <label className="docx-dialog__label" htmlFor={hyperlinkInputId}>
+                  Link URL (Clicking opens URL)
+                </label>
+                <input
+                  id={hyperlinkInputId}
+                  className="docx-dialog__input-group docx-dialog__input"
+                  style={{ border: '1px solid #cbd5e1' }}
+                  value={draft.hyperlink}
+                  placeholder="https://example.com"
+                  onChange={(event) =>
+                    setDraft((current) =>
+                      current ? { ...current, hyperlink: event.target.value } : current
+                    )
+                  }
+                />
+              </div>
+            </section>
+          )}
+
+          {/* Tab 5: Replace Image */}
+          {activeTab === 'replace' && (
+            <section className="docx-dialog__section">
+              <div className="docx-dialog__section-title">Replace Current Image</div>
+              <p className="text-xs text-slate-500">
+                Choose a new image file (.png, .jpg, .gif, .webp) to replace the current picture in
+                this document while maintaining its position and layout settings.
+              </p>
+
               <input
-                id="image-prop-title"
-                className="docx-dialog__input"
-                value={draft.title}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, title: event.target.value } : current
-                  )
-                }
+                ref={replaceFileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/gif,image/webp"
+                className="hidden"
+                onChange={handleReplaceFileChange}
               />
-            </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-prop-description">
-                {t('imageAltText.description')}
-              </label>
-              <textarea
-                id="image-prop-description"
-                className="docx-dialog__textarea"
-                value={draft.description}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, description: event.target.value } : current
-                  )
-                }
-                placeholder={t('dialogs.imageProperties.altTextPlaceholder')}
-              />
-            </div>
-          </section>
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">{t('imageProperties.hyperlink')}</div>
-            <label className="docx-dialog__field-label" htmlFor={hyperlinkInputId}>
-              {t('hyperlinkPopup.urlLabel')}
-            </label>
-            <input
-              id={hyperlinkInputId}
-              className="docx-dialog__input docx-dialog__input--full"
-              value={draft.hyperlink}
-              onChange={(event) =>
-                setDraft((current) =>
-                  current ? { ...current, hyperlink: event.target.value } : current
-                )
-              }
-              placeholder={t('hyperlinkPopup.urlPlaceholder')}
-            />
-          </section>
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">
-              {t('dialogs.imageProperties.textWrapping')}
-            </div>
-            <label className="docx-dialog__field-label" htmlFor={wrapSelectId}>
-              {t('formattingBar.imageWrap')}
-            </label>
-            <select
-              id={wrapSelectId}
-              className="docx-dialog__select docx-dialog__input--full"
-              value={draft.wrap}
-              disabled={target?.canChangeWrap === false}
-              onChange={(event) =>
-                setDraft((current) =>
-                  current ? { ...current, wrap: event.target.value as ImageWrapTarget } : current
-                )
-              }
-            >
-              {IMAGE_WRAP_TARGETS.map((target) => (
-                <option key={target} value={target}>
-                  {t(`imageWrap.targets.${target}` as 'imageWrap.inline')}
-                </option>
-              ))}
-            </select>
-          </section>
-          <section className="docx-dialog__section">
-            <div className="docx-dialog__section-label">{t('imageProperties.crop')}</div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-crop-left">
-                {t('imageProperties.cropLeft')}
-              </label>
-              <input
-                id="image-crop-left"
-                className="docx-dialog__input"
-                disabled={pictureOnlyDisabled}
-                value={draft.cropLeft}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, cropLeft: event.target.value } : current
-                  )
-                }
-              />
-            </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-crop-top">
-                {t('imageProperties.cropTop')}
-              </label>
-              <input
-                id="image-crop-top"
-                className="docx-dialog__input"
-                disabled={pictureOnlyDisabled}
-                value={draft.cropTop}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, cropTop: event.target.value } : current
-                  )
-                }
-              />
-            </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-crop-right">
-                {t('imageProperties.cropRight')}
-              </label>
-              <input
-                id="image-crop-right"
-                className="docx-dialog__input"
-                disabled={pictureOnlyDisabled}
-                value={draft.cropRight}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, cropRight: event.target.value } : current
-                  )
-                }
-              />
-            </div>
-            <div className="docx-dialog__row">
-              <label className="docx-dialog__field-label" htmlFor="image-crop-bottom">
-                {t('imageProperties.cropBottom')}
-              </label>
-              <input
-                id="image-crop-bottom"
-                className="docx-dialog__input"
-                disabled={pictureOnlyDisabled}
-                value={draft.cropBottom}
-                onChange={(event) =>
-                  setDraft((current) =>
-                    current ? { ...current, cropBottom: event.target.value } : current
-                  )
-                }
-              />
-            </div>
-            {pictureOnlyDisabled ? (
-              <p className="docx-dialog__hint">{t('imageProperties.nonPictureHint')}</p>
-            ) : null}
-          </section>
+
+              <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
+                <div className="text-3xl mb-2">📁</div>
+                <button
+                  type="button"
+                  disabled={isReplacing}
+                  onClick={() => replaceFileInputRef.current?.click()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 shadow-sm transition"
+                >
+                  {isReplacing ? 'Replacing Image...' : 'Choose Replacement Image'}
+                </button>
+                <span className="text-xs text-slate-400 mt-2">
+                  Supported formats: PNG, JPG, GIF, WebP
+                </span>
+              </div>
+            </section>
+          )}
         </div>
+
+        {/* Footer */}
         <div className="docx-dialog__footer">
-          <button type="button" className="docx-dialog__button" onClick={dismiss}>
-            {t('common.cancel')}
-          </button>
           <button
             type="button"
-            className="docx-dialog__button docx-dialog__button--primary"
-            onClick={apply}
+            className="docx-dialog__btn docx-dialog__btn--danger"
+            onClick={deleteCurrentDrawing}
           >
-            {t('common.apply')}
+            🗑️ Delete Image
           </button>
+
+          <div className="docx-dialog__footer-actions">
+            <button type="button" className="docx-dialog__btn" onClick={dismiss}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="docx-dialog__btn docx-dialog__btn--primary"
+              onClick={apply}
+            >
+              Apply Changes
+            </button>
+          </div>
         </div>
       </div>
     </div>

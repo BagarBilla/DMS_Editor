@@ -5,8 +5,8 @@ import {
   DocxEditor,
   type DocxEditorRef,
   ImageInsertProvider,
-} from '../../packages/react/dist/index.mjs';
-import '../../packages/core/dist/editor.css';
+} from '../../packages/react/src';
+import '../../packages/core/src/styles/editor.css';
  
 export function Editor() {
   const editorRef = useRef<DocxEditorRef>(null);

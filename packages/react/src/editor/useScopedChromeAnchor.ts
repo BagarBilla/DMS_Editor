@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import type { CSSProperties, RefCallback } from 'react';
-import { absolutePointInScroller } from './scroller-geometry.js';
+import { absolutePointInScroller } from './scroller-geometry';
 
 type AnchorPlacement = 'before' | 'after' | 'story-label';
 

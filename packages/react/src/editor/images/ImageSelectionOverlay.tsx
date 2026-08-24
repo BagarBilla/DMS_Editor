@@ -13,6 +13,7 @@ import { createPortal } from 'react-dom';
 import {
   captureImageMutationPreconditions,
   computeMovedImagePosition,
+  executeImageCommand,
   IMAGE_OVERLAY_NUDGE_PT,
   IMAGE_OVERLAY_NUDGE_SHIFT_PT,
   isStaleImageInteractionCommit,
@@ -20,6 +21,7 @@ import {
   type ImageInteractionSession,
   type ImageOverlayScrollPort,
   type ImageResizeHandle,
+  type ImageWrapTarget,
   type SelectedDrawingOverlayTarget,
 } from '@docx-editor.dev/core/editor';
 import {
@@ -34,6 +36,8 @@ import type { DrawingPositionInput } from '@docx-editor.dev/core/editor';
 import { useTranslation } from '../../i18n';
 import { useDocxEditor } from '../context';
 import { guardToolbarMousedown } from '../toolbar/ToolbarButton';
+import { DocxEditorImagePropertiesDialog } from './ImageProperties';
+import { normalizeImageBytes, pointsToEmu } from './normalizeImageFile';
 
 const HANDLES: readonly ImageResizeHandle[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const AUTO_SCROLL_EDGE_PX = 40;
@@ -105,6 +109,8 @@ export function ImageSelectionOverlay({
   const { t } = useTranslation();
   const [target, setTarget] = useState<SelectedDrawingOverlayTarget | null>(null);
   const [preview, setPreview] = useState<PreviewState | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const replaceInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<PreviewState | null>(null);
   previewRef.current = preview;
   const pointerStartRef = useRef<{ readonly x: number; readonly y: number } | null>(null);
@@ -138,11 +144,6 @@ export function ImageSelectionOverlay({
     const sync = (): void => {
       setTarget(selectedDrawingOverlayTargetOf(editor.surface));
     };
-    // Document `change` can fire synchronously from inside a surface commit (the facade
-    // listens on the session and emits before `selectionAfter` runs). Running overlay
-    // sync in that window used to re-enter React and leave table structural edits on the
-    // pre-commit caret — `insertRowAbove` kept reading A1. Defer to a microtask so the
-    // engine finishes adopting the committed caret first; `selectionChange` stays immediate.
     const syncAfterCommit = (): void => {
       queueMicrotask(sync);
     };
@@ -302,6 +303,12 @@ export function ImageSelectionOverlay({
         event.preventDefault();
         event.stopPropagation();
         editor.exec({ type: 'deleteImage' });
+        return;
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        setDialogOpen(true);
         return;
       }
       if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
@@ -473,6 +480,58 @@ export function ImageSelectionOverlay({
     overlayRef.current?.focus({ preventScroll: true });
   }, [target]);
 
+  const quickScale = useCallback(
+    (scaleRatio: number) => {
+      if (!editor || !target) return;
+      const snapshot = editor.snapshot();
+      const image = snapshot.image;
+      if (!image) return;
+      const baseWidthEmu = image.intrinsic
+        ? pointsToEmu((image.intrinsic.pixelWidth * 72) / image.intrinsic.dpiX)
+        : image.widthEmu;
+      const baseHeightEmu = image.intrinsic
+        ? pointsToEmu((image.intrinsic.pixelHeight * 72) / image.intrinsic.dpiY)
+        : image.heightEmu;
+      const widthEmu = Math.round(baseWidthEmu * scaleRatio);
+      const heightEmu = Math.round(baseHeightEmu * scaleRatio);
+      editor.exec({ type: 'setImageProperties', widthEmu, heightEmu });
+    },
+    [editor, target]
+  );
+
+  const quickWrap = useCallback(
+    (wrapType: ImageWrapTarget) => {
+      if (!editor || !target) return;
+      editor.exec({ type: 'setImageWrapType', target: wrapType });
+    },
+    [editor, target]
+  );
+
+  const handleReplaceImageFile = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !editor) return;
+      try {
+        const buffer = await file.arrayBuffer();
+        const normalized = normalizeImageBytes(new Uint8Array(buffer));
+        if (!normalized.ok) {
+          window.alert('Unable to decode image file.');
+          return;
+        }
+        await executeImageCommand(editor, {
+          type: 'replaceImage',
+          data: normalized.bytes,
+          mime: normalized.mime,
+        });
+      } catch (err) {
+        console.error('Replace image error:', err);
+      } finally {
+        if (e.target) e.target.value = '';
+      }
+    },
+    [editor]
+  );
+
   const active = preview?.bounds ?? target;
   const rendered = useMemo(() => {
     if (!editor?.surface || !active) return null;
@@ -491,79 +550,206 @@ export function ImageSelectionOverlay({
     );
     const showHandles = active.canResize;
     const showMove = active.kind === 'anchored' && active.canMove;
+
+    const quickbarTop = rect.top > 52 ? rect.top - 42 : rect.top + rect.height + 10;
+    const quickbarLeft = rect.left + rect.width / 2;
+
     return (
-      <div
-        ref={overlayRef}
-        className="docx-image-selection-overlay docx-editor-one-surface__overlay-control"
-        data-drawing-node-id={active.id}
-        tabIndex={0}
-        onKeyDown={onOverlayKeyDown}
-      >
+      <>
         <div
-          className="docx-image-selection-overlay__frame"
-          role="group"
-          aria-label={t('imageOverlay.selection')}
-          style={{
-            left: `${rect.left}px`,
-            top: `${rect.top}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
-            cursor: showMove ? 'move' : 'default',
-          }}
-          onPointerDown={(event) => {
-            guardToolbarMousedown(event);
-            if (!showMove || !active.position) return;
-            if (event.button !== 0) return;
-            event.preventDefault();
-            event.stopPropagation();
-            beginSession(
-              'move',
-              null,
-              active,
-              event.clientX,
-              event.clientY,
-              event.currentTarget,
-              event.pointerId
-            );
-          }}
-        />
-        {showHandles
-          ? HANDLES.map((handle) => {
-              const pos = handlePosition(handle);
-              return (
-                <button
-                  key={handle}
-                  type="button"
-                  className="docx-image-selection-overlay__handle"
-                  aria-label={t(handleLabelKey(handle))}
-                  tabIndex={0}
-                  style={{
-                    left: `calc(${rect.left}px + ${rect.width}px * ${parseFloat(pos.x) / 100} - 5px)`,
-                    top: `calc(${rect.top}px + ${rect.height}px * ${parseFloat(pos.y) / 100} - 5px)`,
-                    cursor: cursorForHandle(handle),
-                  }}
-                  onPointerDown={(event) => {
-                    guardToolbarMousedown(event);
-                    if (event.button !== 0) return;
-                    event.preventDefault();
-                    event.stopPropagation();
-                    beginSession(
-                      'resize',
-                      handle,
-                      active,
-                      event.clientX,
-                      event.clientY,
-                      event.currentTarget,
-                      event.pointerId
-                    );
-                  }}
-                />
+          ref={overlayRef}
+          className="docx-image-selection-overlay docx-editor-one-surface__overlay-control"
+          data-drawing-node-id={active.id}
+          tabIndex={0}
+          onKeyDown={onOverlayKeyDown}
+        >
+          {/* Main selection frame */}
+          <div
+            className="docx-image-selection-overlay__frame"
+            role="group"
+            aria-label={t('imageOverlay.selection')}
+            style={{
+              left: `${rect.left}px`,
+              top: `${rect.top}px`,
+              width: `${rect.width}px`,
+              height: `${rect.height}px`,
+              cursor: showMove ? 'move' : 'default',
+            }}
+            onDoubleClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDialogOpen(true);
+            }}
+            onPointerDown={(event) => {
+              guardToolbarMousedown(event);
+              if (!showMove || !active.position) return;
+              if (event.button !== 0) return;
+              event.preventDefault();
+              event.stopPropagation();
+              beginSession(
+                'move',
+                null,
+                active,
+                event.clientX,
+                event.clientY,
+                event.currentTarget,
+                event.pointerId
               );
-            })
-          : null}
-      </div>
+            }}
+          />
+
+          {/* Live Dimension Badge */}
+          <div
+            className="docx-image-dimension-badge"
+            style={{
+              left: `${rect.left + rect.width / 2}px`,
+              top: `${rect.top - 6}px`,
+            }}
+          >
+            <span>📐</span> {Math.round(rect.width)} × {Math.round(rect.height)} px
+          </div>
+
+          {/* 8 Resize Handles */}
+          {showHandles
+            ? HANDLES.map((handle) => {
+                const pos = handlePosition(handle);
+                return (
+                  <button
+                    key={handle}
+                    type="button"
+                    className="docx-image-selection-overlay__handle"
+                    aria-label={t(handleLabelKey(handle))}
+                    tabIndex={0}
+                    style={{
+                      left: `calc(${rect.left}px + ${rect.width}px * ${parseFloat(pos.x) / 100} - 6px)`,
+                      top: `calc(${rect.top}px + ${rect.height}px * ${parseFloat(pos.y) / 100} - 6px)`,
+                      cursor: cursorForHandle(handle),
+                    }}
+                    onPointerDown={(event) => {
+                      guardToolbarMousedown(event);
+                      if (event.button !== 0) return;
+                      event.preventDefault();
+                      event.stopPropagation();
+                      beginSession(
+                        'resize',
+                        handle,
+                        active,
+                        event.clientX,
+                        event.clientY,
+                        event.currentTarget,
+                        event.pointerId
+                      );
+                    }}
+                  />
+                );
+              })
+            : null}
+
+          {/* Floating Quick Action Bar */}
+          {!preview && (
+            <div
+              className="docx-image-quickbar"
+              style={{
+                left: `${quickbarLeft}px`,
+                top: `${quickbarTop}px`,
+              }}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="docx-image-quickbar-btn docx-image-quickbar-btn--primary"
+                onClick={() => setDialogOpen(true)}
+                title="Open full Image Editor dialog (Double-click image)"
+              >
+                <span>✏️</span> Edit Image
+              </button>
+
+              <div className="docx-image-quickbar-divider" />
+
+              <button
+                type="button"
+                className="docx-image-quickbar-btn"
+                onClick={() => quickScale(0.5)}
+                title="Scale to 50%"
+              >
+                50%
+              </button>
+
+              <button
+                type="button"
+                className="docx-image-quickbar-btn"
+                onClick={() => quickScale(1.0)}
+                title="Scale to 100% (Original Size)"
+              >
+                100%
+              </button>
+
+              <div className="docx-image-quickbar-divider" />
+
+              <button
+                type="button"
+                className="docx-image-quickbar-btn"
+                onClick={() => quickWrap(active.kind === 'inline' ? 'square' : 'inline')}
+                title="Toggle Text Wrap (Inline / Square)"
+              >
+                <span>🔲</span> {active.kind === 'inline' ? 'Wrap' : 'Inline'}
+              </button>
+
+              <button
+                type="button"
+                className="docx-image-quickbar-btn"
+                onClick={() => replaceInputRef.current?.click()}
+                title="Replace image with another file"
+              >
+                <span>🔄</span> Replace
+              </button>
+
+              <div className="docx-image-quickbar-divider" />
+
+              <button
+                type="button"
+                className="docx-image-quickbar-btn docx-image-quickbar-btn--danger"
+                onClick={() => {
+                  if (window.confirm('Delete selected image?')) {
+                    editor.exec({ type: 'deleteImage' });
+                  }
+                }}
+                title="Delete Image (Del/Backspace)"
+              >
+                <span>🗑️</span>
+              </button>
+            </div>
+          )}
+
+          {/* Hidden Replace File Input */}
+          <input
+            ref={replaceInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            style={{ display: 'none' }}
+            onChange={handleReplaceImageFile}
+          />
+        </div>
+
+        {/* Full Image Editor Dialog */}
+        <DocxEditorImagePropertiesDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+        />
+      </>
     );
-  }, [active, beginSession, editor, onOverlayKeyDown, t]);
+  }, [
+    active,
+    beginSession,
+    dialogOpen,
+    editor,
+    handleReplaceImageFile,
+    onOverlayKeyDown,
+    preview,
+    quickScale,
+    quickWrap,
+    t,
+  ]);
 
   if (!rendered || !portalRef.current) return null;
   return createPortal(rendered, portalRef.current);
