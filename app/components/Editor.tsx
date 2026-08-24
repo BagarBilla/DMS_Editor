@@ -1,21 +1,19 @@
-// app/components/Editor.tsx
 'use client';
-
+ 
 import { useRef, useState } from 'react';
-import { DocxEditor, type DocxEditorRef } from '../../packages/react/dist/index.mjs';
 import {
-  DocxEditorImagePropertiesDialog,
+  DocxEditor,
+  type DocxEditorRef,
   ImageInsertProvider,
-  ImageInsertTrigger,
 } from '../../packages/react/dist/index.mjs';
 import '../../packages/core/dist/editor.css';
-
+ 
 export function Editor() {
   const editorRef = useRef<DocxEditorRef>(null);
   const [buffer, setBuffer] = useState<ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState('document.docx');
   const [showUploader, setShowUploader] = useState(true);
-
+ 
   async function onFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];
     if (!file) return;
@@ -23,21 +21,7 @@ export function Editor() {
     setFileName(file.name);
     setShowUploader(false);
   }
-
-  async function onSave() {
-    const out = await editorRef.current?.save();
-    if (!out) return;
-    const blob = new Blob([out], {
-      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
+ 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {showUploader && (
@@ -66,22 +50,8 @@ export function Editor() {
             }}
           >
             <div style={{ fontSize: '55px', marginBottom: '10px' }}>📄</div>
-            <h2
-              style={{
-                margin: '0',
-                color: '#1f2937',
-              }}
-            >
-              DOCX Preview
-            </h2>
-            <p
-              style={{
-                color: '#6b7280',
-                marginTop: '10px',
-                marginBottom: '30px',
-                lineHeight: 1.6,
-              }}
-            >
+            <h2 style={{ margin: 0, color: '#1f2937' }}>DOCX Preview</h2>
+            <p style={{ color: '#6b7280', marginTop: '10px', marginBottom: '30px', lineHeight: 1.6 }}>
               Upload a Microsoft Word (.docx) document to preview and edit it.
             </p>
             <label
@@ -97,33 +67,29 @@ export function Editor() {
               }}
             >
               📂 Choose DOCX File
-              <input
-                type="file"
-                accept=".docx"
-                onChange={onFileSelect}
-                style={{ display: 'none' }}
-              />
+              <input type="file" accept=".docx" onChange={onFileSelect} style={{ display: 'none' }} />
             </label>
-            <p
-              style={{
-                marginTop: '20px',
-                color: '#9ca3af',
-                fontSize: '14px',
-              }}
-            >
+            <p style={{ marginTop: '20px', color: '#9ca3af', fontSize: '14px' }}>
               Supported format: <strong>.docx</strong>
             </p>
           </div>
         </div>
       )}
-
-      <div style={{ flex: 1, minHeight: 0 }}>
-       
-          <DocxEditor
-            ref={editorRef}
-            document={buffer ?? undefined}
-            />
-            </div>
-            </div>
+ 
+      {/*
+        The Insert ▸ Image row now comes from the LIBRARY's own packaged menu —
+        patched directly into @docx-editor.dev/core's compiled CHROME_MENUS
+        registry (packages/core/dist/chunk-YVY5YUBT.js + chunk-QJYIREAI.cjs),
+        placed above Table exactly like Word. No menu recomposition needed here
+        anymore. ImageInsertProvider is still required — it's what the packaged
+        row calls into to open the file picker.
+      */}
+      <ImageInsertProvider>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <DocxEditor ref={editorRef} document={buffer ?? undefined} title={fileName} />
+        </div>
+      </ImageInsertProvider>
+    </div>
   );
 }
+ 

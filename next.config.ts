@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack(config, { isServer }) {
+    config.output = config.output || {};
+    config.output.environment = {
+      ...(config.output.environment || {}),
+      asyncFunction: true,
+    };
     if (!isServer) {
       config.resolve = config.resolve || {};
       config.resolve.alias = {

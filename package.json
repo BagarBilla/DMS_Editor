@@ -4,11 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@docx-editor.dev/core": "file:packages/core",
+    "@docx-editor.dev/i18n": "file:packages/i18n",
+    "@radix-ui/react-select": "^2.3.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "emf-converter": "^2.0.2",
+    "harfbuzzjs": "^1.6.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
