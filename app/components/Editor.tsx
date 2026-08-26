@@ -6,6 +6,7 @@ import {
   type DocxEditorRef,
   ImageInsertProvider,
 } from '../../packages/react/src';
+import { blankDocumentBytes } from '@docx-editor.dev/core/editor';
 import '../../packages/core/src/styles/editor.css';
  
 export function Editor() {
@@ -19,6 +20,12 @@ export function Editor() {
     if (!file) return;
     setBuffer(await file.arrayBuffer());
     setFileName(file.name);
+    setShowUploader(false);
+  }
+
+  function onCreateBlankDocument() {
+    setBuffer(new Uint8Array(blankDocumentBytes()).buffer);
+    setFileName('document.docx');
     setShowUploader(false);
   }
  
@@ -69,6 +76,23 @@ export function Editor() {
               📂 Choose DOCX File
               <input type="file" accept=".docx" onChange={onFileSelect} style={{ display: 'none' }} />
             </label>
+            <button
+              type="button"
+              onClick={onCreateBlankDocument}
+              style={{
+                display: 'block',
+                margin: '14px auto 0',
+                padding: '12px 24px',
+                background: '#fff',
+                color: '#2563eb',
+                border: '1px solid #2563eb',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              Create Blank Document
+            </button>
             <p style={{ marginTop: '20px', color: '#9ca3af', fontSize: '14px' }}>
               Supported format: <strong>.docx</strong>
             </p>

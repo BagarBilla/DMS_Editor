@@ -50,10 +50,14 @@ interface CropDraft {
   readonly bottom: number;
 }
 
-interface CustomSession extends ImageInteractionSession {
+type CustomSession = Omit<ImageInteractionSession, 'mode'> & {
   readonly mode: 'move' | 'resize' | 'crop';
   readonly startCrop?: CropDraft;
   readonly currentCrop?: CropDraft;
+};
+
+function isCoreInteractionSession(session: CustomSession): session is ImageInteractionSession {
+  return session.mode !== 'crop';
 }
 
 interface PreviewState {
@@ -659,6 +663,8 @@ export function ImageSelectionOverlay({
           );
           return;
         }
+
+        if (!isCoreInteractionSession(current.session)) return;
 
         const finalized = finalizeImageOverlayInteraction({
           session: current.session,
