@@ -418,7 +418,6 @@ export function validateDrawingOp(part: OoxmlPart, op: DrawingTreeDocOp): TreeOp
       if (!validateDrawingPositionInput(op.position)) return 'invalid-drawing-value';
       const ctx = drawingContext(part, op.drawingNodeId);
       if (typeof ctx === 'string') return ctx;
-      if (ctx.projection.kind !== 'anchored') return 'invalid-drawing-value';
       return lockBlocks(ctx.anchor, op.op);
     }
     case 'setDrawingWrap': {

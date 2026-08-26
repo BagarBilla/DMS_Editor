@@ -682,7 +682,9 @@ export function gateImageCommand(
         return { ok: false, code: 'locked', reason: 'wrap cannot be changed on this drawing' };
       }
       if (propertiesCommandHasPositionFields(command)) {
-        if (!image.canMove || image.kind !== 'anchored') {
+        const isOrWillBeAnchored =
+          command.wrap !== undefined ? command.wrap !== 'inline' : image.kind === 'anchored';
+        if (!isOrWillBeAnchored || (!image.canMove && command.wrap === undefined)) {
           return {
             ok: false,
             code: 'locked',

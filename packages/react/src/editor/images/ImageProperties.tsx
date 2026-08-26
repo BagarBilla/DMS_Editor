@@ -635,21 +635,69 @@ export function DocxEditorImagePropertiesDialog({
           ) : null}
 
           {/* Live Preview Panel */}
-          {imagePreviewSrc && (
-            <div className="docx-dialog__preview-container">
-              <img
-                src={imagePreviewSrc}
-                alt="Selected Image Preview"
-                className="docx-dialog__preview-img"
-              />
-              <div className="docx-dialog__preview-badge">
-                Current: {Math.round(Number(draft.widthPoints))} × {Math.round(Number(draft.heightPoints))} pt
-                {target?.intrinsic
-                  ? ` (Original: ${target.intrinsic.pixelWidth} × ${target.intrinsic.pixelHeight} px)`
-                  : ''}
+          {imagePreviewSrc && (() => {
+            const cropL = Math.max(0, Math.min(85, parseFloat(draft.cropLeft) || 0));
+            const cropT = Math.max(0, Math.min(85, parseFloat(draft.cropTop) || 0));
+            const cropR = Math.max(0, Math.min(85, parseFloat(draft.cropRight) || 0));
+            const cropB = Math.max(0, Math.min(85, parseFloat(draft.cropBottom) || 0));
+
+            const lFrac = cropL / 100;
+            const tFrac = cropT / 100;
+            const rFrac = cropR / 100;
+            const bFrac = cropB / 100;
+
+            const visW = Math.max(0.01, 1 - lFrac - rFrac);
+            const visH = Math.max(0.01, 1 - tFrac - bFrac);
+
+            const natW = target?.intrinsic?.pixelWidth ?? 400;
+            const natH = target?.intrinsic?.pixelHeight ?? 300;
+            const croppedAspect = (natW * visW) / (natH * visH);
+
+            const maxBoxW = 280;
+            const maxBoxH = 150;
+            let viewW = maxBoxW;
+            let viewH = viewW / (croppedAspect || 1);
+            if (viewH > maxBoxH) {
+              viewH = maxBoxH;
+              viewW = viewH * (croppedAspect || 1);
+            }
+
+            const isCropped = cropL > 0 || cropT > 0 || cropR > 0 || cropB > 0;
+
+            return (
+              <div className="docx-dialog__preview-container">
+                <div className="docx-dialog__crop-box">
+                  <div
+                    className="docx-dialog__crop-viewport"
+                    style={{
+                      width: `${Math.round(viewW)}px`,
+                      height: `${Math.round(viewH)}px`,
+                    }}
+                  >
+                    <img
+                      src={imagePreviewSrc}
+                      alt="Selected Image Preview"
+                      className="docx-dialog__crop-img"
+                      style={{
+                        width: `${(1 / visW) * 100}%`,
+                        height: `${(1 / visH) * 100}%`,
+                        left: `${(-lFrac / visW) * 100}%`,
+                        top: `${(-tFrac / visH) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="docx-dialog__preview-badge">
+                  {isCropped ? '✂️ Cropped View: ' : 'Current Size: '}
+                  {Math.round(Number(draft.widthPoints))} × {Math.round(Number(draft.heightPoints))} pt
+                  {target?.intrinsic
+                    ? ` (Original: ${target.intrinsic.pixelWidth} × ${target.intrinsic.pixelHeight} px)`
+                    : ''}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Tab 1: Dimensions & Sizing */}
           {activeTab === 'dimensions' && (
@@ -689,39 +737,40 @@ export function DocxEditorImagePropertiesDialog({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+              {/* Aspect Ratio & Reset */}
+              <div className="docx-dialog__inline-actions">
+                <label className="docx-dialog__checkbox-label">
                   <input
                     type="checkbox"
                     checked={draft.lockAspect}
-                    disabled={aspectLockDisabled}
                     onChange={(event) =>
                       setDraft((current) =>
                         current ? { ...current, lockAspect: event.target.checked } : current
                       )
                     }
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
                   <span>🔒 Lock aspect ratio</span>
                 </label>
 
                 <button
                   type="button"
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 disabled:opacity-50"
-                  disabled={pictureOnlyDisabled || !target?.intrinsic}
+                  className="docx-dialog__btn-text"
                   onClick={resetNatural}
+                  disabled={resizeDisabled}
                 >
                   ↩️ Reset to original size
                 </button>
               </div>
 
-              <div className="docx-dialog__section-title mt-2">Scale Presets</div>
-              <div className="docx-dialog__preset-group">
+              {/* Quick Scale Presets */}
+              <div className="docx-dialog__scale-presets">
+                <span className="docx-dialog__scale-presets-title">Quick Scale:</span>
                 {[25, 50, 75, 100, 150, 200].map((percent) => (
                   <button
                     key={percent}
                     type="button"
                     className="docx-dialog__preset-btn"
+                    disabled={resizeDisabled}
                     onClick={() => scaleByPercent(percent)}
                   >
                     {percent}%
@@ -862,81 +911,179 @@ export function DocxEditorImagePropertiesDialog({
           {/* Tab 3: Crop */}
           {activeTab === 'crop' && (
             <section className="docx-dialog__section">
-              <div className="docx-dialog__section-title">Crop Percentage (%)</div>
+              <div className="docx-dialog__section-title">Crop Edges (%)</div>
               <div className="docx-dialog__grid-2">
+                {/* Left Crop */}
                 <div className="docx-dialog__field">
                   <label className="docx-dialog__label" htmlFor="image-crop-left">
-                    Left Crop ({draft.cropLeft}%)
+                    Left Crop
                   </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="80"
-                    value={draft.cropLeft}
-                    disabled={pictureOnlyDisabled}
-                    onChange={(e) =>
-                      setDraft((curr) => (curr ? { ...curr, cropLeft: e.target.value } : curr))
-                    }
-                    className="w-full"
-                  />
+                  <div className="docx-dialog__crop-field-row">
+                    <input
+                      id="image-crop-left"
+                      type="range"
+                      min="0"
+                      max="80"
+                      step="1"
+                      value={draft.cropLeft}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentR = parseFloat(draft.cropRight) || 0;
+                        const safeVal = val + currentR > 90 ? Math.max(0, 90 - currentR) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropLeft: String(safeVal) } : curr));
+                      }}
+                      className="flex-1"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      max="80"
+                      step="0.5"
+                      value={draft.cropLeft}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentR = parseFloat(draft.cropRight) || 0;
+                        const safeVal = val + currentR > 90 ? Math.max(0, 90 - currentR) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropLeft: String(safeVal) } : curr));
+                      }}
+                      className="docx-dialog__crop-input-num"
+                    />
+                    <span className="text-xs text-slate-500 font-medium">%</span>
+                  </div>
                 </div>
 
+                {/* Top Crop */}
                 <div className="docx-dialog__field">
                   <label className="docx-dialog__label" htmlFor="image-crop-top">
-                    Top Crop ({draft.cropTop}%)
+                    Top Crop
                   </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="80"
-                    value={draft.cropTop}
-                    disabled={pictureOnlyDisabled}
-                    onChange={(e) =>
-                      setDraft((curr) => (curr ? { ...curr, cropTop: e.target.value } : curr))
-                    }
-                    className="w-full"
-                  />
+                  <div className="docx-dialog__crop-field-row">
+                    <input
+                      id="image-crop-top"
+                      type="range"
+                      min="0"
+                      max="80"
+                      step="1"
+                      value={draft.cropTop}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentB = parseFloat(draft.cropBottom) || 0;
+                        const safeVal = val + currentB > 90 ? Math.max(0, 90 - currentB) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropTop: String(safeVal) } : curr));
+                      }}
+                      className="flex-1"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      max="80"
+                      step="0.5"
+                      value={draft.cropTop}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentB = parseFloat(draft.cropBottom) || 0;
+                        const safeVal = val + currentB > 90 ? Math.max(0, 90 - currentB) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropTop: String(safeVal) } : curr));
+                      }}
+                      className="docx-dialog__crop-input-num"
+                    />
+                    <span className="text-xs text-slate-500 font-medium">%</span>
+                  </div>
                 </div>
 
+                {/* Right Crop */}
                 <div className="docx-dialog__field">
                   <label className="docx-dialog__label" htmlFor="image-crop-right">
-                    Right Crop ({draft.cropRight}%)
+                    Right Crop
                   </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="80"
-                    value={draft.cropRight}
-                    disabled={pictureOnlyDisabled}
-                    onChange={(e) =>
-                      setDraft((curr) => (curr ? { ...curr, cropRight: e.target.value } : curr))
-                    }
-                    className="w-full"
-                  />
+                  <div className="docx-dialog__crop-field-row">
+                    <input
+                      id="image-crop-right"
+                      type="range"
+                      min="0"
+                      max="80"
+                      step="1"
+                      value={draft.cropRight}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentL = parseFloat(draft.cropLeft) || 0;
+                        const safeVal = val + currentL > 90 ? Math.max(0, 90 - currentL) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropRight: String(safeVal) } : curr));
+                      }}
+                      className="flex-1"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      max="80"
+                      step="0.5"
+                      value={draft.cropRight}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentL = parseFloat(draft.cropLeft) || 0;
+                        const safeVal = val + currentL > 90 ? Math.max(0, 90 - currentL) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropRight: String(safeVal) } : curr));
+                      }}
+                      className="docx-dialog__crop-input-num"
+                    />
+                    <span className="text-xs text-slate-500 font-medium">%</span>
+                  </div>
                 </div>
 
+                {/* Bottom Crop */}
                 <div className="docx-dialog__field">
                   <label className="docx-dialog__label" htmlFor="image-crop-bottom">
-                    Bottom Crop ({draft.cropBottom}%)
+                    Bottom Crop
                   </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="80"
-                    value={draft.cropBottom}
-                    disabled={pictureOnlyDisabled}
-                    onChange={(e) =>
-                      setDraft((curr) => (curr ? { ...curr, cropBottom: e.target.value } : curr))
-                    }
-                    className="w-full"
-                  />
+                  <div className="docx-dialog__crop-field-row">
+                    <input
+                      id="image-crop-bottom"
+                      type="range"
+                      min="0"
+                      max="80"
+                      step="1"
+                      value={draft.cropBottom}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentT = parseFloat(draft.cropTop) || 0;
+                        const safeVal = val + currentT > 90 ? Math.max(0, 90 - currentT) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropBottom: String(safeVal) } : curr));
+                      }}
+                      className="flex-1"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      max="80"
+                      step="0.5"
+                      value={draft.cropBottom}
+                      disabled={pictureOnlyDisabled}
+                      onChange={(e) => {
+                        const val = Math.min(80, Math.max(0, parseFloat(e.target.value) || 0));
+                        const currentT = parseFloat(draft.cropTop) || 0;
+                        const safeVal = val + currentT > 90 ? Math.max(0, 90 - currentT) : val;
+                        setDraft((curr) => (curr ? { ...curr, cropBottom: String(safeVal) } : curr));
+                      }}
+                      className="docx-dialog__crop-input-num"
+                    />
+                    <span className="text-xs text-slate-500 font-medium">%</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="pt-2">
+              {/* Crop Presets */}
+              <div className="docx-dialog__scale-presets mt-3">
+                <span className="docx-dialog__scale-presets-title">Crop Presets:</span>
                 <button
                   type="button"
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-800"
+                  className="docx-dialog__preset-btn"
                   onClick={() =>
                     setDraft((curr) =>
                       curr
@@ -951,7 +1098,64 @@ export function DocxEditorImagePropertiesDialog({
                     )
                   }
                 >
-                  ✂️ Reset all crop to 0%
+                  ✂️ Reset (0%)
+                </button>
+                <button
+                  type="button"
+                  className="docx-dialog__preset-btn"
+                  onClick={() =>
+                    setDraft((curr) =>
+                      curr
+                        ? {
+                            ...curr,
+                            cropLeft: '12.5',
+                            cropTop: '0',
+                            cropRight: '12.5',
+                            cropBottom: '0',
+                          }
+                        : curr
+                    )
+                  }
+                >
+                  🔲 Square (1:1)
+                </button>
+                <button
+                  type="button"
+                  className="docx-dialog__preset-btn"
+                  onClick={() =>
+                    setDraft((curr) =>
+                      curr
+                        ? {
+                            ...curr,
+                            cropLeft: '0',
+                            cropTop: '10',
+                            cropRight: '0',
+                            cropBottom: '10',
+                          }
+                        : curr
+                    )
+                  }
+                >
+                  📺 16:9 Wide
+                </button>
+                <button
+                  type="button"
+                  className="docx-dialog__preset-btn"
+                  onClick={() =>
+                    setDraft((curr) =>
+                      curr
+                        ? {
+                            ...curr,
+                            cropLeft: '5',
+                            cropTop: '0',
+                            cropRight: '5',
+                            cropBottom: '0',
+                          }
+                        : curr
+                    )
+                  }
+                >
+                  📷 4:3 Standard
                 </button>
               </div>
             </section>

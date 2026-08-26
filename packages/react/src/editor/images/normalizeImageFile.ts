@@ -31,6 +31,9 @@ function isSupportedMime(mime: string): mime is SupportedImageMime {
   return mime === 'image/png' || mime === 'image/jpeg' || mime === 'image/gif';
 }
 
+const MAX_INSERT_WIDTH_POINTS = 360;  // Standard comfortable reading width (~5 inches)
+const MAX_INSERT_HEIGHT_POINTS = 380; // Standard comfortable height (~5.3 inches)
+
 function naturalPoints(
   pixelWidth: number,
   pixelHeight: number,
@@ -40,8 +43,21 @@ function naturalPoints(
   readonly widthPoints: number;
   readonly heightPoints: number;
 } {
-  const widthPoints = (pixelWidth * 72) / dpiX;
-  const heightPoints = (pixelHeight * 72) / dpiY;
+  let widthPoints = (pixelWidth * 72) / (dpiX || DEFAULT_DPI);
+  let heightPoints = (pixelHeight * 72) / (dpiY || DEFAULT_DPI);
+
+  // Proportional fit: if image exceeds optimal document bounds, scale down cleanly
+  if (widthPoints > MAX_INSERT_WIDTH_POINTS) {
+    const scale = MAX_INSERT_WIDTH_POINTS / widthPoints;
+    widthPoints = MAX_INSERT_WIDTH_POINTS;
+    heightPoints = heightPoints * scale;
+  }
+  if (heightPoints > MAX_INSERT_HEIGHT_POINTS) {
+    const scale = MAX_INSERT_HEIGHT_POINTS / heightPoints;
+    heightPoints = MAX_INSERT_HEIGHT_POINTS;
+    widthPoints = widthPoints * scale;
+  }
+
   return {
     widthPoints: Math.max(1, Math.round(widthPoints * 100) / 100),
     heightPoints: Math.max(1, Math.round(heightPoints * 100) / 100),

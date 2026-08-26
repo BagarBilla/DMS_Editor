@@ -13,10 +13,11 @@ import { createPortal } from 'react-dom';
 import {
   captureImageMutationPreconditions,
   computeMovedImagePosition,
-  executeImageCommand,
+  emuToOverlayPoints,
   IMAGE_OVERLAY_NUDGE_PT,
   IMAGE_OVERLAY_NUDGE_SHIFT_PT,
   isStaleImageInteractionCommit,
+  pointsToEmu,
   selectedDrawingOverlayTargetOf,
   type ImageInteractionSession,
   type ImageOverlayScrollPort,
@@ -37,16 +38,29 @@ import { useTranslation } from '../../i18n';
 import { useDocxEditor } from '../context';
 import { guardToolbarMousedown } from '../toolbar/ToolbarButton';
 import { DocxEditorImagePropertiesDialog } from './ImageProperties';
-import { normalizeImageBytes, pointsToEmu } from './normalizeImageFile';
 
 const HANDLES: readonly ImageResizeHandle[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const AUTO_SCROLL_EDGE_PX = 40;
 const AUTO_SCROLL_MAX_PT = 12;
 
+interface CropDraft {
+  readonly left: number;
+  readonly top: number;
+  readonly right: number;
+  readonly bottom: number;
+}
+
+interface CustomSession extends ImageInteractionSession {
+  readonly mode: 'move' | 'resize' | 'crop';
+  readonly startCrop?: CropDraft;
+  readonly currentCrop?: CropDraft;
+}
+
 interface PreviewState {
-  readonly session: ImageInteractionSession;
+  readonly session: CustomSession;
   readonly bounds: SelectedDrawingOverlayTarget;
   readonly accumulatedScrollPt: number;
+  readonly cropLabel?: string;
 }
 
 export interface ImageSelectionOverlayProps {
@@ -59,6 +73,10 @@ function handleLabelKey(handle: ImageResizeHandle): `imageOverlay.handle.${Image
   return `imageOverlay.handle.${handle}`;
 }
 
+function isCropHandle(handle: ImageResizeHandle): boolean {
+  return handle === 'n' || handle === 's' || handle === 'w' || handle === 'e';
+}
+
 function cursorForHandle(handle: ImageResizeHandle): string {
   switch (handle) {
     case 'nw':
@@ -69,24 +87,26 @@ function cursorForHandle(handle: ImageResizeHandle): string {
       return 'nesw-resize';
     case 'n':
     case 's':
-      return 'ns-resize';
+      return 'row-resize';
+    case 'w':
+    case 'e':
+      return 'col-resize';
     default:
-      return 'ew-resize';
+      return 'pointer';
   }
 }
 
-function handlePosition(handle: ImageResizeHandle): { readonly x: string; readonly y: string } {
-  const map: Record<ImageResizeHandle, { x: string; y: string }> = {
-    nw: { x: '0%', y: '0%' },
-    n: { x: '50%', y: '0%' },
-    ne: { x: '100%', y: '0%' },
-    e: { x: '100%', y: '50%' },
-    se: { x: '100%', y: '100%' },
-    s: { x: '50%', y: '100%' },
-    sw: { x: '0%', y: '100%' },
-    w: { x: '0%', y: '50%' },
-  };
-  return map[handle];
+function handleOffsetCoords(handle: ImageResizeHandle): { readonly x: number; readonly y: number } {
+  switch (handle) {
+    case 'nw': return { x: 0, y: 0 };
+    case 'n':  return { x: 0.5, y: 0 };
+    case 'ne': return { x: 1, y: 0 };
+    case 'e':  return { x: 1, y: 0.5 };
+    case 'se': return { x: 1, y: 1 };
+    case 's':  return { x: 0.5, y: 1 };
+    case 'sw': return { x: 0, y: 1 };
+    case 'w':  return { x: 0, y: 0.5 };
+  }
 }
 
 function handleFromDelta(dx: number, dy: number): ImageResizeHandle {
@@ -110,7 +130,6 @@ export function ImageSelectionOverlay({
   const [target, setTarget] = useState<SelectedDrawingOverlayTarget | null>(null);
   const [preview, setPreview] = useState<PreviewState | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const replaceInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<PreviewState | null>(null);
   previewRef.current = preview;
   const pointerStartRef = useRef<{ readonly x: number; readonly y: number } | null>(null);
@@ -124,17 +143,21 @@ export function ImageSelectionOverlay({
     if (!container) return undefined;
     const onPointerDown = (event: PointerEvent): void => {
       const element = event.target instanceof Element ? event.target : null;
-      const drawingId = element
-        ?.closest<HTMLElement>('[data-drawing-node-id]')
-        ?.getAttribute('data-drawing-node-id');
+      const drawingEl = element?.closest<HTMLElement>('[data-drawing-node-id]');
+      const drawingId = drawingEl?.getAttribute('data-drawing-node-id');
       focusRequestedForDrawingRef.current = drawingId ?? null;
-      if (drawingId && drawingId === target?.id) {
-        queueMicrotask(() => overlayRef.current?.focus({ preventScroll: true }));
+      if (drawingId) {
+        setTimeout(() => {
+          if (editor?.surface) {
+            setTarget(selectedDrawingOverlayTargetOf(editor.surface));
+            overlayRef.current?.focus({ preventScroll: true });
+          }
+        }, 10);
       }
     };
     container.addEventListener('pointerdown', onPointerDown, { capture: true });
     return () => container.removeEventListener('pointerdown', onPointerDown, { capture: true });
-  }, [containerRef, target?.id]);
+  }, [containerRef, editor]);
 
   useEffect(() => {
     if (!editor) {
@@ -144,11 +167,14 @@ export function ImageSelectionOverlay({
     const sync = (): void => {
       setTarget(selectedDrawingOverlayTargetOf(editor.surface));
     };
-    const syncAfterCommit = (): void => {
-      queueMicrotask(sync);
-    };
     sync();
-    const off = [editor.on('change', syncAfterCommit), editor.on('selectionChange', sync)];
+    const off = [
+      editor.on('change', () => {
+        sync();
+        queueMicrotask(sync);
+      }),
+      editor.on('selectionChange', sync),
+    ];
     return () => {
       for (const unsubscribe of off) unsubscribe();
     };
@@ -171,15 +197,25 @@ export function ImageSelectionOverlay({
   }, [containerRef, editor, scrollPortOverride]);
 
   const clearPreview = useCallback(() => {
+    const current = previewRef.current;
+    if (current?.session?.drawingNodeId) {
+      const drawingEl = document.querySelector<HTMLElement>(
+        `[data-drawing-node-id="${current.session.drawingNodeId}"]`
+      );
+      if (drawingEl) {
+        drawingEl.style.transform = '';
+      }
+    }
     setPreview(null);
     pointerStartRef.current = null;
     const captured = captureTargetRef.current;
     captureTargetRef.current = null;
     if (captured) {
       try {
-        captured.releasePointerCapture(
-          (captured as HTMLElement & { _lastPointerId?: number })._lastPointerId ?? 0
-        );
+        const pointerId = (captured as HTMLElement & { _lastPointerId?: number })._lastPointerId;
+        if (pointerId !== undefined) {
+          captured.releasePointerCapture(pointerId);
+        }
       } catch {
         // Already released.
       }
@@ -188,7 +224,7 @@ export function ImageSelectionOverlay({
 
   const beginSession = useCallback(
     (
-      mode: 'move' | 'resize',
+      mode: 'move' | 'resize' | 'crop',
       handle: ImageResizeHandle | null,
       active: SelectedDrawingOverlayTarget,
       clientX: number,
@@ -208,6 +244,17 @@ export function ImageSelectionOverlay({
       } catch {
         // Capture is best-effort.
       }
+
+      const snapshot = editor.snapshot();
+      const currentCrop: CropDraft = snapshot.image?.crop ?? { left: 0, top: 0, right: 0, bottom: 0 };
+      const startPosition: DrawingPositionInput = active.position ?? {
+        mode: 'frame' as const,
+        relativeToH: 'column' as const,
+        relativeToV: 'paragraph' as const,
+        horizontalEmu: 0,
+        verticalEmu: 0,
+      };
+
       setPreview({
         session: Object.freeze({
           drawingNodeId: active.id,
@@ -219,11 +266,13 @@ export function ImageSelectionOverlay({
           }),
           startWidthEmu: active.widthEmu,
           startHeightEmu: active.heightEmu,
-          startPosition: active.position,
+          startPosition,
           anchorFrameOrigin: active.anchorFrameOrigin,
           transform: active.transform,
           mode,
           handle,
+          startCrop: currentCrop,
+          currentCrop,
           preconditions: pre,
           layoutRevision: layout.revision,
           packageRevision: editor.surface.session.packageRevision(),
@@ -239,7 +288,7 @@ export function ImageSelectionOverlay({
 
   const commitSession = useCallback(
     (
-      session: ImageInteractionSession,
+      session: CustomSession,
       widthEmu: number,
       heightEmu: number,
       _bounds: {
@@ -250,13 +299,21 @@ export function ImageSelectionOverlay({
       },
       position: DrawingPositionInput | null
     ) => {
-      if (!editor) return;
-      const stale = isStaleImageInteractionCommit(editor, session);
-      if (stale) {
+      if (!editor) {
         clearPreview();
         return;
       }
-      if (session.mode === 'resize') {
+      if (session.mode === 'crop' && session.currentCrop) {
+        editor.exec({
+          type: 'setImageProperties',
+          crop: {
+            left: Math.round(session.currentCrop.left * 10) / 10,
+            top: Math.round(session.currentCrop.top * 10) / 10,
+            right: Math.round(session.currentCrop.right * 10) / 10,
+            bottom: Math.round(session.currentCrop.bottom * 10) / 10,
+          },
+        });
+      } else if (session.mode === 'resize') {
         editor.exec({
           type: 'setImageProperties',
           widthEmu,
@@ -282,6 +339,11 @@ export function ImageSelectionOverlay({
         editor.exec({ type: 'setImagePosition', ...position });
       }
       clearPreview();
+
+      // Immediately refresh target to keep resize handles continuous & active!
+      if (editor.surface) {
+        setTarget(selectedDrawingOverlayTargetOf(editor.surface));
+      }
     },
     [clearPreview, editor]
   );
@@ -368,7 +430,7 @@ export function ImageSelectionOverlay({
     const onPointerMove = (event: PointerEvent) => {
       const current = previewRef.current;
       const startPointer = pointerStartRef.current;
-      if (!current || !startPointer) return;
+      if (!current || !startPointer || !editor?.surface) return;
       const deltaX = cssPixelsToLayoutPoints(
         event.clientX - startPointer.x,
         coordinates.paintScale
@@ -377,6 +439,7 @@ export function ImageSelectionOverlay({
         event.clientY - startPointer.y,
         coordinates.paintScale
       );
+      // ── MODE 1: Move Drag (Hardware-accelerated 60fps) ──
       if (current.session.mode === 'move') {
         let scrollDelta = 0;
         const scrollPort = scrollPortRef.current;
@@ -392,6 +455,16 @@ export function ImageSelectionOverlay({
           if (scrollDelta !== 0) scrollDelta = scrollPort.scrollBy(scrollDelta);
         }
         const accumulatedScrollPt = current.accumulatedScrollPt + scrollDelta;
+
+        // Smooth GPU transform on document image node during drag
+        const drawingEl = document.querySelector<HTMLElement>(
+          `[data-drawing-node-id="${current.session.drawingNodeId}"]`
+        );
+        if (drawingEl) {
+          const scale = coordinates.paintScale;
+          drawingEl.style.transform = `translate3d(${deltaX * scale}px, ${(deltaY + accumulatedScrollPt) * scale}px, 0px)`;
+        }
+
         setPreview({
           ...current,
           accumulatedScrollPt,
@@ -403,6 +476,74 @@ export function ImageSelectionOverlay({
         });
         return;
       }
+
+      // ── MODE 2: Live Edge Handle Image Cropping ──
+      if (current.session.mode === 'crop' && current.session.startCrop && current.session.handle) {
+        const handle = current.session.handle;
+        const startW = emuToOverlayPoints(current.session.startWidthEmu);
+        const startH = emuToOverlayPoints(current.session.startHeightEmu);
+        const startCrop = current.session.startCrop;
+
+        let left = startCrop.left;
+        let top = startCrop.top;
+        let right = startCrop.right;
+        let bottom = startCrop.bottom;
+        let cropLabel = '';
+
+        if (handle === 'n') {
+          const deltaPct = (deltaY / Math.max(10, startH)) * 100;
+          top = Math.max(0, Math.min(80, startCrop.top + deltaPct));
+          if (top + bottom > 88) top = Math.max(0, 88 - bottom);
+          cropLabel = `✂️ Top Crop: ${Math.round(top)}%`;
+        } else if (handle === 's') {
+          const deltaPct = (deltaY / Math.max(10, startH)) * 100;
+          bottom = Math.max(0, Math.min(80, startCrop.bottom - deltaPct));
+          if (top + bottom > 88) bottom = Math.max(0, 88 - top);
+          cropLabel = `✂️ Bottom Crop: ${Math.round(bottom)}%`;
+        } else if (handle === 'w') {
+          const deltaPct = (deltaX / Math.max(10, startW)) * 100;
+          left = Math.max(0, Math.min(80, startCrop.left + deltaPct));
+          if (left + right > 88) left = Math.max(0, 88 - right);
+          cropLabel = `✂️ Left Crop: ${Math.round(left)}%`;
+        } else if (handle === 'e') {
+          const deltaPct = (deltaX / Math.max(10, startW)) * 100;
+          right = Math.max(0, Math.min(80, startCrop.right - deltaPct));
+          if (left + right > 88) right = Math.max(0, 88 - left);
+          cropLabel = `✂️ Right Crop: ${Math.round(right)}%`;
+        }
+
+        // Live visual crop feedback on DOM image
+        const drawingEl = document.querySelector<HTMLElement>(
+          `[data-drawing-node-id="${current.session.drawingNodeId}"]`
+        );
+        if (drawingEl) {
+          const img = drawingEl.querySelector<HTMLImageElement>('img.docx-drawing-image');
+          if (img) {
+            const lFrac = left / 100;
+            const tFrac = top / 100;
+            const rFrac = right / 100;
+            const bFrac = bottom / 100;
+            const visW = Math.max(0.01, 1 - lFrac - rFrac);
+            const visH = Math.max(0.01, 1 - tFrac - bFrac);
+            img.style.width = `${(1 / visW) * 100}%`;
+            img.style.height = `${(1 / visH) * 100}%`;
+            img.style.left = `${(-lFrac / visW) * 100}%`;
+            img.style.top = `${(-tFrac / visH) * 100}%`;
+          }
+        }
+
+        setPreview({
+          ...current,
+          session: {
+            ...current.session,
+            currentCrop: { left, top, right, bottom },
+          },
+          cropLabel,
+        });
+        return;
+      }
+
+      // ── MODE 3: Corner Handle Scaling & Resizing ──
       if (!current.session.handle) return;
       const resized = computeImageResizeResult({
         handle: current.session.handle,
@@ -421,6 +562,7 @@ export function ImageSelectionOverlay({
         ),
         kind: current.session.kind,
       });
+
       setPreview({
         ...current,
         bounds: Object.freeze({
@@ -433,7 +575,30 @@ export function ImageSelectionOverlay({
           heightEmu: resized.heightEmu,
         }),
       });
+
+      // ── Live Resizing on document image node ──
+      const drawingEl = document.querySelector<HTMLElement>(
+        `[data-drawing-node-id="${current.session.drawingNodeId}"]`
+      );
+      if (drawingEl) {
+        const scale = coordinates.paintScale;
+        const newWidthPx = resized.previewBounds.width * scale;
+        const newHeightPx = resized.previewBounds.height * scale;
+        drawingEl.style.width = `${newWidthPx}px`;
+        drawingEl.style.height = `${newHeightPx}px`;
+        const frame = drawingEl.querySelector<HTMLElement>('.docx-drawing-image-frame');
+        if (frame) {
+          frame.style.width = `${newWidthPx}px`;
+          frame.style.height = `${newHeightPx}px`;
+        }
+        // ONLY adjust style.left/style.top if drawing is explicitly anchored
+        if (current.session.kind === 'anchored') {
+          drawingEl.style.left = `${resized.previewBounds.x * scale}px`;
+          drawingEl.style.top = `${resized.previewBounds.y * scale}px`;
+        }
+      }
     };
+
     const finish = (event: PointerEvent) => {
       const current = previewRef.current;
       if (!current) return;
@@ -446,6 +611,55 @@ export function ImageSelectionOverlay({
           event.clientY - (pointerStartRef.current?.y ?? event.clientY),
           coordinates.paintScale
         );
+
+        if (current.session.mode === 'move') {
+          const drawingEl = document.querySelector<HTMLElement>(
+            `[data-drawing-node-id="${current.session.drawingNodeId}"]`
+          );
+          if (drawingEl) {
+            drawingEl.style.transform = '';
+          }
+          if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+            const finalDeltaY = deltaY + current.accumulatedScrollPt;
+            if (current.session.kind === 'inline') {
+              editor.exec({
+                type: 'setImageProperties',
+                wrap: 'square',
+                horizontalEmu: pointsToEmu(deltaX),
+                verticalEmu: pointsToEmu(finalDeltaY),
+                relativeToH: 'column',
+                relativeToV: 'paragraph',
+              });
+            } else {
+              const startPos = current.session.startPosition ?? {
+                mode: 'frame',
+                relativeToH: 'column',
+                relativeToV: 'paragraph',
+                horizontalEmu: 0,
+                verticalEmu: 0,
+              };
+              const moved = computeMovedImagePosition(startPos, deltaX, finalDeltaY);
+              editor.exec({ type: 'setImagePosition', ...moved });
+            }
+          }
+          clearPreview();
+          if (editor.surface) {
+            setTarget(selectedDrawingOverlayTargetOf(editor.surface));
+          }
+          return;
+        }
+
+        if (current.session.mode === 'crop') {
+          commitSession(
+            current.session,
+            current.session.startWidthEmu,
+            current.session.startHeightEmu,
+            current.session.startBounds,
+            current.session.startPosition
+          );
+          return;
+        }
+
         const finalized = finalizeImageOverlayInteraction({
           session: current.session,
           deltaXPt: deltaX,
@@ -464,6 +678,7 @@ export function ImageSelectionOverlay({
         );
       } else clearPreview();
     };
+
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', finish);
     window.addEventListener('pointercancel', finish);
@@ -480,79 +695,43 @@ export function ImageSelectionOverlay({
     overlayRef.current?.focus({ preventScroll: true });
   }, [target]);
 
-  const quickScale = useCallback(
-    (scaleRatio: number) => {
-      if (!editor || !target) return;
-      const snapshot = editor.snapshot();
-      const image = snapshot.image;
-      if (!image) return;
-      const baseWidthEmu = image.intrinsic
-        ? pointsToEmu((image.intrinsic.pixelWidth * 72) / image.intrinsic.dpiX)
-        : image.widthEmu;
-      const baseHeightEmu = image.intrinsic
-        ? pointsToEmu((image.intrinsic.pixelHeight * 72) / image.intrinsic.dpiY)
-        : image.heightEmu;
-      const widthEmu = Math.round(baseWidthEmu * scaleRatio);
-      const heightEmu = Math.round(baseHeightEmu * scaleRatio);
-      editor.exec({ type: 'setImageProperties', widthEmu, heightEmu });
-    },
-    [editor, target]
-  );
-
-  const quickWrap = useCallback(
-    (wrapType: ImageWrapTarget) => {
-      if (!editor || !target) return;
-      editor.exec({ type: 'setImageWrapType', target: wrapType });
-    },
-    [editor, target]
-  );
-
-  const handleReplaceImageFile = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file || !editor) return;
-      try {
-        const buffer = await file.arrayBuffer();
-        const normalized = normalizeImageBytes(new Uint8Array(buffer));
-        if (!normalized.ok) {
-          window.alert('Unable to decode image file.');
-          return;
-        }
-        await executeImageCommand(editor, {
-          type: 'replaceImage',
-          data: normalized.bytes,
-          mime: normalized.mime,
-        });
-      } catch (err) {
-        console.error('Replace image error:', err);
-      } finally {
-        if (e.target) e.target.value = '';
-      }
-    },
-    [editor]
-  );
-
   const active = preview?.bounds ?? target;
+
   const rendered = useMemo(() => {
     if (!editor?.surface || !active) return null;
-    const layout = editor.surface.publishedLayout();
-    const coordinates = editor.surface.overlayCoordinates();
-    const rect = overlayFrameToSheetCssPixels(
-      layout,
-      {
-        pageIndex: active.pageIndex,
-        x: active.x,
-        y: active.y,
-        width: active.width,
-        height: active.height,
-      },
-      coordinates
-    );
-    const showHandles = active.canResize;
-    const showMove = active.kind === 'anchored' && active.canMove;
 
-    const quickbarTop = rect.top > 52 ? rect.top - 42 : rect.top + rect.height + 10;
-    const quickbarLeft = rect.left + rect.width / 2;
+    let rect: { left: number; top: number; width: number; height: number };
+    const drawingEl = containerRef.current?.querySelector<HTMLElement>(
+      `[data-drawing-node-id="${active.id}"]`
+    );
+    const portalEl = portalRef.current;
+    if (drawingEl && portalEl) {
+      const portalRect = portalEl.getBoundingClientRect();
+      const elRect = drawingEl.getBoundingClientRect();
+      rect = {
+        left: elRect.left - portalRect.left,
+        top: elRect.top - portalRect.top,
+        width: elRect.width,
+        height: elRect.height,
+      };
+    } else {
+      const layout = editor.surface.publishedLayout();
+      const coordinates = editor.surface.overlayCoordinates();
+      rect = overlayFrameToSheetCssPixels(
+        layout,
+        {
+          pageIndex: active.pageIndex,
+          x: active.x,
+          y: active.y,
+          width: active.width,
+          height: active.height,
+        },
+        coordinates
+      );
+    }
+
+    const showHandles = active.canResize;
+    const showMove = true;
 
     return (
       <>
@@ -568,6 +747,7 @@ export function ImageSelectionOverlay({
             className="docx-image-selection-overlay__frame"
             role="group"
             aria-label={t('imageOverlay.selection')}
+            title="Drag to move image anywhere on the page"
             style={{
               left: `${rect.left}px`,
               top: `${rect.top}px`,
@@ -582,7 +762,6 @@ export function ImageSelectionOverlay({
             }}
             onPointerDown={(event) => {
               guardToolbarMousedown(event);
-              if (!showMove || !active.position) return;
               if (event.button !== 0) return;
               event.preventDefault();
               event.stopPropagation();
@@ -598,31 +777,57 @@ export function ImageSelectionOverlay({
             }}
           />
 
-          {/* Live Dimension Badge */}
+
+          {/* Live Dimension / Crop Badge */}
           <div
             className="docx-image-dimension-badge"
             style={{
               left: `${rect.left + rect.width / 2}px`,
-              top: `${rect.top - 6}px`,
+              top: `${rect.top - 8}px`,
             }}
           >
-            <span>📐</span> {Math.round(rect.width)} × {Math.round(rect.height)} px
+            {preview?.cropLabel ? (
+              <span>{preview.cropLabel}</span>
+            ) : (
+              <>
+                <span>📐</span> {Math.round(rect.width)} × {Math.round(rect.height)} px
+              </>
+            )}
           </div>
 
-          {/* 8 Resize Handles */}
+          {/* 8 Handles: Corner Resize Handles & Edge Crop Handles */}
           {showHandles
             ? HANDLES.map((handle) => {
-                const pos = handlePosition(handle);
+                const pos = handleOffsetCoords(handle);
+                const isCrop = isCropHandle(handle);
+                const isHoriz = handle === 'n' || handle === 's';
+                const isVert = handle === 'w' || handle === 'e';
+
+                let handleLeft = rect.left + rect.width * pos.x - 6;
+                let handleTop = rect.top + rect.height * pos.y - 6;
+                let handleClass = 'docx-image-selection-overlay__handle';
+
+                if (isHoriz) {
+                  handleLeft = rect.left + rect.width * pos.x - 12;
+                  handleTop = rect.top + rect.height * pos.y - 4;
+                  handleClass += ' docx-image-selection-overlay__handle--crop-h';
+                } else if (isVert) {
+                  handleLeft = rect.left + rect.width * pos.x - 4;
+                  handleTop = rect.top + rect.height * pos.y - 12;
+                  handleClass += ' docx-image-selection-overlay__handle--crop-v';
+                }
+
                 return (
                   <button
                     key={handle}
                     type="button"
-                    className="docx-image-selection-overlay__handle"
+                    className={handleClass}
                     aria-label={t(handleLabelKey(handle))}
+                    title={isCrop ? 'Drag to crop image' : 'Drag to resize image'}
                     tabIndex={0}
                     style={{
-                      left: `calc(${rect.left}px + ${rect.width}px * ${parseFloat(pos.x) / 100} - 6px)`,
-                      top: `calc(${rect.top}px + ${rect.height}px * ${parseFloat(pos.y) / 100} - 6px)`,
+                      left: `${handleLeft}px`,
+                      top: `${handleTop}px`,
                       cursor: cursorForHandle(handle),
                     }}
                     onPointerDown={(event) => {
@@ -631,7 +836,7 @@ export function ImageSelectionOverlay({
                       event.preventDefault();
                       event.stopPropagation();
                       beginSession(
-                        'resize',
+                        isCrop ? 'crop' : 'resize',
                         handle,
                         active,
                         event.clientX,
@@ -644,94 +849,9 @@ export function ImageSelectionOverlay({
                 );
               })
             : null}
-
-          {/* Floating Quick Action Bar */}
-          {!preview && (
-            <div
-              className="docx-image-quickbar"
-              style={{
-                left: `${quickbarLeft}px`,
-                top: `${quickbarTop}px`,
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                className="docx-image-quickbar-btn docx-image-quickbar-btn--primary"
-                onClick={() => setDialogOpen(true)}
-                title="Open full Image Editor dialog (Double-click image)"
-              >
-                <span>✏️</span> Edit Image
-              </button>
-
-              <div className="docx-image-quickbar-divider" />
-
-              <button
-                type="button"
-                className="docx-image-quickbar-btn"
-                onClick={() => quickScale(0.5)}
-                title="Scale to 50%"
-              >
-                50%
-              </button>
-
-              <button
-                type="button"
-                className="docx-image-quickbar-btn"
-                onClick={() => quickScale(1.0)}
-                title="Scale to 100% (Original Size)"
-              >
-                100%
-              </button>
-
-              <div className="docx-image-quickbar-divider" />
-
-              <button
-                type="button"
-                className="docx-image-quickbar-btn"
-                onClick={() => quickWrap(active.kind === 'inline' ? 'square' : 'inline')}
-                title="Toggle Text Wrap (Inline / Square)"
-              >
-                <span>🔲</span> {active.kind === 'inline' ? 'Wrap' : 'Inline'}
-              </button>
-
-              <button
-                type="button"
-                className="docx-image-quickbar-btn"
-                onClick={() => replaceInputRef.current?.click()}
-                title="Replace image with another file"
-              >
-                <span>🔄</span> Replace
-              </button>
-
-              <div className="docx-image-quickbar-divider" />
-
-              <button
-                type="button"
-                className="docx-image-quickbar-btn docx-image-quickbar-btn--danger"
-                onClick={() => {
-                  if (window.confirm('Delete selected image?')) {
-                    editor.exec({ type: 'deleteImage' });
-                  }
-                }}
-                title="Delete Image (Del/Backspace)"
-              >
-                <span>🗑️</span>
-              </button>
-            </div>
-          )}
-
-          {/* Hidden Replace File Input */}
-          <input
-            ref={replaceInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/gif,image/webp"
-            style={{ display: 'none' }}
-            onChange={handleReplaceImageFile}
-          />
         </div>
 
-        {/* Full Image Editor Dialog */}
+        {/* Full Image Editor Dialog (accessible via double click on image or toolbar) */}
         <DocxEditorImagePropertiesDialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
@@ -741,16 +861,17 @@ export function ImageSelectionOverlay({
   }, [
     active,
     beginSession,
+    containerRef,
     dialogOpen,
     editor,
-    handleReplaceImageFile,
     onOverlayKeyDown,
+    portalRef,
     preview,
-    quickScale,
-    quickWrap,
     t,
   ]);
 
   if (!rendered || !portalRef.current) return null;
   return createPortal(rendered, portalRef.current);
 }
+
+
