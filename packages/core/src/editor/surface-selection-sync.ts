@@ -132,6 +132,7 @@ export function createSurfaceSelectionSync(deps: SurfaceSelectionSyncDeps): Surf
   const { document, pagesLayer, session } = deps;
 
   let applyingSelection = false;
+  let applyingTimer: ReturnType<typeof setTimeout> | null = null;
   /**
    * Whether the MODEL holds the newer of the two selections.
    *
@@ -268,9 +269,8 @@ export function createSurfaceSelectionSync(deps: SurfaceSelectionSyncDeps): Surf
       // so a scroll or an undo would "adopt" that collapse, leave the overlay painting four
       // cells, and turn the next Delete into a one-character edit inside one of them.
       const holdOff = deps.holdsCellSelection?.() === true || deps.isGesturing?.() === true;
-      const adopted = modelMoved || holdOff ? false : adoptPendingDomSelection();
-      modelMoved = false;
-      return adopted;
+      if (modelMoved || holdOff) return false;
+      return adoptPendingDomSelection();
     },
 
     noteModelMoved() {
@@ -283,6 +283,11 @@ export function createSurfaceSelectionSync(deps: SurfaceSelectionSyncDeps): Surf
       // selection, and in that case the model IS still the newer of the two. The flag is
       // spent by the decision to publish a selection, not by the write succeeding.
       modelMoved = false;
+      if (applyingTimer !== null) {
+        clearTimeout(applyingTimer);
+        applyingTimer = null;
+      }
+      applyingSelection = false;
     },
 
     mirrorToDom(claim = false) {
@@ -302,18 +307,22 @@ export function createSurfaceSelectionSync(deps: SurfaceSelectionSyncDeps): Surf
         document.getSelection()
       );
       deps.recordSelectionMs(deps.now() - began);
-      // Cleared on a LATER task, because `selectionchange` is queued rather than dispatched
-      // synchronously. Clearing it here would defeat the guard in every real browser while
-      // still appearing to work under a synchronous test DOM.
-      queueMicrotask(() => {
+      // Cleared on a LATER macrotask, because `selectionchange` is queued asynchronously rather
+      // than dispatched synchronously or in microtasks. Clearing it in `queueMicrotask` defeated
+      // the guard in Chromium because microtasks run before queued macrotask events.
+      if (applyingTimer !== null) clearTimeout(applyingTimer);
+      applyingTimer = setTimeout(() => {
+        applyingTimer = null;
         applyingSelection = false;
-      });
+        modelMoved = false;
+      }, 50);
     },
 
     adoptBeforeInput() {
       // Engine-owned pointer drags and cell rectangles deliberately outrank the browser's
       // native selection. Composition has its own DOM readback when it ends.
-      if (applyingSelection || composing) return;
+      // If we are applying selection or the model just moved, the model holds the source of truth.
+      if (applyingSelection || modelMoved || composing) return;
       if (deps.isGesturing?.()) return;
       if (deps.holdsCellSelection?.()) return;
       adoptDomSelection();
@@ -322,15 +331,28 @@ export function createSurfaceSelectionSync(deps: SurfaceSelectionSyncDeps): Surf
     isComposing: () => composing,
 
     onSelectionChange: (): void => {
-      // Ignore the echo of our own write, and anything happening outside the pages. The flag
-      // is cleared on a later task rather than synchronously: browsers QUEUE `selectionchange`
-      // rather than firing it from `setBaseAndExtent`, so clearing it in a `finally` would
-      // leave it false by the time the echo arrives — and every programmatic selection would
-      // be read straight back, fighting the user mid-drag.
-      if (applyingSelection) return;
+      // Ignore the echo of our own write, and anything happening outside the pages.
       if (composing) return;
       if (deps.isGesturing?.()) return;
       if (deps.holdsCellSelection?.()) return;
+
+      const domSelection = document.getSelection();
+      const next = semanticSelectionFromDom(pagesLayer, domSelection);
+      if (next && selectionsEqual(next, deps.selection())) {
+        // DOM selection matches what the model holds — write has settled.
+        if (applyingTimer !== null) {
+          clearTimeout(applyingTimer);
+          applyingTimer = null;
+        }
+        applyingSelection = false;
+        modelMoved = false;
+        return;
+      }
+
+      // If we are currently applying a selection or the model has moved
+      // (waiting for the DOM to reflect it), do not adopt an inconsistent/stale DOM selection!
+      if (applyingSelection || modelMoved) return;
+
       adoptDomSelection();
     },
 

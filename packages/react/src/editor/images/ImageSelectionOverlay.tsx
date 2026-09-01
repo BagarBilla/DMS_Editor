@@ -150,7 +150,16 @@ export function ImageSelectionOverlay({
       const drawingEl = element?.closest<HTMLElement>('[data-drawing-node-id]');
       const drawingId = drawingEl?.getAttribute('data-drawing-node-id');
       focusRequestedForDrawingRef.current = drawingId ?? null;
-      if (drawingId) {
+      if (drawingId && editor?.surface) {
+        const paragraphId = drawingEl?.dataset.paragraphId;
+        const startStr = drawingEl?.dataset.start;
+        if (paragraphId && startStr !== undefined) {
+          const start = Number(startStr);
+          editor.surface.setSelection({
+            anchor: { paragraphId, offset: start },
+            head: { paragraphId, offset: start + 1 },
+          });
+        }
         setTimeout(() => {
           if (editor?.surface) {
             setTarget(selectedDrawingOverlayTargetOf(editor.surface));
@@ -374,7 +383,7 @@ export function ImageSelectionOverlay({
       if (event.key === 'Enter') {
         event.preventDefault();
         event.stopPropagation();
-        setDialogOpen(true);
+        editor.surface?.splitParagraph();
         return;
       }
       if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;

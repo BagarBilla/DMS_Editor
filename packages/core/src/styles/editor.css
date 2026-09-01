@@ -527,30 +527,27 @@
    unscoped [contenteditable] rule reaches into every rich-text field of the
    HOST application. */
 .docx-editor [contenteditable='true'] {
-  /* Black caret for light backgrounds - highly visible */
-  caret-color: #000;
-
-  /* Ensure cursor is always visible */
+  /* Suppress native cursor so only the engine precision caret is drawn */
+  caret-color: transparent !important;
   outline: none;
-
-  /* Smooth caret animation */
-  caret-shape: bar;
 }
 
 /* Editable runs - the main text editing elements */
 .docx-run-editable[contenteditable='true'] {
-  caret-color: #000;
-
-  /* Ensure minimum height for cursor visibility in empty runs */
+  caret-color: transparent !important;
   min-height: 1em;
-
-  /* Display inline for text flow */
   display: inline;
+}
+
+.docx-paginated-surface,
+.docx-paginated-surface *,
+.docx-page-content,
+.docx-page-content * {
+  caret-color: transparent !important;
 }
 
 /* Empty paragraph cursor placeholder */
 .docx-paragraph-empty [contenteditable='true'] {
-  /* Ensure cursor is visible in empty paragraphs */
   min-height: 1em;
   min-width: 1px;
   display: inline-block;
@@ -797,14 +794,14 @@ a.docx-hyperlink:focus-visible {
   * SPECIAL CONTENT TYPES
   * ============================================================================ */
 
-/* Highlighted text - ensure caret is visible against yellow */
+/* Highlighted text */
 .docx-run-highlighted[contenteditable='true'] {
-  caret-color: #333;
+  caret-color: transparent !important;
 }
 
-/* Dark background text - use white caret */
+/* Dark background text */
 .docx-run-dark-bg[contenteditable='true'] {
-  caret-color: #fff;
+  caret-color: transparent !important;
 }
 
 /* ============================================================================

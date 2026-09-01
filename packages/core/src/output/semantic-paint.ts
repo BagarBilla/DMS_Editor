@@ -1229,8 +1229,10 @@ function paintLine(
       const drawing = inlineDrawings[nextInlineDrawing]!;
       const advance = Math.max(0, drawing.advanceEnd - drawing.advanceStart);
       const spacer = document.createElement('span');
-      spacer.className = 'docx-inline-drawing-advance';
-      spacer.dataset.docxMarker = '';
+      spacer.className = 'docx-inline-drawing-advance layout-run layout-run-image';
+      spacer.dataset.paragraphId = drawing.paragraphId;
+      spacer.dataset.start = String(drawing.start);
+      spacer.dataset.end = String(drawing.start + 1);
       spacer.setAttribute('contenteditable', 'false');
       spacer.setAttribute('aria-hidden', 'true');
       spacer.style.display = 'inline-block';
@@ -1242,6 +1244,8 @@ function paintLine(
       spacer.style.lineHeight = '0';
       spacer.style.pointerEvents = 'none';
       spacer.style.verticalAlign = 'baseline';
+      spacer.style.overflow = 'hidden';
+      spacer.append(document.createTextNode('\uFFFC'));
       element.append(spacer);
       nextInlineDrawing += 1;
       anchor = null;
@@ -1298,7 +1302,7 @@ function paintLine(
   // draw a caret at a position with no inline box to measure. The <br> is the anchor;
   // sizing it to the line keeps the caret the paragraph's font height, not the div's
   // default.
-  if (line.spans.length === 0) {
+  if (line.spans.length === 0 && (line.drawings?.length ?? 0) === 0) {
     const anchor = document.createElement('br');
     anchor.style.lineHeight = `${line.box.height * scale}px`;
     element.append(anchor);

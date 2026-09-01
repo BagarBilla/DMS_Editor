@@ -155,6 +155,46 @@ function textElement(
   } as unknown as OoxmlNode;
 }
 
+/**
+ * Merge adjacent text nodes of the same kind inside a run.
+ *
+ * Prevents run fragmentation where typing keystroke-by-keystroke accumulates one `<w:t>`
+ * per character, which turns a word into multiple 1-character spans and confuses browser
+ * caret placement and Backspace behavior.
+ */
+function coalesceRunChildren(nextId: () => string, nodes: readonly OoxmlNode[]): OoxmlNode[] {
+  const out: OoxmlNode[] = [];
+  for (const node of nodes) {
+    const isText = node.kind === 'text' || node.kind === 'deletedText';
+    if (isText) {
+      const textVal = (node.children ?? []).find((child) => child.kind === 'textValue');
+      const valStr = textVal && textVal.kind === 'textValue' ? textVal.value : '';
+      if (valStr.length === 0 && (out.length > 0 || nodes.length > 1)) {
+        continue;
+      }
+    }
+    const previous = out[out.length - 1];
+    const mergeable =
+      previous !== undefined &&
+      previous.kind === node.kind &&
+      isText;
+    if (!mergeable) {
+      out.push(node);
+      continue;
+    }
+    const left = (previous.children ?? []).find((child) => child.kind === 'textValue');
+    const right = (node.children ?? []).find((child) => child.kind === 'textValue');
+    const value =
+      (left && left.kind === 'textValue' ? left.value : '') +
+      (right && right.kind === 'textValue' ? right.value : '');
+    out[out.length - 1] = textElement(nextId, value, node.kind as 'text' | 'deletedText');
+  }
+  if (out.length === 0 && nodes.length > 0) {
+    out.push(nodes[0]!);
+  }
+  return out;
+}
+
 function simpleElement(
   nextId: () => string,
   localName: 'tab' | 'br',
@@ -508,8 +548,11 @@ function applyInsertContent(
     const kind = textNode.kind === 'deletedText' ? 'deletedText' : 'text';
     const head = textElement(nextId, value.slice(0, local), kind);
     const tail = textElement(nextId, value.slice(local), kind);
-    const rebuilt = run.children.flatMap((child) =>
-      child.id === textNode.id ? [head, ...nodes, tail] : [child]
+    const rebuilt = coalesceRunChildren(
+      nextId,
+      run.children.flatMap((child) =>
+        child.id === textNode.id ? [head, ...nodes, tail] : [child]
+      )
     );
     inserted = fromEdit(
       replaceChildren(part, run.id, rebuilt, deferOptions(options, control)),
@@ -523,19 +566,23 @@ function applyInsertContent(
       const run = findNode(part, site.segment.runId);
       if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
       const index = run.children.findIndex((child) => contains(child, site.segment.node.id));
+      const targetIndex = Math.max(0, index);
+      const children = [...run.children];
+      children.splice(targetIndex, 0, ...nodes);
+      const rebuilt = coalesceRunChildren(nextId, children);
       inserted = fromEdit(
-        insertChildren(part, run.id, Math.max(0, index), nodes, deferOptions(options, control)),
+        replaceChildren(part, run.id, rebuilt, deferOptions(options, control)),
         effect
       );
       return finishContentEdit(inserted, control, options);
     }
     if (site.kind === 'appendToRun') {
+      const rebuilt = coalesceRunChildren(nextId, [...site.run.children, ...nodes]);
       inserted = fromEdit(
-        insertChildren(
+        replaceChildren(
           part,
           site.run.id,
-          site.run.children.length,
-          nodes,
+          rebuilt,
           deferOptions(options, control)
         ),
         effect
@@ -581,14 +628,12 @@ function applyInsertContent(
     const run = findNode(part, before.runId);
     if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
     const index = run.children.findIndex((child) => contains(child, before.node.id));
+    const targetIndex = index < 0 ? run.children.length : index + 1;
+    const children = [...run.children];
+    children.splice(targetIndex, 0, ...nodes);
+    const rebuilt = coalesceRunChildren(nextId, children);
     inserted = fromEdit(
-      insertChildren(
-        part,
-        run.id,
-        index < 0 ? run.children.length : index + 1,
-        nodes,
-        deferOptions(options, control)
-      ),
+      replaceChildren(part, run.id, rebuilt, deferOptions(options, control)),
       effect
     );
     return finishContentEdit(inserted, control, options);
@@ -597,8 +642,12 @@ function applyInsertContent(
     const run = findNode(part, after.runId);
     if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
     const index = run.children.findIndex((child) => contains(child, after.node.id));
+    const targetIndex = Math.max(0, index);
+    const children = [...run.children];
+    children.splice(targetIndex, 0, ...nodes);
+    const rebuilt = coalesceRunChildren(nextId, children);
     inserted = fromEdit(
-      insertChildren(part, run.id, Math.max(0, index), nodes, deferOptions(options, control)),
+      replaceChildren(part, run.id, rebuilt, deferOptions(options, control)),
       effect
     );
     return finishContentEdit(inserted, control, options);

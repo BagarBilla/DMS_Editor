@@ -94,6 +94,40 @@ describe('painted pages, semantic interaction', () => {
     expect(surface.session.bodyText()).toBe('hell');
   });
 
+  test('backspace mid-word moves caret back and subsequent backspace deletes preceding character', () => {
+    const { surface } = mount(paragraph('univrsity'));
+    putCaret(surface, 3); // After 'i'
+    surface.deleteBackward();
+    expect(surface.session.bodyText()).toBe('unvrsity');
+    // Caret must be at offset 2 (between 'n' and 'v'), NOT stuck at 3 (after 'v')
+    expect(surface.state().selection.head.offset).toBe(2);
+
+    // Tapping backspace again should delete 'n' (offset 1..2), not 'v' (offset 2..3)
+    surface.deleteBackward();
+    expect(surface.session.bodyText()).toBe('uvrsity');
+    expect(surface.state().selection.head.offset).toBe(1);
+  });
+
+  test('typing letters in a word coalesces text without single-letter run fragmentation', () => {
+    const { surface } = mount(paragraph(''));
+    putCaret(surface, 0);
+    for (const char of 'univrsity') {
+      surface.type(char);
+    }
+    expect(surface.session.bodyText()).toBe('univrsity');
+    expect(surface.state().selection.head.offset).toBe(9);
+
+    // Put caret after 'i' (offset 3)
+    putCaret(surface, 3);
+    surface.deleteBackward();
+    expect(surface.session.bodyText()).toBe('unvrsity');
+    expect(surface.state().selection.head.offset).toBe(2);
+
+    surface.deleteBackward();
+    expect(surface.session.bodyText()).toBe('uvrsity');
+    expect(surface.state().selection.head.offset).toBe(1);
+  });
+
   test('Enter splits and the caret lands in the new paragraph', () => {
     const { surface } = mount(paragraph('hello'));
     putCaret(surface, 3);

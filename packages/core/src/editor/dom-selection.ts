@@ -48,8 +48,9 @@ function offsetWithin(identity: SpanIdentity, within: number): number {
 const PARAGRAPH_ID = /^[^\s]{1,512}$/;
 
 function identityOf(element: Element): SpanIdentity | null {
-  const paragraphId = (element as HTMLElement).dataset?.paragraphId;
-  const rawStart = (element as HTMLElement).dataset?.start;
+  const target = (element.closest('[data-paragraph-id][data-start]') ?? element) as HTMLElement;
+  const paragraphId = target.dataset?.paragraphId;
+  const rawStart = target.dataset?.start;
   if (!paragraphId || rawStart === undefined) return null;
   // BOTH values are re-validated. They round-trip through the DOM, where anything on the
   // page could have rewritten them, and the id then flows into a tree op as the paragraph to
@@ -60,11 +61,11 @@ function identityOf(element: Element): SpanIdentity | null {
   // `data-end` is written with `data-start` by the same painter branch, and validated the same
   // way for the same reason. A span missing or misreporting it falls back to the painted
   // length, which is the pre-existing behaviour and correct for every 1:1 span.
-  const rawEnd = (element as HTMLElement).dataset?.end;
+  const rawEnd = target.dataset?.end;
   const end =
     rawEnd !== undefined && /^\d{1,9}$/.test(rawEnd) && Number(rawEnd) >= start
       ? Number(rawEnd)
-      : start + ((element as HTMLElement).textContent?.length ?? 0);
+      : start + (target.textContent?.length ?? 0);
   return { paragraphId, start, end };
 }
 
@@ -160,6 +161,13 @@ export function positionFromDomPoint(
   const nearestElement =
     node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
 
+  // The engine's painted caret is furniture. A selection pointing at or inside it must
+  // never map to a model position.
+  if (nearestElement?.closest('.docx-editor-one-surface__caret, [data-docx-caret]')) return null;
+
+  // Non-model furniture (tab leader, wrap advance, change bars, etc.) carries no source range.
+  if (nearestElement?.closest('[data-docx-tab-leader], .docx-tab-leader, .docx-wrap-advance, .docx-change-bars')) return null;
+
   // Live-projected and computed fields are inert furniture: their painted cache has no
   // independently editable model text. Literal FORMTEXT results are not marked this way.
   if (nearestElement?.closest('[data-docx-field]')) return null;
@@ -172,26 +180,9 @@ export function positionFromDomPoint(
   // furniture, not the story.
   if (activeHeaderFooterRoot(root) && nearestElement?.closest('.docx-page-content')) return null;
 
-  // A LIST MARKER is furniture with one honest answer. It carries no source range, so it
-  // cannot be mapped through a child index — but it is painted at the paragraph's own start,
-  // inside the hanging indent, which is exactly the position Word gives a click on a bullet.
-  //
-  // Returning nothing instead is what made this worth changing: a double-click on the first
-  // word of a list item can anchor in the marker, the whole selection then failed to map,
-  // and the caller kept the PREVIOUS model selection while the browser showed the new one —
-  // so the next toolbar command formatted a range the user could no longer see.
-  //
-  // The engine's painted caret shares this attribute but hangs off the page content box, so
-  // it has no owning paragraph and still resolves to nothing, which is what it should do.
-  const marker = nearestElement?.closest('[data-docx-marker]');
+  // A LIST MARKER is furniture with one honest answer: the start of its own paragraph.
+  const marker = nearestElement?.closest('.docx-list-marker, [data-docx-list-marker]');
   if (marker) return marker.parentElement ? paragraphStartAt(marker.parentElement) : null;
-
-  // A TAB LEADER has no such answer: it is drawn across the advance of a tab in the MIDDLE
-  // of a paragraph, so the paragraph start would be a lie and its repeated glyphs are not
-  // model characters. It is `pointer-events: none` and `user-select: none`, so a real
-  // endpoint should never land in one; refusing explicitly keeps that a property rather than
-  // an accident of how the ancestors happen to be attributed.
-  if (nearestElement?.closest('[data-docx-tab-leader]')) return null;
 
   // An ELEMENT endpoint carries a child index, never a character offset — including when the
   // element is a painted span. Runs are inline-blocks, so a shift-click or a drag across one
@@ -214,6 +205,17 @@ export function positionFromDomPoint(
 
   const found = spanFor(node);
   if (!found) return null;
+
+  const isDrawing =
+    found.element.classList.contains('docx-inline-drawing-advance') ||
+    found.element.classList.contains('docx-drawing') ||
+    !!found.element.closest('.docx-drawing, .docx-inline-drawing-advance');
+  if (isDrawing) {
+    return {
+      paragraphId: found.identity.paragraphId,
+      offset: found.identity.end,
+    };
+  }
 
   // Clamp to the span's own RANGE: a browser may report an offset past the end for an endpoint
   // that sits at a boundary between elements, and a field's painted result is wider than the

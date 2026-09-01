@@ -628,44 +628,51 @@ export function paintDrawingRecord(
   if (drawing.accessibility.hidden) return null;
   if (drawing.paintBounds.width <= 0 || drawing.paintBounds.height <= 0) return null;
 
+  let element: HTMLElement | null = null;
   if (
     drawing.kind === 'anchoredDrawing' &&
     drawing.textboxStory !== undefined &&
     ctx.paintStoryFragment !== undefined
   ) {
-    return paintTextboxStory(document, drawing, drawing.textboxStory, ctx, origin);
-  }
-
-  if (drawing.vectorShape && drawing.vectorShape.subpathsEmu.length > 0) {
-    return paintVectorShape(document, drawing, ctx, origin);
-  }
-
-  const { resource } = drawing;
-  if (resource.kind === 'ready') {
-    if (!ctx.imageUrlPort || !urlRegistry) {
-      return paintPlaceholderCard(document, drawing, ctx, origin);
+    element = paintTextboxStory(document, drawing, drawing.textboxStory, ctx, origin);
+  } else if (drawing.vectorShape && drawing.vectorShape.subpathsEmu.length > 0) {
+    element = paintVectorShape(document, drawing, ctx, origin);
+  } else {
+    const { resource } = drawing;
+    if (resource.kind === 'ready') {
+      if (!ctx.imageUrlPort || !urlRegistry) {
+        element = paintPlaceholderCard(document, drawing, ctx, origin);
+      } else {
+        const url = urlRegistry.urlForReady(resource.validatedHandle, resource.mime);
+        element = !url
+          ? paintPlaceholderCard(document, drawing, ctx, origin)
+          : paintReadyImage(document, drawing, ctx, url, urlRegistry, origin);
+      }
+    } else if (resource.kind === 'pending') {
+      const retained =
+        urlRegistry?.readyElementFor?.(drawingElementKey(drawing, ctx)) ??
+        urlRegistry
+          ?.imageForPending?.(drawingElementKey(drawing, ctx))
+          ?.closest<HTMLElement>('.docx-drawing-ready');
+      if (retained) {
+        readyImagePaintSignatures.delete(retained);
+        retained.dataset.drawingNodeId = drawing.drawingNodeId;
+        positionedBox(retained, drawing.paintBounds, ctx.scale, origin);
+        element = retained;
+      } else {
+        element = paintPlaceholderCard(document, drawing, ctx, origin);
+      }
+    } else {
+      element = paintPlaceholderCard(document, drawing, ctx, origin);
     }
-    const url = urlRegistry.urlForReady(resource.validatedHandle, resource.mime);
-    if (!url) return paintPlaceholderCard(document, drawing, ctx, origin);
-    return paintReadyImage(document, drawing, ctx, url, urlRegistry, origin);
   }
 
-  if (resource.kind === 'pending') {
-    const retained =
-      urlRegistry?.readyElementFor?.(drawingElementKey(drawing, ctx)) ??
-      urlRegistry
-        ?.imageForPending?.(drawingElementKey(drawing, ctx))
-        ?.closest<HTMLElement>('.docx-drawing-ready');
-    if (retained) {
-      readyImagePaintSignatures.delete(retained);
-      retained.dataset.drawingNodeId = drawing.drawingNodeId;
-      positionedBox(retained, drawing.paintBounds, ctx.scale, origin);
-      return retained;
-    }
-    return paintPlaceholderCard(document, drawing, ctx, origin);
+  if (element && drawing.kind === 'inlineDrawing') {
+    element.dataset.paragraphId = drawing.paragraphId;
+    element.dataset.start = String(drawing.start);
+    element.dataset.end = String(drawing.start + 1);
   }
-
-  return paintPlaceholderCard(document, drawing, ctx, origin);
+  return element;
 }
 
 export function paintInlineDrawingsOnLine(
