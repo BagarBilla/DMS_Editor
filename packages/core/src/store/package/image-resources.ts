@@ -36,14 +36,21 @@ export type SupportedImageMime =
   | 'image/gif'
   | 'image/bmp'
   | 'image/webp';
+
+export type SupportedVideoMime =
+  | 'video/mp4'
+  | 'video/webm'
+  | 'video/ogg'
+  | 'video/quicktime';
+
 /**
  * Vector media painted straight from validated bytes. An `<img>` renders SVG in the
  * browser's secure static mode — no script, no external subresource loads — so there is
  * no decode step and no raster buffer sized by a file-supplied number.
  */
 export type VectorImageMime = 'image/svg+xml';
-/** Every mime the painter can hand to an `<img>`. */
-export type RenderableImageMime = SupportedImageMime | VectorImageMime;
+/** Every mime the painter can hand to an `<img>` or `<video>`. */
+export type RenderableImageMime = SupportedImageMime | VectorImageMime | SupportedVideoMime;
 /**
  * Media kept in the package byte-for-byte that the painter cannot hand to an `<img>`.
  * A decode port may rasterize it; without one it paints as a labelled placeholder.
@@ -160,6 +167,10 @@ const CONTENT_TYPE_TO_MIME: Readonly<Record<string, RenderableImageMime | Preser
     'image/tiff': 'image/tiff',
     'image/x-emf': 'image/x-emf',
     'image/x-wmf': 'image/x-wmf',
+    'video/mp4': 'video/mp4',
+    'video/webm': 'video/webm',
+    'video/ogg': 'video/ogg',
+    'video/quicktime': 'video/quicktime',
   });
 
 /** A raster header that passed structural validation: its real MIME type and pixel extent. */
@@ -231,6 +242,64 @@ export function sniffImageMime(
   bytes: Uint8Array
 ): RenderableImageMime | PreservedImageMime | 'unknown' {
   if (bytesStartWith(bytes, PNG_SIGNATURE)) return 'image/png';
+  if (
+    bytes.length >= 8 &&
+    bytes[4] === 0x66 &&
+    bytes[5] === 0x74 &&
+    bytes[6] === 0x79 &&
+    bytes[7] === 0x70
+  ) {
+    return 'video/mp4';
+  }
+  if (
+    bytes.length >= 4 &&
+    bytes[0] === 0x1a &&
+    bytes[1] === 0x45 &&
+    bytes[2] === 0xdf &&
+    bytes[3] === 0xa3
+  ) {
+    return 'video/webm';
+  }
+  if (
+    bytes.length >= 4 &&
+    bytes[0] === 0x4f &&
+    bytes[1] === 0x67 &&
+    bytes[2] === 0x67 &&
+    bytes[3] === 0x53
+  ) {
+    return 'video/ogg';
+  }
+  if (
+    bytes.length >= 8 &&
+    bytes[4] === 0x6d &&
+    bytes[5] === 0x6f &&
+    bytes[6] === 0x6f &&
+    bytes[7] === 0x76
+  ) {
+    return 'video/quicktime';
+  }
+  // Deep scan in first 512 bytes for MP4 / QuickTime atoms if shifted
+  if (bytes.length >= 16) {
+    const scanLimit = Math.min(bytes.length - 4, 512);
+    for (let i = 0; i <= scanLimit; i++) {
+      if (
+        bytes[i] === 0x66 &&
+        bytes[i + 1] === 0x74 &&
+        bytes[i + 2] === 0x79 &&
+        bytes[i + 3] === 0x70
+      ) {
+        return 'video/mp4';
+      }
+      if (
+        bytes[i] === 0x6d &&
+        bytes[i + 1] === 0x6f &&
+        bytes[i + 2] === 0x6f &&
+        bytes[i + 3] === 0x76
+      ) {
+        return 'video/quicktime';
+      }
+    }
+  }
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
     return 'image/jpeg';
   }
@@ -768,9 +837,10 @@ function checkedDecodedRgbaBytes(pixelCount: number, limits: ImageResourceLimits
 
 function imageMimeClass(
   mime: RenderableImageMime | PreservedImageMime
-): 'raster' | 'vector' | 'preserved' {
+): 'raster' | 'vector' | 'preserved' | 'video' {
   if (isRasterSupportedMime(mime)) return 'raster';
   if (isPreservedMime(mime)) return 'preserved';
+  if ((mime as string).startsWith('video/')) return 'video';
   return 'vector';
 }
 
@@ -977,16 +1047,50 @@ function createImageResourceCacheInternal(
       throw new Error('ImageResourceLookup stale');
     }
 
-    if (snapshotted.length > limits.maxEncodedBytes) {
+    const claimed = claimedMimeForPart(pkg, resolvedPartName);
+    const sniffed = sniffImageMime(snapshotted);
+
+    const isVideoResource =
+      claimed.startsWith('video/') ||
+      sniffed.startsWith('video/') ||
+      resolvedPartName.startsWith('/word/media/video');
+
+    const effectiveMaxBytes = isVideoResource ? 1024 * 1024 * 1024 : limits.maxEncodedBytes;
+
+    if (snapshotted.length > effectiveMaxBytes) {
       return unrenderable(
         resolvedPartName,
-        claimedMimeForPart(pkg, resolvedPartName),
+        claimed,
         'resource-limit'
       );
     }
 
-    const sniffed = sniffImageMime(snapshotted);
-    const claimed = claimedMimeForPart(pkg, resolvedPartName);
+    if (isVideoResource) {
+      const videoMime = (sniffed !== 'unknown' && sniffed.startsWith('video/')
+        ? sniffed
+        : (claimed.startsWith('video/') ? claimed : 'video/mp4')) as SupportedVideoMime;
+
+      const videoContentId = contentIdOf(snapshotted);
+      const videoResourceKey = resourceKeyOf(ownerPartName, resolvedPartName, videoContentId);
+      const videoHandle = validatedBytesRegistry.acquire(
+        videoResourceKey,
+        videoContentId,
+        snapshotted
+      );
+      validatedBytesRegistry.retain(videoHandle);
+      return freezeState({
+        kind: 'ready',
+        partName: resolvedPartName,
+        contentId: videoContentId,
+        resourceKey: videoResourceKey,
+        validatedHandle: videoHandle,
+        mime: videoMime,
+        pixelWidth: 800,
+        pixelHeight: 450,
+        dpiX: DEFAULT_DPI,
+        dpiY: DEFAULT_DPI,
+      });
+    }
 
     if (claimed !== 'unknown' && sniffed !== 'unknown' && mimeClassesMismatch(claimed, sniffed)) {
       return unrenderable(resolvedPartName, sniffed, 'signature-mismatch');
@@ -1152,6 +1256,29 @@ function createImageResourceCacheInternal(
         mime: sniffed,
         pixelWidth: intrinsic.pixelWidth,
         pixelHeight: intrinsic.pixelHeight,
+        dpiX: DEFAULT_DPI,
+        dpiY: DEFAULT_DPI,
+      });
+    }
+
+    if (sniffed.startsWith('video/')) {
+      const videoContentId = contentIdOf(snapshotted);
+      const videoResourceKey = resourceKeyOf(ownerPartName, resolvedPartName, videoContentId);
+      const videoHandle = validatedBytesRegistry.acquire(
+        videoResourceKey,
+        videoContentId,
+        snapshotted
+      );
+      validatedBytesRegistry.retain(videoHandle);
+      return freezeState({
+        kind: 'ready',
+        partName: resolvedPartName,
+        contentId: videoContentId,
+        resourceKey: videoResourceKey,
+        validatedHandle: videoHandle,
+        mime: sniffed as SupportedVideoMime,
+        pixelWidth: 800,
+        pixelHeight: 450,
         dpiX: DEFAULT_DPI,
         dpiY: DEFAULT_DPI,
       });

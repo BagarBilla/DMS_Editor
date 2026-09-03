@@ -6431,4 +6431,25 @@ a.docx-hyperlink:focus-visible {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
+/* Embedded Video Player inside Document Canvas */
+.docx-drawing-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #0f172a;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease;
+  z-index: 2;
+}
+
+.docx-drawing:hover .docx-drawing-video {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.docx-video-insert__input {
+  display: none;
+}
+
 

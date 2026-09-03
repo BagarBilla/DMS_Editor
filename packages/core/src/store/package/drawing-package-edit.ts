@@ -11,6 +11,7 @@ import {
   validateRasterHeader,
   type ImageDecodePort,
   type SupportedImageMime,
+  type SupportedVideoMime,
 } from './image-resources.js';
 import { projectDrawingsInPackage } from './drawing-projection.js';
 import { resolveImageResourceLimits } from '../runtime/limits.js';
@@ -28,20 +29,28 @@ import { withoutContentTypeOverride } from './hf-lifecycle-shell.js';
 const WP_NAMESPACE_URI = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
 const MAX_UNSIGNED_INT = 4_294_967_295;
 
-const MIME_TO_CONTENT_TYPE: Readonly<Record<SupportedImageMime, string>> = Object.freeze({
+const MIME_TO_CONTENT_TYPE: Readonly<Record<SupportedImageMime | SupportedVideoMime, string>> = Object.freeze({
   'image/png': 'image/png',
   'image/jpeg': 'image/jpeg',
   'image/gif': 'image/gif',
   'image/bmp': 'image/bmp',
   'image/webp': 'image/webp',
+  'video/mp4': 'video/mp4',
+  'video/webm': 'video/webm',
+  'video/ogg': 'video/ogg',
+  'video/quicktime': 'video/quicktime',
 });
 
-const MIME_TO_EXTENSION: Readonly<Record<SupportedImageMime, string>> = Object.freeze({
+const MIME_TO_EXTENSION: Readonly<Record<SupportedImageMime | SupportedVideoMime, string>> = Object.freeze({
   'image/png': 'png',
   'image/jpeg': 'jpeg',
   'image/gif': 'gif',
   'image/bmp': 'bmp',
   'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/ogg': 'ogg',
+  'video/quicktime': 'mov',
 });
 
 const IMAGE_CONTENT_TYPES: ReadonlySet<string> = new Set([
@@ -57,6 +66,10 @@ const IMAGE_CONTENT_TYPES: ReadonlySet<string> = new Set([
   'image/tiff',
   'image/x-emf',
   'image/x-wmf',
+  'video/mp4',
+  'video/webm',
+  'video/ogg',
+  'video/quicktime',
 ]);
 
 /** A freshly allocated drawing property id, or the reason one could not be minted. */
@@ -230,8 +243,9 @@ export async function validateEmbeddedImageForCommit(
 }
 
 function allocateMediaPartName(pkg: OoxmlPackage, ext: string): string | null {
+  const prefix = ext === 'mp4' || ext === 'webm' || ext === 'ogg' || ext === 'mov' ? 'video' : 'image';
   for (let index = 1; index <= Number.MAX_SAFE_INTEGER; index += 1) {
-    const canonical = `/word/media/image${index}.${ext}`;
+    const canonical = `/word/media/${prefix}${index}.${ext}`;
     if (!partPresent(pkg, canonical)) return storagePartName(canonical, pkg);
   }
   return null;
@@ -347,7 +361,7 @@ export function withBinaryPart(
 export function withEmbeddedImage(
   pkg: OoxmlPackage,
   ownerPartName: string,
-  input: Readonly<{ bytes: Uint8Array; mime: SupportedImageMime }>
+  input: Readonly<{ bytes: Uint8Array; mime: SupportedImageMime | SupportedVideoMime }>
 ):
   | Readonly<{
       ok: true;
@@ -361,7 +375,11 @@ export function withEmbeddedImage(
   if (!ownerNormalized.ok) return { ok: false, reason: 'invalidArgs' };
   const owner = ownerNormalized.partName;
   if (!pkg.parts.has(owner)) return { ok: false, reason: 'invalidArgs' };
-  if (!validateEmbeddedImageBytes(input.bytes, input.mime)) {
+  const isVideo = (input.mime as string).startsWith('video/');
+  if (!isVideo && !validateEmbeddedImageBytes(input.bytes, input.mime as SupportedImageMime)) {
+    return { ok: false, reason: 'invalid-image' };
+  }
+  if (isVideo && input.bytes.length === 0) {
     return { ok: false, reason: 'invalid-image' };
   }
 

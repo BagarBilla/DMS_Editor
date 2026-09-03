@@ -132,6 +132,13 @@ const CHROME_PROBES: Partial<Record<ChromeSlotId, EditorCommand>> = {
     widthPoints: 72,
     heightPoints: 72,
   },
+  'video.insert': {
+    type: 'insertImage',
+    data: IMAGE_INSERT_PROBE_BYTES,
+    mime: 'image/png',
+    widthPoints: 400,
+    heightPoints: 225,
+  },
   'image.properties': { type: 'setImageProperties', description: 'probe' },
   'table.insert': { type: 'insertTable', rows: 1, cols: 1 },
   // Page setup is the same shape: whether this document's sections can be rewritten is the
@@ -402,7 +409,7 @@ export function toolbarCommandState(editor: Editor | null, id: ChromeSlotId): To
     // and keeps falling through below so an adapter without a popover stays honestly unwired.
     const shapeProbe = CHROME_PROBES[id];
     if (shapeProbe) {
-      if (id === 'image.insert' && shapeProbe.type === 'insertImage') {
+      if ((id === 'image.insert' || id === 'video.insert') && shapeProbe.type === 'insertImage') {
         const judged: CanResult =
           editor.canExecuteImageCommand?.({
             type: 'insertImage',

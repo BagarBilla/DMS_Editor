@@ -5,6 +5,7 @@ import {
   DocxEditor,
   type DocxEditorRef,
   ImageInsertProvider,
+  VideoInsertProvider,
 } from '../../packages/react/src';
 import { blankDocumentBytes } from '@docx-editor.dev/core/editor';
 import '../../packages/core/src/styles/editor.css';
@@ -109,9 +110,11 @@ export function Editor() {
         row calls into to open the file picker.
       */}
       <ImageInsertProvider>
-        <div style={{ flex: 1, minHeight: 0 }}>
-          <DocxEditor ref={editorRef} document={buffer ?? undefined} title={fileName} />
-        </div>
+        <VideoInsertProvider>
+          <div style={{ flex: 1, minHeight: 0 }}>
+            <DocxEditor ref={editorRef} document={buffer ?? undefined} title={fileName} />
+          </div>
+        </VideoInsertProvider>
       </ImageInsertProvider>
     </div>
   );

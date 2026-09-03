@@ -40,6 +40,7 @@ import { DocxEditorContext, ReviewRailContext, type ReviewRailRegistry } from '.
 import { HyperlinkPopupContext, useHyperlinkPopupInstance } from './useHyperlinkPopup';
 import { ContentControlContext, useContentControlInstance } from './useContentControl';
 import { ImageInsertProvider } from './images/ImageInsert';
+import { VideoInsertProvider } from './images/VideoInsert';
 import {
   NavigationLayoutContext,
   createNavigationLayoutStore,
@@ -268,7 +269,9 @@ export function DocxEditorRoot(props: DocxEditorRootProps) {
               open/closed state and only one of them registers with the engine's gestures. */}
           <HyperlinkPopupProvider>
             <ContentControlProvider>
-              <ImageInsertProvider>{children}</ImageInsertProvider>
+              <ImageInsertProvider>
+                <VideoInsertProvider>{children}</VideoInsertProvider>
+              </ImageInsertProvider>
             </ContentControlProvider>
           </HyperlinkPopupProvider>
         </NavigationLayoutContext.Provider>

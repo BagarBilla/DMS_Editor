@@ -228,6 +228,7 @@ export function DocxEditorImagePropertiesDialog({
   const [activeTab, setActiveTab] = useState<DialogTab>('dimensions');
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
   const [isReplacing, setIsReplacing] = useState(false);
+  const [isVideoMedia, setIsVideoMedia] = useState(false);
 
   const target = targetRef.current;
   const pictureOnlyDisabled = target?.canCrop === false;
@@ -270,12 +271,21 @@ export function DocxEditorImagePropertiesDialog({
       ...positionDraft,
     });
 
-    // Extract live image preview element src
+    // Extract live preview element src
+    const videoEl = document.querySelector<HTMLVideoElement>(
+      `[data-drawing-node-id="${image.id}"] video`
+    );
     const imgEl = document.querySelector<HTMLImageElement>(
       `[data-drawing-node-id="${image.id}"] img`
     );
-    if (imgEl?.src) {
+    if (videoEl?.src) {
+      setIsVideoMedia(true);
+      setImagePreviewSrc(videoEl.src);
+    } else if (imgEl?.src) {
+      setIsVideoMedia(false);
       setImagePreviewSrc(imgEl.src);
+    } else {
+      setIsVideoMedia(false);
     }
   }, [open, image?.id, image?.widthEmu, image?.heightEmu, editor]);
 
@@ -575,7 +585,7 @@ export function DocxEditorImagePropertiesDialog({
         {/* Header */}
         <div id={titleId} className="docx-dialog__header">
           <h3 className="docx-dialog__title">
-            <span>🖼️</span> Image Editor & Properties
+            <span>{isVideoMedia ? '🎬' : '🖼️'}</span> {isVideoMedia ? 'Video Properties' : 'Image Editor & Properties'}
           </h3>
           <button
             type="button"
@@ -603,13 +613,15 @@ export function DocxEditorImagePropertiesDialog({
           >
             🔲 Wrapping & Layout
           </button>
-          <button
-            type="button"
-            className={`docx-dialog__tab ${activeTab === 'crop' ? 'docx-dialog__tab--active' : ''}`}
-            onClick={() => setActiveTab('crop')}
-          >
-            ✂️ Crop
-          </button>
+          {!isVideoMedia && (
+            <button
+              type="button"
+              className={`docx-dialog__tab ${activeTab === 'crop' ? 'docx-dialog__tab--active' : ''}`}
+              onClick={() => setActiveTab('crop')}
+            >
+              ✂️ Crop
+            </button>
+          )}
           <button
             type="button"
             className={`docx-dialog__tab ${activeTab === 'details' ? 'docx-dialog__tab--active' : ''}`}
@@ -674,17 +686,31 @@ export function DocxEditorImagePropertiesDialog({
                       height: `${Math.round(viewH)}px`,
                     }}
                   >
-                    <img
-                      src={imagePreviewSrc}
-                      alt="Selected Image Preview"
-                      className="docx-dialog__crop-img"
-                      style={{
-                        width: `${(1 / visW) * 100}%`,
-                        height: `${(1 / visH) * 100}%`,
-                        left: `${(-lFrac / visW) * 100}%`,
-                        top: `${(-tFrac / visH) * 100}%`,
-                      }}
-                    />
+                    {isVideoMedia ? (
+                      <video
+                        src={imagePreviewSrc}
+                        controls
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          backgroundColor: '#000000',
+                          borderRadius: '4px',
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={imagePreviewSrc}
+                        alt="Selected Preview"
+                        className="docx-dialog__crop-img"
+                        style={{
+                          width: `${(1 / visW) * 100}%`,
+                          height: `${(1 / visH) * 100}%`,
+                          left: `${(-lFrac / visW) * 100}%`,
+                          top: `${(-tFrac / visH) * 100}%`,
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
 

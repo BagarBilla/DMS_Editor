@@ -189,12 +189,20 @@ export {
   DocxEditorImagePropertiesDialog,
   ImageInsertProvider,
   ImageInsertTrigger,
+  VideoInsertProvider,
+  VideoInsertTrigger,
+  ToolbarVideoInsert,
+  useVideoInsert,
+  useVideoInsertOptional,
   ImageWrap,
   ImageAltText,
   ImagePropertiesTrigger,
   normalizeImageBytes,
   type DocxEditorImagePropertiesDialogProps,
   type NormalizedImagePayload,
+  type VideoInsertContextValue,
+  type VideoInsertProviderProps,
+  type VideoInsertTriggerProps,
 } from './editor/images';
 export { useEditorEvent } from './editor/useEditorEvent';
 export { usePageSetup, type PageSetupUpdate, type UsePageSetupReturn } from './editor/usePageSetup';

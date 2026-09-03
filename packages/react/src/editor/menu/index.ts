@@ -8,6 +8,8 @@ export {
   MenuEntry,
   MenuGroup,
   MenuItem,
+  MenuImageInsert,
+  MenuVideoInsert,
   MenuReportIssue,
   MenuRow,
   MenuSeparator,

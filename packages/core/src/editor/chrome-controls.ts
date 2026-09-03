@@ -495,6 +495,19 @@ export const CHROME_GROUPS = [
     ],
   },
   {
+    id: 'video',
+    labelKey: 'toolbar.video',
+    contextual: true,
+    controls: [
+      {
+        id: 'insert',
+        labelKey: 'toolbar.video',
+        paths: GENERATED_ICON_PATHS['videocam'],
+        state: { kind: 'command' },
+      },
+    ],
+  },
+  {
     id: 'table',
     labelKey: 'formattingBar.groups.table',
     contextual: true,
@@ -745,6 +758,7 @@ export type ChromeSlotId =
   | 'image.properties'
   | 'image.wrap'
   | 'image.altText'
+  | 'video.insert'
   | 'table.insert'
   | 'table.borderTarget'
   | 'table.borderColor'
@@ -966,6 +980,7 @@ export const CHROME_MENUS: readonly ChromeMenu[] = [
     // placing the row back is one child element.
     entries: [
       { kind: 'item', slot: 'image.insert' },
+      { kind: 'item', slot: 'video.insert' },
       { kind: 'item', slot: 'table.insert', picker: 'tableGrid' },
       { kind: 'separator' },
       { kind: 'item', slot: 'insert.footnote' },

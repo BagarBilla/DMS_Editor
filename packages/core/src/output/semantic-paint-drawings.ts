@@ -256,6 +256,32 @@ function refusalLabel(
   strings: DrawingPaintStrings
 ): string {
   const { resource } = drawing;
+  const isVideo =
+    resource.mime?.startsWith('video/') ||
+    drawing.placeholderGraphicKind === 'video';
+
+  if (isVideo) {
+    switch (resource.kind) {
+      case 'external':
+        return 'External video not loaded';
+      case 'missing':
+        return 'Video missing';
+      case 'pending':
+        return 'Loading video...';
+      case 'unrenderable':
+        switch (resource.reason) {
+          case 'resource-limit':
+            return 'Video exceeds size limit (1 GB)';
+          case 'unsupported-format':
+            return 'Unsupported video format';
+          default:
+            return 'Video could not be played';
+        }
+      default:
+        return 'Invalid video';
+    }
+  }
+
   switch (resource.kind) {
     case 'external':
       return strings.externalResource;
@@ -448,26 +474,43 @@ function paintReadyImage(
   cropViewport.style.height = '100%';
   cropViewport.style.overflow = 'hidden';
 
-  const img =
-    urlRegistry?.imageFor?.(elementKey, resource.resourceKey, document) ??
-    document.createElement('img');
-  img.className = 'docx-drawing-image';
-  img.setAttribute('draggable', 'false');
-  // SAFE: `src` is a host-minted object URL from PaintImageUrlPort, never file-derived.
-  // Re-assigning an identical src still restarts the load and blanks a frame — skip it.
-  if (img.getAttribute('src') !== url) img.setAttribute('src', url);
-  img.setAttribute('alt', '');
+  const isVideo = resource.mime?.startsWith('video/');
+  if (isVideo) {
+    const video = document.createElement('video');
+    video.className = 'docx-drawing-video';
+    video.setAttribute('controls', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('preload', 'metadata');
+    if (video.getAttribute('src') !== url) video.setAttribute('src', url);
+    video.style.position = 'absolute';
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.style.objectFit = 'contain';
+    video.style.backgroundColor = '#000000';
+    video.style.borderRadius = '2px';
+    cropViewport.append(video);
+  } else {
+    const img =
+      urlRegistry?.imageFor?.(elementKey, resource.resourceKey, document) ??
+      document.createElement('img');
+    img.className = 'docx-drawing-image';
+    img.setAttribute('draggable', 'false');
+    // SAFE: `src` is a host-minted object URL from PaintImageUrlPort, never file-derived.
+    // Re-assigning an identical src still restarts the load and blanks a frame — skip it.
+    if (img.getAttribute('src') !== url) img.setAttribute('src', url);
+    img.setAttribute('alt', '');
 
-  const cropStyles = cropImageStyles(drawing, resource);
-  img.style.position = 'absolute';
-  img.style.width = cropStyles.width;
-  img.style.height = cropStyles.height;
-  img.style.left = cropStyles.left;
-  img.style.top = cropStyles.top;
-  img.style.maxWidth = 'none';
-  img.style.maxHeight = 'none';
+    const cropStyles = cropImageStyles(drawing, resource);
+    img.style.position = 'absolute';
+    img.style.width = cropStyles.width;
+    img.style.height = cropStyles.height;
+    img.style.left = cropStyles.left;
+    img.style.top = cropStyles.top;
+    img.style.maxWidth = 'none';
+    img.style.maxHeight = 'none';
 
-  cropViewport.append(img);
+    cropViewport.append(img);
+  }
   transformStage.append(cropViewport);
   inner.append(transformStage);
   outer.replaceChildren(inner);

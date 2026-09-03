@@ -9,6 +9,16 @@ export {
   type ImageInsertTriggerProps,
 } from './ImageInsert';
 export {
+  VideoInsertProvider,
+  VideoInsertTrigger,
+  ToolbarVideoInsert,
+  useVideoInsert,
+  useVideoInsertOptional,
+  type VideoInsertContextValue,
+  type VideoInsertProviderProps,
+  type VideoInsertTriggerProps,
+} from './VideoInsert';
+export {
   ImageWrap,
   ToolbarImageWrap,
   type ImageWrapProps,

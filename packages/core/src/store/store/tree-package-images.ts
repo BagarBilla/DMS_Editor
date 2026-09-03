@@ -25,7 +25,7 @@ import {
   cleanupOrphanDrawingHyperlinkRelationship,
 } from '../package/hyperlink-part.js';
 import { resolveImageRelationship } from '../package/relationships.js';
-import type { ImageDecodePort, SupportedImageMime } from '../package/image-resources.js';
+import type { ImageDecodePort, SupportedImageMime, SupportedVideoMime } from '../package/image-resources.js';
 import type { OoxmlDrawingNode, OoxmlElement, OoxmlPart } from '../package/ooxml-tree.js';
 import { docPrHyperlinkRelationshipId, setDocPrHyperlinkRelationship } from './tree-op-drawings.js';
 import type { DrawingTreeDocOp } from './tree-op-types.js';
@@ -36,7 +36,7 @@ export interface InsertImageInput {
   readonly paragraphId: string;
   readonly offset: number;
   readonly bytes: Uint8Array;
-  readonly mime: SupportedImageMime;
+  readonly mime: SupportedImageMime | SupportedVideoMime;
   readonly widthPoints: number;
   readonly heightPoints: number;
   readonly decodePort: ImageDecodePort;
@@ -271,15 +271,24 @@ export async function insertImage(
   if (blocked) return blocked;
 
   const ownerPartName = resolved.story.partName;
-  const validated = await validateEmbeddedImageForCommit(input.decodePort, input.bytes, input.mime);
-  if (!validated.ok) {
-    return {
-      ok: false,
-      reason: 'invalidArgs',
-      detail: 'invalid-image',
-    };
+  const isVideo = (input.mime as string).startsWith('video/');
+  let committedBytes: Uint8Array;
+  if (isVideo) {
+    if (input.bytes.length === 0) {
+      return { ok: false, reason: 'invalidArgs', detail: 'invalid-image' };
+    }
+    committedBytes = input.bytes;
+  } else {
+    const validated = await validateEmbeddedImageForCommit(input.decodePort, input.bytes, input.mime as SupportedImageMime);
+    if (!validated.ok) {
+      return {
+        ok: false,
+        reason: 'invalidArgs',
+        detail: 'invalid-image',
+      };
+    }
+    committedBytes = validated.bytes;
   }
-  const committedBytes = validated.bytes;
 
   const preflight = withEmbeddedImage(store.currentPackage(), ownerPartName, {
     bytes: committedBytes,

@@ -31,6 +31,7 @@ import { chromeControlForSlot, chromeIcon, guardToolbarMousedown } from '../tool
 import { useMenuContext, useMenuLabel, type MenuId } from './menu-context';
 import { focusBy, focusEdge, panelItems } from './menu-keyboard';
 import { useImageInsert } from '../images/ImageInsert';
+import { useVideoInsert } from '../images/VideoInsert';
 
 /** Word's insert-table grid is 6 columns by 6 rows. */
 const TABLE_GRID_COLUMNS = 6;
@@ -346,7 +347,8 @@ function MenuImageInsertImpl({ className, hidden }: MenuActionProps) {
   const label = useMenuLabel();
   if (hidden) return null;
   const control = chromeControlForSlot('image.insert');
-  const text = label(control?.labelKey ?? 'toolbar.image');
+  const rawText = label(control?.labelKey ?? 'toolbar.image');
+  const text = !rawText || rawText === 'toolbar.image' ? 'Picture' : rawText;
   return (
     <MenuRow
       slot="image.insert"
@@ -366,6 +368,35 @@ function MenuImageInsertImpl({ className, hidden }: MenuActionProps) {
 
 export const MenuImageInsert = Object.assign(MenuImageInsertImpl, {
   docxSlot: 'image.insert' as ChromeSlotId,
+});
+
+function MenuVideoInsertImpl({ className, hidden }: MenuActionProps) {
+  const { openFilePicker, isEnabled, disabledReason } = useVideoInsert();
+  const context = useMenuContext();
+  const label = useMenuLabel();
+  if (hidden) return null;
+  const control = chromeControlForSlot('video.insert');
+  const rawVideoText = label(control?.labelKey ?? 'toolbar.video');
+  const text = !rawVideoText || rawVideoText === 'toolbar.video' ? 'Video' : rawVideoText;
+  return (
+    <MenuRow
+      slot="video.insert"
+      icon={chromeIcon(control?.paths)}
+      disabled={!isEnabled}
+      {...(disabledReason ? { title: disabledReason } : {})}
+      onSelect={() => {
+        openFilePicker();
+        context.setOpenMenu(null);
+      }}
+      {...(className ? { className } : {})}
+    >
+      {text}
+    </MenuRow>
+  );
+}
+
+export const MenuVideoInsert = Object.assign(MenuVideoInsertImpl, {
+  docxSlot: 'video.insert' as ChromeSlotId,
 });
 
 function MenuWatermarkImpl({ className, hidden }: MenuActionProps) {
@@ -762,6 +793,7 @@ export function MenuEntry({ entry }: { entry: ChromeMenuEntry }) {
   if (entry.slot === 'file.save') return <MenuSave />;
   if (entry.slot === 'file.pageSetup') return <MenuPageSetup />;
   if (entry.slot === 'image.insert') return <MenuImageInsert />;
+  if (entry.slot === 'video.insert') return <MenuVideoInsert />;
   if (entry.slot === 'insert.watermark') return <MenuWatermark />;
   if (entry.picker === 'tableGrid') return <MenuTablePicker entry={entry} />;
   return (
