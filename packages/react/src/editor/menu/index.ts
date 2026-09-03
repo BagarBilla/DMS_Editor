@@ -13,6 +13,7 @@ export {
   MenuSeparator,
   MenuSubmenu,
   MenuTableGrid,
+  MenuWatermark,
   type MenuActionProps,
   type MenuGroupProps,
   type MenuItemProps,

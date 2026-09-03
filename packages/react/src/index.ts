@@ -349,3 +349,11 @@ export {
   type RulerUnit,
 } from './rulerTicks';
 export { useEditorSnapshot } from './useEditorSnapshot';
+export { DocxEditorWatermarkDialog, type DocxEditorWatermarkDialogProps } from './editor/DocxEditorWatermarkDialog';
+export { useWatermark, type UseWatermarkReturn } from './editor/useWatermark';
+export {
+  DEFAULT_WATERMARK_PRESETS,
+  type Watermark as WatermarkConfig,
+  type TextWatermark,
+  type PictureWatermark,
+} from './lib/watermark';

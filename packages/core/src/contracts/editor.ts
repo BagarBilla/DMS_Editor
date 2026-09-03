@@ -489,7 +489,7 @@ export interface Editor {
   getPageSetup(): PageSetup | null;
 
   /** The document watermark, for the watermark dialog. */
-  getWatermark(): { readonly kind: 'text' | 'image'; readonly text?: string } | null;
+  getWatermark(): Watermark | null;
 
   /** Header/footer editing state: which region is being edited, if any. */
   getHeaderFooterState(): HeaderFooterState | null;

@@ -122,6 +122,12 @@ export interface DocxEditorProps {
    */
   onOpen?: () => void;
   /**
+   * Watermark handler for Insert › Watermark.
+   *
+   * Without it the row falls back to the packaged Watermark dialog.
+   */
+  onWatermark?: () => void;
+  /**
    * The packaged menu bar — File · Format · Insert · Help — under the document title.
    *
    * `false` removes it. An OBJECT is `DocxEditorMenuProps`, passed straight through, so a

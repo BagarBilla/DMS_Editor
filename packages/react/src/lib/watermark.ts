@@ -29,8 +29,10 @@ export interface TextWatermark {
   color: string;
   /** Word's "Semitransparent" checkbox — renders at reduced opacity. */
   semitransparent: boolean;
-  /** Diagonal (≈ -45°) or horizontal layout. */
-  layout: 'diagonal' | 'horizontal';
+  /** Opacity override between 0 and 1. */
+  opacity?: number;
+  /** Diagonal, horizontal, vertical, or parallel layout. */
+  layout: 'diagonal' | 'horizontal' | 'vertical' | 'parallel';
   /** Font size in points. When undefined the renderer auto-sizes to the page (Word's "Auto"). */
   fontSize?: number;
 }

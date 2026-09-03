@@ -275,6 +275,12 @@ export function execEditorCommand(
         };
       }
       break;
+    case 'setWatermark':
+      if (typeof mounted.setWatermark === 'function') {
+        mounted.setWatermark(command.watermark);
+        return { ok: true, changed: true };
+      }
+      return { ok: false, code: 'unsupported', reason: 'setWatermark not supported on surface' };
     case 'editHeaderFooter':
       return execEditHeaderFooter(mounted, command);
     case 'exitHeaderFooter': {

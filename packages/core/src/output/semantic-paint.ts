@@ -45,8 +45,9 @@ import {
   paintInlineDrawingsOnLine,
   type DrawingPaintContext,
   type DrawingPaintStrings,
-  type PaintImageUrlPort,
 } from './semantic-paint-drawings.js';
+import type { PaintImageUrlPort } from './semantic-paint-drawings.js';
+import type { Watermark } from '../contracts/types.js';
 
 /**
  * When a field's result is drawn on its grey block, following Word's own View option.
@@ -230,6 +231,8 @@ export interface PaintOptions {
   };
   readonly drawingStrings?: DrawingPaintStrings;
   readonly imageUrlPort?: PaintImageUrlPort;
+  /** Document watermark to render behind content on each page. */
+  readonly watermark?: Watermark | null;
 }
 
 export type { DrawingPaintStrings, PaintImageUrlPort } from './semantic-paint-drawings.js';
@@ -1884,6 +1887,74 @@ function paintTableFragment(
   return element;
 }
 
+function appendPageWatermark(
+  document: Document,
+  pageElement: HTMLElement,
+  page: PageRecord,
+  watermark: Watermark,
+  scale: number
+): void {
+  if (!watermark.text) return;
+  const layer = document.createElement('div');
+  layer.className = 'docx-watermark-layer';
+  layer.setAttribute('aria-hidden', 'true');
+  layer.setAttribute('contenteditable', 'false');
+  layer.style.position = 'absolute';
+  layer.style.inset = '0';
+  layer.style.pointerEvents = 'none';
+  layer.style.overflow = 'hidden';
+  layer.style.display = 'flex';
+  layer.style.alignItems = 'center';
+  layer.style.justifyContent = 'center';
+  layer.style.userSelect = 'none';
+  layer.style.zIndex = '0';
+
+  const textNode = document.createElement('div');
+  textNode.className = 'docx-watermark-text';
+  textNode.textContent = watermark.text;
+  textNode.style.fontFamily = watermark.font || 'Calibri, Arial, sans-serif';
+  textNode.style.fontWeight = 'bold';
+  textNode.style.whiteSpace = 'nowrap';
+  textNode.style.color = watermark.color || '#9ca3af';
+
+  const opacity =
+    watermark.opacity !== undefined
+      ? watermark.opacity
+      : watermark.semitransparent !== false
+        ? 0.2
+        : 0.6;
+  textNode.style.opacity = String(opacity);
+
+  let angle = -45;
+  if (watermark.layout === 'horizontal') {
+    angle = 0;
+  } else if (watermark.layout === 'vertical') {
+    angle = -90;
+  } else if (watermark.layout === 'parallel' || watermark.layout === 'diagonal') {
+    const diagAngle = -Math.round((Math.atan2(page.box.height, page.box.width) * 180) / Math.PI);
+    angle = Number.isFinite(diagAngle) ? diagAngle : -45;
+  }
+  textNode.style.transform = `rotate(${angle}deg)`;
+  textNode.style.transformOrigin = 'center center';
+
+  if (watermark.fontSize && watermark.fontSize > 0) {
+    textNode.style.fontSize = `${watermark.fontSize * scale}px`;
+  } else {
+    const textLen = Math.max(watermark.text.length, 3);
+    const availableDim =
+      watermark.layout === 'vertical'
+        ? page.box.height * 0.7
+        : watermark.layout === 'horizontal'
+          ? page.box.width * 0.75
+          : Math.hypot(page.box.width, page.box.height) * 0.65;
+    const computedPt = Math.min(Math.max((availableDim / textLen) * 1.5, 24), 130);
+    textNode.style.fontSize = `${computedPt * scale}px`;
+  }
+
+  layer.append(textNode);
+  pageElement.append(layer);
+}
+
 function paintPage(
   document: Document,
   page: PageRecord,
@@ -1892,6 +1963,7 @@ function paintPage(
     readonly activeHeaderFooterRId?: string;
     readonly activeHeaderFooterPageIndex?: number;
     readonly contentControlChrome?: PaintOptions['contentControlChrome'];
+    readonly watermark?: Watermark | null;
   },
   materialize: boolean
 ): HTMLElement {
@@ -1956,6 +2028,11 @@ function paintPage(
       width: page.box.width,
       height: page.box.height,
     });
+  }
+
+  // Paint Watermark (behind page content)
+  if (options.watermark?.text) {
+    appendPageWatermark(document, element, page, options.watermark, options.scale);
   }
 
   const content = document.createElement('div');
@@ -2438,6 +2515,10 @@ export function paintSemanticLayout(
     ? [...options.emptyTocPlaceholderIds].sort().join(',')
     : '';
   const tocKey = chrome?.tocControlIds ? [...chrome.tocControlIds].sort().join(',') : '';
+  const wm = options.watermark;
+  const watermarkKey = wm?.text
+    ? `${wm.text}:${wm.layout ?? ''}:${wm.fontSize ?? ''}:${wm.color ?? ''}:${wm.opacity ?? ''}:${wm.semitransparent ?? ''}:${wm.font ?? ''}`
+    : '';
   const resolved = {
     scale: options.scale ?? 96 / 72,
     ariaHidden: options.ariaHidden ?? true,
@@ -2460,10 +2541,12 @@ export function paintSemanticLayout(
       ? { activeHeaderFooterPageIndex: options.activeHeaderFooterPageIndex }
       : {}),
     ...(chrome ? { contentControlChrome: chrome } : {}),
+    ...(options.watermark !== undefined ? { watermark: options.watermark } : {}),
   } satisfies ResolvedPaintContext & {
     ariaHidden: boolean;
     activeHeaderFooterRId?: string;
     activeHeaderFooterPageIndex?: number;
+    watermark?: Watermark | null;
   };
   const document = container.ownerDocument;
   // The alias lookup is part of the paint parameters: a page painted before fonts
@@ -2480,6 +2563,7 @@ export function paintSemanticLayout(
     `${resolved.activeHeaderFooterPageIndex ?? ''}|` +
     `cc:${chromeKey}:${additionalKey}|toc:${tocKey}|` +
     `ro:${readOnlyKey}|tocEmpty:${emptyTocKey}|` +
+    `wm:${watermarkKey}|` +
     `${options.imageUrlPort ? 'url' : ''}|` +
     `${drawingPaintStringsCacheToken(drawingStrings)}`;
   const previous = retainedPaints.get(container);

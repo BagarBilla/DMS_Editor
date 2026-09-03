@@ -470,8 +470,16 @@ export type ThemeColorScheme = Readonly<Record<string, string>>;
 
 /** A watermark, which OOXML expresses as either text or an image — never both meaningfully. */
 export interface Watermark {
+  readonly kind?: 'text' | 'image' | 'picture';
   readonly text?: string;
   readonly imageData?: Uint8Array;
+  readonly font?: string;
+  readonly color?: string;
+  readonly semitransparent?: boolean;
+  readonly opacity?: number;
+  readonly layout?: 'horizontal' | 'vertical' | 'parallel' | 'diagonal';
+  readonly fontSize?: number;
+  readonly scale?: number;
 }
 
 /** A size in EMUs, the unit DrawingML stores extents in. 914400 EMU = 1 inch. */

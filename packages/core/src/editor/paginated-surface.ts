@@ -80,6 +80,7 @@ import type {
   SurfaceEditingMode,
 } from './paginated-surface-contract.js';
 import type { ExecResult } from '../contracts/editor.js';
+import type { Watermark } from '../contracts/types.js';
 import type { TableCommandPlan } from './table-command-plan.js';
 import {
   clampedToDocument,
@@ -523,6 +524,41 @@ export function mountPaginatedSurface(
   });
   const drawingStrings: DrawingPaintStrings =
     options.drawingStrings ?? DEFAULT_DRAWING_PAINT_STRINGS;
+  let currentWatermark: Watermark | null = null;
+  try {
+    const livePkg = session.currentPackage();
+    for (const [, part] of livePkg.parts) {
+      if (part.name.includes('header') && part.root) {
+        const textpath = findNode(part.root, (n) => n.kind === 'element' && n.localName === 'textpath');
+        if (textpath && textpath.kind === 'element') {
+          const stringAttr = textpath.attributes['string'];
+          if (stringAttr) {
+            const shape = findNode(part.root, (n) => n.kind === 'element' && n.localName === 'shape');
+            let layout: 'horizontal' | 'vertical' | 'parallel' = 'parallel';
+            let color = '#9ca3af';
+            let semitransparent = true;
+            if (shape && shape.kind === 'element') {
+              const style = shape.attributes['style'] || '';
+              if (style.includes('rotation:0') || !style.includes('rotation:')) layout = 'horizontal';
+              else if (style.includes('rotation:90') || style.includes('rotation:270')) layout = 'vertical';
+              else layout = 'parallel';
+              if (shape.attributes['fillcolor']) color = shape.attributes['fillcolor'];
+            }
+            currentWatermark = {
+              kind: 'text',
+              text: stringAttr,
+              layout,
+              color,
+              semitransparent,
+            };
+            break;
+          }
+        }
+      }
+    }
+  } catch {
+    // Non-fatal if initial package inspection cannot read watermark
+  }
   /**
    * The insertion point, or null when the selection is not collapsed — a range has two ends
    * and is not "inside" anything, and a second background under one of them would read as a
@@ -1784,6 +1820,7 @@ export function mountPaginatedSurface(
           }
         : {}),
       ...(contentControlChrome ? { contentControlChrome } : {}),
+      ...(currentWatermark ? { watermark: currentWatermark } : {}),
     });
     // Paint just rebuilt every span, so the caret's field lost its mark with the old DOM.
     syncActiveFieldShading(pagesLayer, collapsedCaretPosition());
@@ -3393,6 +3430,12 @@ export function mountPaginatedSurface(
     insertToc,
     canRefreshToc,
     refreshToc,
+    getWatermark: () => currentWatermark,
+    setWatermark: (watermark: Watermark | null) => {
+      currentWatermark = watermark;
+      render(true);
+      return true;
+    },
     isInsideToc: (paragraphId) =>
       detectBodyTocs(session.part()).some(
         (toc) =>

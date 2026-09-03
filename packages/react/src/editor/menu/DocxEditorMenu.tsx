@@ -34,6 +34,7 @@ import { editorScopeFor } from '../editor-scope';
 import { useTranslation } from '../../i18n';
 import type { TranslationKey } from '../../i18n';
 import { DocxEditorPageSetupDialog } from '../DocxEditorPageSetup';
+import { DocxEditorWatermarkDialog } from '../DocxEditorWatermarkDialog';
 import type { ToolbarTranslate } from '../toolbar/toolbar-context';
 import { guardToolbarMousedown } from '../toolbar/ToolbarButton';
 import { MenuContext, type MenuContextValue, type MenuId } from './menu-context';
@@ -56,6 +57,7 @@ import {
   MenuReportIssue,
   MenuSubmenu,
   MenuTableGrid,
+  MenuWatermark,
   type MenuPartComponent,
 } from './parts';
 import { useScopeClassName } from '../scope-context';
@@ -94,6 +96,8 @@ export interface DocxEditorMenuProps {
   onSave?: () => void;
   /** Replaces File › Page setup. The default opens the packaged Page Setup dialog. */
   onPageSetup?: () => void;
+  /** Replaces Insert › Watermark. The default opens the packaged Watermark dialog. */
+  onWatermark?: () => void;
   /**
    * Replaces Help › Report issue. The default opens THIS project's issue tracker,
    * prefilled with the current page URL and user agent — so a host embedding the editor
@@ -160,6 +164,7 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
     onOpenFile,
     onSave,
     onPageSetup,
+    onWatermark,
     onReportIssue,
     reportIssue,
     preset = true,
@@ -176,6 +181,7 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
   // moves it, and opening a menu takes it so Escape returns focus somewhere sensible.
   const [activeMenu, setActiveMenu] = useState<MenuId | null>(null);
   const [pageSetupOpen, setPageSetupOpen] = useState(false);
+  const [watermarkOpen, setWatermarkOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -223,12 +229,14 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
   }, [editor, fileName, openedName]);
 
   const packagedPageSetup = useCallback(() => setPageSetupOpen(true), []);
+  const packagedWatermark = useCallback(() => setWatermarkOpen(true), []);
 
   // The resolved actions, host override first. Each is undefined without an editor, which
   // is what disables the row before the document is ready.
   const resolvedOpen = editor ? (onOpen ?? packagedOpen) : undefined;
   const resolvedSave = editor ? (onSave ?? packagedSave) : undefined;
   const resolvedPageSetup = editor ? (onPageSetup ?? packagedPageSetup) : undefined;
+  const resolvedWatermark = editor ? (onWatermark ?? packagedWatermark) : undefined;
 
   // Ctrl/Cmd+O and Ctrl/Cmd+S, so the shortcut column tells the truth. Both are what the
   // browser would otherwise handle (open a local file, save the page), and an editor that
@@ -271,6 +279,7 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
       onOpen: resolvedOpen,
       onSave: resolvedSave,
       onPageSetup: resolvedPageSetup,
+      onWatermark: resolvedWatermark,
       onReportIssue,
       reportIssue,
     }),
@@ -282,6 +291,7 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
       resolvedOpen,
       resolvedSave,
       resolvedPageSetup,
+      resolvedWatermark,
       onReportIssue,
       reportIssue,
     ]
@@ -389,6 +399,8 @@ function DocxEditorMenuRoot(props: DocxEditorMenuProps) {
       />
       {/* The packaged Page Setup dialog. A host that passed `onPageSetup` never opens it. */}
       <DocxEditorPageSetupDialog open={pageSetupOpen} onClose={() => setPageSetupOpen(false)} />
+      {/* The packaged Watermark dialog. A host that passed `onWatermark` never opens it. */}
+      <DocxEditorWatermarkDialog open={watermarkOpen} onClose={() => setWatermarkOpen(false)} />
     </MenuContext.Provider>
   );
 }
@@ -417,6 +429,7 @@ export interface DocxEditorMenuNamespace {
   readonly Open: typeof MenuOpen;
   readonly Save: typeof MenuSave;
   readonly PageSetup: typeof MenuPageSetup;
+  readonly Watermark: typeof MenuWatermark;
   /** Help › Report issue, so a host can drop it or point it elsewhere by name. */
   readonly ReportIssue: typeof MenuReportIssue;
 }
@@ -447,5 +460,6 @@ export const DocxEditorMenu: DocxEditorMenuNamespace = Object.assign(DocxEditorM
   Open: MenuOpen,
   Save: MenuSave,
   PageSetup: MenuPageSetup,
+  Watermark: MenuWatermark,
   ReportIssue: MenuReportIssue,
 });

@@ -45,6 +45,7 @@ export interface MenuContextValue {
   readonly onOpen: (() => void) | undefined;
   readonly onSave: (() => void) | undefined;
   readonly onPageSetup: (() => void) | undefined;
+  readonly onWatermark: (() => void) | undefined;
   /** Replaces the packaged Help row's handler. */
   readonly onReportIssue: (() => void) | undefined;
   /** `false` drops the packaged Help row, and Help with it. */
@@ -59,6 +60,7 @@ export const MenuContext = createContext<MenuContextValue>({
   onOpen: undefined,
   onSave: undefined,
   onPageSetup: undefined,
+  onWatermark: undefined,
   onReportIssue: undefined,
   reportIssue: undefined,
 });

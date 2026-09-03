@@ -4,7 +4,7 @@
 // the formatting snapshot and the surface interface itself. The composition root in
 // paginated-surface.ts implements and re-exports them, so importers keep one entry point.
 
-import type { IndentFormatting } from '../contracts/types.js';
+import type { IndentFormatting, Watermark } from '../contracts/types.js';
 import type { TreeApplyResult, TreeDocxSession } from '@docx-editor.dev/core/binding';
 import type { BookmarkIndex, StoryScope, TreeDocOp } from '@docx-editor.dev/core/store';
 import type { ViewScope } from '../contracts/editor.js';
@@ -625,6 +625,10 @@ export interface PaginatedSurface {
   refreshToc(tocId?: string, mode?: 'entire' | 'pageNumbers'): boolean;
   /** Whether a body paragraph belongs to a detected TOC boundary or cached result. */
   isInsideToc(paragraphId: string): boolean;
+  /** Get the current document watermark. */
+  getWatermark(): Watermark | null;
+  /** Set or remove the document watermark. */
+  setWatermark(watermark: Watermark | null): boolean;
   /**
    * Bookmark jumps and the ONE external-activation gate. A host's popover "open" action
    * calls `openExternal`; nothing else in the engine may call `window.open`.

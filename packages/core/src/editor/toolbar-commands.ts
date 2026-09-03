@@ -80,6 +80,7 @@ const SLOT_COMMANDS: Partial<Record<ChromeSlotId, EditorCommand>> = {
   'insert.pageBreak': { type: 'insertBreak', kind: 'page' },
   'insert.sectionBreakNextPage': { type: 'insertBreak', kind: 'section' },
   'insert.toc': { type: 'insertToc' },
+  'insert.watermark': { type: 'setWatermark', watermark: null },
   // Content-control remove maps to the public edit shape; the Editor facade resolves the
   // caret control. Show-all / form-fill / inspector are surface chrome, not commands — see
   // the special cases in `toolbarCommandState` / `runToolbarCommand`.
@@ -138,6 +139,7 @@ const CHROME_PROBES: Partial<Record<ChromeSlotId, EditorCommand>> = {
   // names one field so `classifyCommand`'s "requires at least one field" gate passes; it is
   // never executed, and the dialog sends the user's real values.
   'file.pageSetup': { type: 'setPageSetup', orientation: 'portrait' },
+  'insert.watermark': { type: 'setWatermark', watermark: null },
 };
 
 /**

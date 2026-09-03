@@ -2120,7 +2120,7 @@ export function createDocxEditor(config: DocxEditorConfig): DocxEditorInstance {
 
     getPageSetup: () => pageSetupOf(surface),
 
-    getWatermark: () => null,
+    getWatermark: () => surface?.getWatermark() ?? null,
     getTrackedChanges: () =>
       (surface?.session.reviewItems() ?? [])
         .filter((item) => item.kind === 'revision')
@@ -2465,8 +2465,10 @@ export function createDocxEditor(config: DocxEditorConfig): DocxEditorInstance {
           ) as unknown as EditorQueryResults[K];
         case 'tableContext':
           return tableContextOf(surface) as EditorQueryResults[K];
+        case 'watermark':
+          return (surface?.getWatermark() ?? null) as unknown as EditorQueryResults[K];
         default:
-          // watermark, splitCellConfig and pageContent are nullable and underived.
+          // splitCellConfig and pageContent are nullable and underived.
           return null as EditorQueryResults[K];
       }
     },

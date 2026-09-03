@@ -228,6 +228,7 @@ const DocxEditorFrame = forwardRef<DocxEditorRef, DocxEditorProps>(
       onFontError,
       onOpen,
       onSave,
+      onWatermark,
       hyperlinkPopup,
       contextMenu = true,
       menu = true,
@@ -336,6 +337,7 @@ const DocxEditorFrame = forwardRef<DocxEditorRef, DocxEditorProps>(
                   {...(title !== undefined ? { fileName: title } : {})}
                   {...(onOpen ? { onOpen } : {})}
                   {...(onSave ? { onSave } : {})}
+                  {...(onWatermark ? { onWatermark } : {})}
                   // An object `menu` is menu props, spread LAST so a host's own handler wins
                   // over the ones derived from the top-level props above.
                   {...(typeof menu === 'object' ? menu : {})}

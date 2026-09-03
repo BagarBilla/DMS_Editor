@@ -368,6 +368,34 @@ export const MenuImageInsert = Object.assign(MenuImageInsertImpl, {
   docxSlot: 'image.insert' as ChromeSlotId,
 });
 
+function MenuWatermarkImpl({ className, hidden }: MenuActionProps) {
+  const context = useMenuContext();
+  const label = useMenuLabel();
+  if (hidden) return null;
+  const control = chromeControlForSlot('insert.watermark');
+  const text = label(control?.labelKey ?? 'toolbar.watermark');
+  const enabled = !!context.onWatermark;
+  return (
+    <MenuRow
+      slot="insert.watermark"
+      icon={chromeIcon(control?.paths)}
+      disabled={!enabled}
+      onSelect={() => {
+        context.onWatermark?.();
+        context.setOpenMenu(null);
+      }}
+      {...(className ? { className } : {})}
+    >
+      {text || 'Watermark'}
+    </MenuRow>
+  );
+}
+
+export const MenuWatermark = Object.assign(MenuWatermarkImpl, {
+  docxSlot: 'insert.watermark' as ChromeSlotId,
+});
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Submenu
 // ─────────────────────────────────────────────────────────────────────────────
@@ -734,6 +762,7 @@ export function MenuEntry({ entry }: { entry: ChromeMenuEntry }) {
   if (entry.slot === 'file.save') return <MenuSave />;
   if (entry.slot === 'file.pageSetup') return <MenuPageSetup />;
   if (entry.slot === 'image.insert') return <MenuImageInsert />;
+  if (entry.slot === 'insert.watermark') return <MenuWatermark />;
   if (entry.picker === 'tableGrid') return <MenuTablePicker entry={entry} />;
   return (
     <MenuItem

@@ -854,6 +854,34 @@ a.docx-hyperlink:focus-visible {
   user-select: none;
 }
 
+/* Document watermark layer behind page content */
+.docx-watermark-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  z-index: 0;
+}
+
+.docx-watermark-text {
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+@media print {
+  .docx-watermark-layer {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 /* Content-control boundary furniture — overlay only; never contributes layout. */
 .docx-content-control-boundary {
   box-sizing: border-box;

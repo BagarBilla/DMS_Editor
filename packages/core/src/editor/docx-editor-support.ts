@@ -476,6 +476,8 @@ export function classifyCommand(command: EditorCommand): CommandSupport {
           };
     case 'insertToc':
       return { supported: true, mutating: true };
+    case 'setWatermark':
+      return { supported: true, mutating: true };
     case 'refreshToc':
       if (
         command.mode !== undefined &&

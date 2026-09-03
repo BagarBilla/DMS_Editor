@@ -654,6 +654,12 @@ export const CHROME_GROUPS = [
         paths: GENERATED_ICON_PATHS['toc'],
         state: { kind: 'command' },
       },
+      {
+        id: 'watermark',
+        labelKey: 'toolbar.watermark',
+        paths: GENERATED_ICON_PATHS['branding_watermark'],
+        state: { kind: 'command' },
+      },
     ],
   },
 ] as const;
@@ -757,7 +763,8 @@ export type ChromeSlotId =
   | 'insert.pageBreak'
   | 'insert.sectionBreakNextPage'
   | 'insert.sectionBreakContinuous'
-  | 'insert.toc';
+  | 'insert.toc'
+  | 'insert.watermark';
 
 /**
  * Every control id in the chrome, as a literal union. Unique WITHIN a group, not
@@ -958,6 +965,7 @@ export const CHROME_MENUS: readonly ChromeMenu[] = [
     // menu's. The slot, its toolbar control and `DocxEditor.Menu.ImageInsert` all remain, so
     // placing the row back is one child element.
     entries: [
+      { kind: 'item', slot: 'image.insert' },
       { kind: 'item', slot: 'table.insert', picker: 'tableGrid' },
       { kind: 'separator' },
       { kind: 'item', slot: 'insert.footnote' },
@@ -974,6 +982,7 @@ export const CHROME_MENUS: readonly ChromeMenu[] = [
         ],
       },
       { kind: 'item', slot: 'insert.toc' },
+      { kind: 'item', slot: 'insert.watermark' },
     ],
   },
   {
