@@ -10,7 +10,7 @@
   "dependencies": {
     "@docx-editor.dev/core": "2.2.1",
     "@docx-editor.dev/i18n": "2.2.1",
-    "@docx-editor.dev/pro": "2.2.1",
+    "@docx-editor.dev/pro": "2.11.0",
     "@docx-editor.dev/vue": "2.2.1",
     "vue": "^3.5.0",
     "fflate": "^0.8.2"
