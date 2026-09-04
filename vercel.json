@@ -1,22 +1,3 @@
 {
-  "buildCommand": "bun run build",
-  "outputDirectory": "examples/parity/dist",
-  "installCommand": "rm -rf node_modules && bun install --frozen-lockfile",
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/react/",
-      "permanent": false
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/react/(.*)",
-      "destination": "/react/index.html"
-    },
-    {
-      "source": "/vue/(.*)",
-      "destination": "/vue/index.html"
-    }
-  ]
+  "installCommand": "bun install --no-frozen-lockfile"
 }
