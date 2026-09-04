@@ -55,7 +55,7 @@
   "types": "./dist/index.d.ts",
   "dependencies": {
     "@docx-editor.dev/core": "2.2.1",
-    "@docx-editor.dev/i18n": "2.2.1",
+    "@docx-editor.dev/i18n": "2.11.0",
     "emf-converter": "2.0.2",
     "harfbuzzjs": "1.4.0"
   }
