@@ -57,7 +57,7 @@
     "@docx-editor.dev/core": "2.2.1",
     "@docx-editor.dev/i18n": "2.2.1",
     "emf-converter": "2.0.2",
-    "harfbuzzjs": "1.4.0"
+    "harfbuzzjs": "1.6.0"
   }
 }
 
