@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@docx-editor.dev/core": "2.2.1",
-    "@docx-editor.dev/fonts": "2.2.1",
+    "@docx-editor.dev/fonts": "2.11.0",
     "@docx-editor.dev/i18n": "2.2.1",
     "@docx-editor.dev/pro": "2.2.1",
     "@docx-editor.dev/react": "2.2.1",
