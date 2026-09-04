@@ -416,6 +416,7 @@ export function DocxEditorContextMenu({
       onOpen: undefined,
       onSave: undefined,
       onPageSetup: undefined,
+      onWatermark: undefined,
       onReportIssue: undefined,
       reportIssue: undefined,
     }),

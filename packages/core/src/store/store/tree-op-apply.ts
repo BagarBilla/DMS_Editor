@@ -182,8 +182,10 @@ function coalesceRunChildren(nextId: () => string, nodes: readonly OoxmlNode[]):
       out.push(node);
       continue;
     }
-    const left = (previous.children ?? []).find((child) => child.kind === 'textValue');
-    const right = (node.children ?? []).find((child) => child.kind === 'textValue');
+    const prevChildren = 'children' in previous ? (previous.children as readonly OoxmlNode[]) : [];
+    const nodeChildren = 'children' in node ? (node.children as readonly OoxmlNode[]) : [];
+    const left = prevChildren.find((child: OoxmlNode) => child.kind === 'textValue');
+    const right = nodeChildren.find((child: OoxmlNode) => child.kind === 'textValue');
     const value =
       (left && left.kind === 'textValue' ? left.value : '') +
       (right && right.kind === 'textValue' ? right.value : '');
@@ -567,7 +569,7 @@ function applyInsertContent(
       if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
       const index = run.children.findIndex((child) => contains(child, site.segment.node.id));
       const targetIndex = Math.max(0, index);
-      const children = [...run.children];
+      const children: OoxmlNode[] = [...run.children];
       children.splice(targetIndex, 0, ...nodes);
       const rebuilt = coalesceRunChildren(nextId, children);
       inserted = fromEdit(
@@ -629,7 +631,7 @@ function applyInsertContent(
     if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
     const index = run.children.findIndex((child) => contains(child, before.node.id));
     const targetIndex = index < 0 ? run.children.length : index + 1;
-    const children = [...run.children];
+    const children: OoxmlNode[] = [...run.children];
     children.splice(targetIndex, 0, ...nodes);
     const rebuilt = coalesceRunChildren(nextId, children);
     inserted = fromEdit(
@@ -643,7 +645,7 @@ function applyInsertContent(
     if (!run || run.kind !== 'run') return { ok: false, reason: 'tree-invariant' };
     const index = run.children.findIndex((child) => contains(child, after.node.id));
     const targetIndex = Math.max(0, index);
-    const children = [...run.children];
+    const children: OoxmlNode[] = [...run.children];
     children.splice(targetIndex, 0, ...nodes);
     const rebuilt = coalesceRunChildren(nextId, children);
     inserted = fromEdit(

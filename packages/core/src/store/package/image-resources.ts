@@ -1284,6 +1284,10 @@ function createImageResourceCacheInternal(
       });
     }
 
+    if (!isRasterSupportedMime(sniffed)) {
+      return unrenderable(resolvedPartName, sniffed, 'unsupported-format');
+    }
+
     const header = validateRasterHeader(snapshotted, sniffed);
     if (header === null) {
       return unrenderable(resolvedPartName, sniffed, 'unsupported-format');

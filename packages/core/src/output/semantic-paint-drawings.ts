@@ -256,8 +256,9 @@ function refusalLabel(
   strings: DrawingPaintStrings
 ): string {
   const { resource } = drawing;
+  const mime = 'mime' in resource ? resource.mime : undefined;
   const isVideo =
-    resource.mime?.startsWith('video/') ||
+    (typeof mime === 'string' && mime.startsWith('video/')) ||
     drawing.placeholderGraphicKind === 'video';
 
   if (isVideo) {
