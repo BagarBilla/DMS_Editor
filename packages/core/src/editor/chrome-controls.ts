@@ -711,6 +711,7 @@ export type ChromeGroupId =
   | 'review'
   | 'contentControl'
   | 'image'
+  | 'video'
   | 'table'
   | 'file'
   | 'insert';

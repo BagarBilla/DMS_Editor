@@ -237,6 +237,15 @@ function isPreservedMime(mime: string): mime is PreservedImageMime {
   return mime === 'image/tiff' || mime === 'image/x-emf' || mime === 'image/x-wmf';
 }
 
+function isSupportedVideoMime(mime: string): mime is SupportedVideoMime {
+  return (
+    mime === 'video/mp4' ||
+    mime === 'video/webm' ||
+    mime === 'video/ogg' ||
+    mime === 'video/quicktime'
+  );
+}
+
 /** Signature sniffing — authoritative over declared content type. */
 export function sniffImageMime(
   bytes: Uint8Array
@@ -1261,7 +1270,7 @@ function createImageResourceCacheInternal(
       });
     }
 
-    if (sniffed.startsWith('video/')) {
+    if (isSupportedVideoMime(sniffed)) {
       const videoContentId = contentIdOf(snapshotted);
       const videoResourceKey = resourceKeyOf(ownerPartName, resolvedPartName, videoContentId);
       const videoHandle = validatedBytesRegistry.acquire(
@@ -1276,7 +1285,7 @@ function createImageResourceCacheInternal(
         contentId: videoContentId,
         resourceKey: videoResourceKey,
         validatedHandle: videoHandle,
-        mime: sniffed as SupportedVideoMime,
+        mime: sniffed,
         pixelWidth: 800,
         pixelHeight: 450,
         dpiX: DEFAULT_DPI,

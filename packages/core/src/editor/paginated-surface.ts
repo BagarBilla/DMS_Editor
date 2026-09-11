@@ -526,23 +526,36 @@ export function mountPaginatedSurface(
     options.drawingStrings ?? DEFAULT_DRAWING_PAINT_STRINGS;
   let currentWatermark: Watermark | null = null;
   try {
+    const findElement = (root: OoxmlNode, predicate: (el: OoxmlElement) => boolean): OoxmlElement | null => {
+      if (root.kind === 'textValue') return null;
+      if (predicate(root)) return root;
+      for (const child of root.children) {
+        const found = findElement(child, predicate);
+        if (found) return found;
+      }
+      return null;
+    };
+    const getAttr = (el: OoxmlElement, name: string): string | undefined =>
+      el.attributes.find((a) => a.localName === name)?.value;
+
     const livePkg = session.currentPackage();
     for (const [, part] of livePkg.parts) {
       if (part.name.includes('header') && part.root) {
-        const textpath = findNode(part.root, (n) => n.kind === 'element' && n.localName === 'textpath');
-        if (textpath && textpath.kind === 'element') {
-          const stringAttr = textpath.attributes['string'];
+        const textpath = findElement(part.root, (n) => n.localName === 'textpath');
+        if (textpath) {
+          const stringAttr = getAttr(textpath, 'string');
           if (stringAttr) {
-            const shape = findNode(part.root, (n) => n.kind === 'element' && n.localName === 'shape');
+            const shape = findElement(part.root, (n) => n.localName === 'shape');
             let layout: 'horizontal' | 'vertical' | 'parallel' = 'parallel';
             let color = '#9ca3af';
-            let semitransparent = true;
-            if (shape && shape.kind === 'element') {
-              const style = shape.attributes['style'] || '';
+            const semitransparent = true;
+            if (shape) {
+              const style = getAttr(shape, 'style') || '';
               if (style.includes('rotation:0') || !style.includes('rotation:')) layout = 'horizontal';
               else if (style.includes('rotation:90') || style.includes('rotation:270')) layout = 'vertical';
               else layout = 'parallel';
-              if (shape.attributes['fillcolor']) color = shape.attributes['fillcolor'];
+              const fillColor = getAttr(shape, 'fillcolor');
+              if (fillColor) color = fillColor;
             }
             currentWatermark = {
               kind: 'text',

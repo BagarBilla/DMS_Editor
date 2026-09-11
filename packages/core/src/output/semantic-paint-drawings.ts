@@ -257,7 +257,7 @@ function refusalLabel(
 ): string {
   const { resource } = drawing;
   const isVideo =
-    resource.mime?.startsWith('video/') ||
+    ('mime' in resource && resource.mime?.startsWith('video/')) ||
     drawing.placeholderGraphicKind === 'video';
 
   if (isVideo) {
