@@ -31,6 +31,8 @@ import { ToolbarSeparator } from './parts';
 import { Slot } from './Slot';
 import { ToolbarHexColorPickerBody } from './ColorSplit';
 import { useTableChromeProviderVisible, useTableChromeSlot } from './useTableChrome';
+import { useEditorCommand } from '../useEditorCommand';
+import { MERGE_CELLS_PATHS } from '../contextmenu/contextmenu-icons';
 import {
   useDropdownClose,
   useTableChromeTriggerA11y,
@@ -858,7 +860,75 @@ export const ToolbarTableCellFill: TableCellFillNamespace = Object.assign(TableC
   Main: fillCompound.Main,
 });
 
-/** The five contextual table chrome controls in registry order. @internal */
+/**
+ * Contextual table cell merge toolbar button.
+ *
+ * @public
+ */
+export function ToolbarTableMergeCells({
+  className,
+  asChild,
+  hidden,
+  children,
+}: TableChromePartProps): ReactNode {
+  const { isEnabled, disabledReason, execute } = useEditorCommand({ type: 'mergeCells' });
+  const label = useToolbarLabel();
+  if (hidden) return null;
+
+  const shared = {
+    type: 'button' as const,
+    disabled: !isEnabled,
+    'aria-disabled': !isEnabled,
+    'aria-label': label('table.mergeCells'),
+    title: disabledReason ?? label('table.mergeCells'),
+    className: `docx-toolbar__button${className ? ` ${className}` : ''}`,
+    onMouseDown: guardToolbarMousedown,
+    onClick: () => {
+      execute();
+    },
+  };
+
+  const content = children ?? chromeIcon(MERGE_CELLS_PATHS);
+  return asChild ? <Slot {...shared}>{content}</Slot> : <button {...shared}>{content}</button>;
+}
+
+ToolbarTableMergeCells.docxSlot = 'table.mergeCells' as const;
+
+/**
+ * Contextual table cell split toolbar button.
+ *
+ * @public
+ */
+export function ToolbarTableSplitCell({
+  className,
+  asChild,
+  hidden,
+  children,
+}: TableChromePartProps): ReactNode {
+  const { isEnabled, disabledReason, execute } = useEditorCommand({ type: 'splitCell' });
+  const label = useToolbarLabel();
+  if (hidden) return null;
+
+  const shared = {
+    type: 'button' as const,
+    disabled: !isEnabled,
+    'aria-disabled': !isEnabled,
+    'aria-label': label('table.splitCell'),
+    title: disabledReason ?? label('table.splitCell'),
+    className: `docx-toolbar__button${className ? ` ${className}` : ''}`,
+    onMouseDown: guardToolbarMousedown,
+    onClick: () => {
+      execute();
+    },
+  };
+
+  const content = children ?? chromeIcon(tableChromeIconPaths('call_split'));
+  return asChild ? <Slot {...shared}>{content}</Slot> : <button {...shared}>{content}</button>;
+}
+
+ToolbarTableSplitCell.docxSlot = 'table.splitCell' as const;
+
+/** The contextual table chrome controls in registry order. @internal */
 export function TableChromeGroup({
   overrides = new Map(),
 }: {
@@ -867,7 +937,12 @@ export function TableChromeGroup({
   const visible = useTableChromeProviderVisible();
   if (!visible) return null;
 
-  const entries: readonly TableChromePartComponent[] = [
+  const entries: readonly (
+    | TableChromePartComponent
+    | { (props: TableChromePartProps): ReactNode; readonly docxSlot: string }
+  )[] = [
+    ToolbarTableMergeCells,
+    ToolbarTableSplitCell,
     ToolbarTableBorderTarget,
     ToolbarTableBorderColor,
     ToolbarTableBorderStyle,

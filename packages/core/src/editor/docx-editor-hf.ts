@@ -334,13 +334,22 @@ export function execInsertPageField(
   mounted: PaginatedSurface,
   command: Extract<EditorCommand, { type: 'insertPageField' }>
 ): ExecResult {
-  const scope = mounted.activeScope();
+  let scope = mounted.activeScope();
   if (scope.kind !== 'headerFooter') {
-    return {
-      ok: false,
-      code: 'unsupported',
-      reason: 'insertPageField requires an open header or footer scope',
-    };
+    if (command.target === 'header' || command.target === 'footer') {
+      const entered = execEditHeaderFooter(mounted, {
+        type: 'editHeaderFooter',
+        position: command.target,
+      });
+      if (!entered.ok) return entered;
+      scope = mounted.activeScope();
+    } else {
+      return {
+        ok: false,
+        code: 'unsupported',
+        reason: 'insertPageField requires an open header or footer scope',
+      };
+    }
   }
   if (typeof mounted.insertPageField !== 'function') {
     return { ok: false, code: 'unsupported', reason: 'page field insertion is not available' };

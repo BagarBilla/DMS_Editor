@@ -140,6 +140,12 @@ export interface EditorHeaderFooterCommands {
    */
   insertPageField: {
     field: 'PAGE' | 'NUMPAGES' | 'SECTIONPAGES' | 'PAGE_X_OF_Y';
+    /**
+     * Optional target story. When omitted, requires an open header or footer scope.
+     * When specified ('header' | 'footer'), automatically opens or creates the story
+     * before inserting the page number field.
+     */
+    target?: 'header' | 'footer';
   };
 }
 

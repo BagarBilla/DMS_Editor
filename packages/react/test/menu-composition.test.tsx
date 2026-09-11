@@ -758,4 +758,22 @@ describe('chrome contracts', () => {
     });
     expect(view.container.querySelectorAll('[role="menu"]').length).toBe(0);
   });
+
+  test('the chart insert row is present and opens the chart dialog', async () => {
+    const { view } = mountMenu(<DocxEditorMenu />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    openMenu(view, 'toolbar.insert');
+    const chartRow = row(view, 'chart.insert');
+    expect(chartRow.disabled).toBe(false);
+    expect(chartRow.getAttribute('aria-disabled')).toBeNull();
+    expect(chartRow.textContent).toContain(label('toolbar.chart' as TranslationKey));
+    act(() => {
+      fireEvent.click(chartRow);
+    });
+    expect(view.container.querySelectorAll('[role="menu"]').length).toBe(0);
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  });
 });
+

@@ -293,14 +293,14 @@ describe('table command planner and editor parity', () => {
     expect(editor.exec(cmd)).toEqual(can);
   });
 
-  test('mergeCells is unsupported with an exact reason', () => {
+  test('mergeCells refuses when single cell is selected', () => {
     const editor = mount(TABLE_2X2);
     const surface = editor.surface!;
     caret(surface, paragraphByText('A1', surface));
     const cmd = { type: 'mergeCells' as const };
     const can = editor.can(cmd);
     expect(can.ok).toBe(false);
-    expect(can.reason).toBe('cell merge is not supported yet');
+    expect(can.reason).toBe('merging table cells requires at least two selected cells');
     expect(editor.exec(cmd)).toEqual(can);
   });
 

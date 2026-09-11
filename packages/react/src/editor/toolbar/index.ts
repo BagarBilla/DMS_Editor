@@ -9,6 +9,8 @@ export { ToolbarButton, type ToolbarButtonProps } from './ToolbarButton';
 export { ToolbarAction, type ToolbarActionProps } from './ToolbarAction';
 export {
   ToolbarSeparator,
+  ToolbarPageNumber,
+  ToolbarPageXofY,
   type ToolbarPartComponent,
   type ToolbarPartProps,
   type ToolbarSeparatorProps,
@@ -39,6 +41,8 @@ export {
   ToolbarTableBorderTarget,
   ToolbarTableBorderWidth,
   ToolbarTableCellFill,
+  ToolbarTableMergeCells,
+  ToolbarTableSplitCell,
   useTableBorderTargetLabel,
   type TableBorderColorNamespace,
   type TableBorderStyleNamespace,

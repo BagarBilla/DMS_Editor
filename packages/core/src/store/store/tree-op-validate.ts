@@ -41,6 +41,8 @@ import {
   validateTableColumnOp,
   validateTableResizeOp,
   validateTableCellPropertyOp,
+  validateMergeTableCells,
+  validateSplitTableCell,
 } from './tree-op-tables.js';
 import {
   bodyNodeOf,
@@ -659,6 +661,8 @@ export function validateTreeOp(part: OoxmlPart, op: TreeDocOp): TreeOpRejection 
   ) {
     return validateTableCellPropertyOp(part, op);
   }
+  if (op.op === 'mergeTableCells') return validateMergeTableCells(part, op);
+  if (op.op === 'splitTableCell') return validateSplitTableCell(part, op);
 
   if (op.op === 'joinParagraphs') {
     const first = findNode(part, op.firstId);

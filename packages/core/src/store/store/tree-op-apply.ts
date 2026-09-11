@@ -122,6 +122,8 @@ import {
   applyTableColumnOp,
   applyTableResizeOp,
   applyTableCellPropertyOp,
+  applyMergeTableCells,
+  applySplitTableCell,
 } from './tree-op-tables.js';
 import { contentControlAtCaret, validateTreeOp } from './tree-op-validate.js';
 import { fnv1a32 } from '../package/para-id.js';
@@ -302,6 +304,8 @@ export function applyTreeOp(part: OoxmlPart, op: TreeDocOp, options?: EditOption
   ) {
     return applyTableCellPropertyOp(part, op, options);
   }
+  if (op.op === 'mergeTableCells') return applyMergeTableCells(part, op, options);
+  if (op.op === 'splitTableCell') return applySplitTableCell(part, op, options);
   if (isDrawingTreeDocOp(op)) return applyDrawingOp(part, op, options);
 
   if (op.op === 'insertTable') return applyInsertTable(part, op, options);

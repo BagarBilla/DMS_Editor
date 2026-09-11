@@ -128,6 +128,12 @@ export interface DocxEditorProps {
    */
   onWatermark?: () => void;
   /**
+   * Chart dialog handler for Insert › Chart.
+   *
+   * Without it the row falls back to the packaged Chart dialog.
+   */
+  onChart?: () => void;
+  /**
    * The packaged menu bar — File · Format · Insert · Help — under the document title.
    *
    * `false` removes it. An OBJECT is `DocxEditorMenuProps`, passed straight through, so a
@@ -180,6 +186,11 @@ export interface DocxEditorProps {
    * `DocxEditor.HorizontalRuler` / `DocxEditor.VerticalRuler` yourself.
    */
   rulers?: boolean;
+  /**
+   * Microsoft Word-like bottom status bar showing page count, cursor line/column, word count,
+   * and zoom controls. Default `true` when `chrome` is enabled.
+   */
+  statusBar?: boolean;
   /** A document to load: DOCX bytes or an existing handle. */
   document?: DocumentSource;
   /** 'edit' (default) or 'view' (read-only). Applied at mount only — not reactive; remount to change. */

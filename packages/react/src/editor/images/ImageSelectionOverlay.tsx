@@ -19,6 +19,7 @@ import {
   isStaleImageInteractionCommit,
   pointsToEmu,
   selectedDrawingOverlayTargetOf,
+  selectedImageStateOf,
   type ImageInteractionSession,
   type ImageOverlayScrollPort,
   type ImageResizeHandle,
@@ -38,6 +39,7 @@ import { useTranslation } from '../../i18n';
 import { useDocxEditor } from '../context';
 import { guardToolbarMousedown } from '../toolbar/ToolbarButton';
 import { DocxEditorImagePropertiesDialog } from './ImageProperties';
+import { DocxEditorChartDialog, parseChartConfig } from '../charts';
 
 const HANDLES: readonly ImageResizeHandle[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const AUTO_SCROLL_EDGE_PX = 40;
@@ -134,6 +136,7 @@ export function ImageSelectionOverlay({
   const [target, setTarget] = useState<SelectedDrawingOverlayTarget | null>(null);
   const [preview, setPreview] = useState<PreviewState | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [chartDialogOpen, setChartDialogOpen] = useState(false);
   const previewRef = useRef<PreviewState | null>(null);
   previewRef.current = preview;
   const pointerStartRef = useRef<{ readonly x: number; readonly y: number } | null>(null);
@@ -712,6 +715,12 @@ export function ImageSelectionOverlay({
 
   const active = preview?.bounds ?? target;
 
+  const selectedImage = editor?.surface ? selectedImageStateOf(editor.surface) : null;
+  const chartConfig = useMemo(() => {
+    if (!selectedImage || !active || selectedImage.id !== active.id) return null;
+    return parseChartConfig(selectedImage.description);
+  }, [selectedImage, active]);
+
   const rendered = useMemo(() => {
     if (!editor?.surface || !active) return null;
 
@@ -773,7 +782,11 @@ export function ImageSelectionOverlay({
             onDoubleClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setDialogOpen(true);
+              if (chartConfig) {
+                setChartDialogOpen(true);
+              } else {
+                setDialogOpen(true);
+              }
             }}
             onPointerDown={(event) => {
               guardToolbarMousedown(event);
@@ -799,8 +812,41 @@ export function ImageSelectionOverlay({
             style={{
               left: `${rect.left + rect.width / 2}px`,
               top: `${rect.top - 8}px`,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
+            {chartConfig ? (
+              <button
+                type="button"
+                style={{
+                  background: '#4f46e5',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '2px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                }}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setChartDialogOpen(true);
+                }}
+                title="Edit chart data and design"
+              >
+                <span>📊</span> {t('dialogs.chart.editBadge')}
+              </button>
+            ) : null}
             {preview?.cropLabel ? (
               <span>{preview.cropLabel}</span>
             ) : (
@@ -871,11 +917,23 @@ export function ImageSelectionOverlay({
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
         />
+
+        {/* Chart Editor Dialog */}
+        {chartConfig ? (
+          <DocxEditorChartDialog
+            open={chartDialogOpen}
+            onClose={() => setChartDialogOpen(false)}
+            initialConfig={chartConfig}
+            editDrawingNodeId={active.id}
+          />
+        ) : null}
       </>
     );
   }, [
     active,
     beginSession,
+    chartConfig,
+    chartDialogOpen,
     containerRef,
     dialogOpen,
     editor,

@@ -79,6 +79,10 @@ export const ToolbarIndent = definePart('list.indent');
 export { ToolbarImageInsert, ToolbarImageProperties, ToolbarImageWrap, ToolbarImageAltText };
 export const ToolbarTableInsert = definePart('table.insert');
 export const ToolbarComments = definePart('review.comments');
+export const ToolbarPageNumber = definePart('insert.pageNumber');
+export const ToolbarPageXofY = definePart('insert.pageXofY');
+export const ToolbarTotalPages = definePart('insert.totalPages');
+export const ToolbarSectionPages = definePart('insert.sectionPages');
 
 /**
  * Insert Link.

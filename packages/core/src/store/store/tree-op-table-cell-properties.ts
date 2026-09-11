@@ -80,7 +80,7 @@ interface SidePatch {
   readonly spec?: TableBorderSpecInput;
 }
 
-interface PlacedCell {
+export interface PlacedCell {
   readonly rowIndex: number;
   readonly startCol: number;
   readonly span: number;
@@ -91,13 +91,13 @@ interface PlacedCell {
   readonly visualOwner: PlacedCell;
 }
 
-interface OwnershipInterval {
+export interface OwnershipInterval {
   readonly start: number;
   readonly end: number;
   readonly entry: PlacedCell;
 }
 
-interface PhysicalGrid {
+export interface PhysicalGrid {
   readonly rowFrom: number;
   readonly rowTo: number;
   readonly colFrom: number;
@@ -105,7 +105,7 @@ interface PhysicalGrid {
   readonly rows: readonly (readonly OwnershipInterval[])[];
 }
 
-interface ValidatedCellSelection {
+export interface ValidatedCellSelection {
   readonly index: PlacedCellIndex;
   readonly selectedIds: ReadonlySet<string>;
   readonly grid: PhysicalGrid;
@@ -183,7 +183,7 @@ const NO_OP_FILL_EFFECT: TreeOpEffect = {
   impact: 'paragraph-local',
 };
 
-function mapTopologyRejection(
+export function mapTopologyRejection(
   reason: 'unknown-table' | 'duplicate-property-container' | 'duplicate-node-id' | 'resource-limit'
 ): TreeOpRejection {
   if (reason === 'duplicate-node-id') return 'unknown-table';
@@ -218,7 +218,7 @@ function countWmlChildren(container: OoxmlElement, localName: string): number {
   return count;
 }
 
-function readGridSpan(cellProperties: OoxmlElement | undefined): number {
+export function readGridSpan(cellProperties: OoxmlElement | undefined): number {
   const raw = cellProperties && wmlChildNamed(cellProperties, 'gridSpan');
   const value = raw && wmlAttributeValue(raw, 'val');
   if (!value || !/^\d{1,7}$/.test(value)) return 1;
@@ -234,7 +234,7 @@ function readGridSkip(rowProperties: OoxmlElement | undefined, localName: string
   return Number.isInteger(count) && count > 0 ? Math.min(count, MAX_TABLE_COLUMNS) : 0;
 }
 
-function readVMergeKind(cellProperties: OoxmlElement | undefined): 'none' | 'restart' | 'continue' {
+export function readVMergeKind(cellProperties: OoxmlElement | undefined): 'none' | 'restart' | 'continue' {
   const vMerge = cellProperties && wmlChildNamed(cellProperties, 'vMerge');
   if (!vMerge) return 'none';
   return wmlAttributeValue(vMerge, 'val') === 'restart' ? 'restart' : 'continue';
@@ -259,7 +259,7 @@ function buildRowGridSlots(
   return slots;
 }
 
-interface PlacedCellIndex {
+export interface PlacedCellIndex {
   readonly placed: readonly PlacedCell[];
   readonly byId: ReadonlyMap<string, PlacedCell>;
   readonly byRow: ReadonlyMap<number, readonly PlacedCell[]>;
@@ -589,7 +589,7 @@ function rejectDuplicateCellProperties(cell: OoxmlTableCellNode): TreeOpRejectio
   return null;
 }
 
-function validateCellSelection(
+export function validateCellSelection(
   topology: EditableTableTopology,
   cellIds: readonly string[],
   limits: TableTopologyLimits

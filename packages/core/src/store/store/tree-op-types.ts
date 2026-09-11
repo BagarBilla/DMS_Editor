@@ -653,6 +653,20 @@ export type TreeDocOp =
       readonly alignment: 'top' | 'center' | 'bottom';
     }
   | {
+      /** Merge a rectangular selection of table cells across rows and/or columns. */
+      readonly op: 'mergeTableCells';
+      readonly tableId: string;
+      readonly cellIds: readonly string[];
+    }
+  | {
+      /** Split a table cell into multiple columns and/or rows. */
+      readonly op: 'splitTableCell';
+      readonly tableId: string;
+      readonly cellId: string;
+      readonly rows: number;
+      readonly cols: number;
+    }
+  | {
       /** Allocate an empty header/footer part and declare it on a section. Package-level. */
       readonly op: 'createHeaderFooter';
       readonly sectionIndex: number;
@@ -953,6 +967,8 @@ export const TREE_DOC_OP_KINDS = [
   'setTableCellBorders',
   'setTableCellFill',
   'setTableCellVerticalAlignment',
+  'mergeTableCells',
+  'splitTableCell',
   'createHeaderFooter',
   'deleteHeaderFooter',
   'linkToPrevious',

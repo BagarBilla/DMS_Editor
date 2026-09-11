@@ -621,6 +621,8 @@ describe('keyboard', () => {
 
 describe('table context rows (Task 10)', () => {
   const TABLE_ROW_IDS = [
+    'table.mergeCells',
+    'table.splitCell',
     'table.insertRowAbove',
     'table.insertRowBelow',
     'table.insertColumnLeft',
@@ -649,11 +651,10 @@ describe('table context rows (Task 10)', () => {
     });
     rightClick(view);
     const slots = rows(view).map((row) => row.dataset.slot);
-    const tableStart = slots.indexOf('table.insertRowAbove');
+    const tableStart = slots.indexOf('table.mergeCells');
     expect(tableStart).toBeGreaterThan(-1);
     expect(slots.slice(tableStart, tableStart + TABLE_ROW_IDS.length)).toEqual([...TABLE_ROW_IDS]);
-    expect(slots).not.toContain('table.mergeCells');
-    expect(slots).not.toContain('table.splitCell');
+    expect(slots).toContain('table.splitCell');
   });
 
   test('destructive table rows carry the destructive treatment before cell alignment', () => {

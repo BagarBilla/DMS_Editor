@@ -306,6 +306,45 @@ function validateTableCommandShape(command: EditorCommand): TableCommandPlan | n
       return !isPlainObject(command) || !ownKeysExactly(command, ['type'])
         ? refusal('invalidArgs', 'deleteTable command shape is invalid')
         : null;
+    case 'mergeCells':
+      return !isPlainObject(command) || !ownKeysExactly(command, ['type'])
+        ? refusal('invalidArgs', 'mergeCells command shape is invalid')
+        : null;
+    case 'splitCell': {
+      if (!isPlainObject(command) || command.type !== 'splitCell') {
+        return refusal('invalidArgs', 'splitCell command shape is invalid');
+      }
+      const allowedKeys = ['type', 'rows', 'cols'];
+      for (const k of Object.keys(command)) {
+        if (!allowedKeys.includes(k)) {
+          return refusal('invalidArgs', 'splitCell command shape is invalid');
+        }
+      }
+      if ('rows' in command && command.rows !== undefined) {
+        if (
+          typeof command.rows !== 'number' ||
+          !Number.isInteger(command.rows) ||
+          command.rows < 1
+        ) {
+          return refusal('invalidArgs', 'splitCell rows must be a positive integer');
+        }
+      }
+      if ('cols' in command && command.cols !== undefined) {
+        if (
+          typeof command.cols !== 'number' ||
+          !Number.isInteger(command.cols) ||
+          command.cols < 1
+        ) {
+          return refusal('invalidArgs', 'splitCell cols must be a positive integer');
+        }
+      }
+      const r = command.rows ?? 1;
+      const c = command.cols ?? 2;
+      if (r === 1 && c === 1) {
+        return refusal('invalidArgs', 'splitting a cell requires at least 2 rows or 2 columns');
+      }
+      return null;
+    }
     case 'setCellFill':
       if (!isPlainObject(command) || !ownKeysExactly(command, ['type', 'color'])) {
         return refusal('invalidArgs', 'setCellFill command shape is invalid');
@@ -646,10 +685,6 @@ export function planTableCommand(input: TableCommandPlannerInput): TableCommandP
   }
 
   switch (command.type) {
-    case 'mergeCells':
-      return refusal('unsupported', 'cell merge is not supported yet');
-    case 'splitCell':
-      return refusal('unsupported', 'cell split is not supported yet');
     case 'toggleHeaderRow':
     case 'selectTableRegion':
     case 'setTableProperties':
@@ -830,6 +865,34 @@ export function planTableCommand(input: TableCommandPlannerInput): TableCommandP
         command.columnWidthTwips,
         command.tableWidthTwips
       );
+    case 'mergeCells': {
+      if (!anchor) return refusal('unsupported', 'the selection is not inside a table');
+      if (anchor.cellIds.length < 2) {
+        return refusal('unsupported', 'merging table cells requires at least two selected cells');
+      }
+      const op: TreeDocOp = {
+        op: 'mergeTableCells',
+        tableId: anchor.tableId,
+        cellIds: anchor.cellIds,
+      };
+      return planValidated(part, [op], { kind: 'adoptCommittedCaret' });
+    }
+    case 'splitCell': {
+      if (!anchor) return refusal('unsupported', 'the selection is not inside a table');
+      if (anchor.cellIds.length !== 1) {
+        return refusal('unsupported', 'splitting table cells requires a single selected cell');
+      }
+      const rows = command.rows ?? 1;
+      const cols = command.cols ?? 2;
+      const op: TreeDocOp = {
+        op: 'splitTableCell',
+        tableId: anchor.tableId,
+        cellId: anchor.cellId,
+        rows,
+        cols,
+      };
+      return planValidated(part, [op], { kind: 'adoptCommittedCaret' });
+    }
     default:
       return refusal('unsupported', `command '${command.type}' is not a table command`);
   }
@@ -843,10 +906,6 @@ export function tableCommandCanSupport(command: EditorCommand): {
     return { supported: false, reason: `command '${command.type}' is not a table command` };
   }
   switch (command.type) {
-    case 'mergeCells':
-      return { supported: false, reason: 'cell merge is not supported yet' };
-    case 'splitCell':
-      return { supported: false, reason: 'cell split is not supported yet' };
     case 'toggleHeaderRow':
     case 'selectTableRegion':
     case 'setTableProperties':

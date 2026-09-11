@@ -10,6 +10,7 @@ import type {
   EditorCommand,
   EditorScope,
   CanResult,
+  CaretPositionMetrics,
   ExecResult,
   HyperlinkInfo,
   PageSetup,
@@ -25,7 +26,7 @@ import { gateImageCommand } from './docx-editor-images.js';
 export type CommandGate =
   | { ok: true; tablePlan?: import('./table-command-plan.js').TableCommandPlan }
   | { ok: false; refusal: Exclude<ExecResult, { ok: true }> };
-import { tableContextAt } from '@docx-editor.dev/core/layout';
+import { caretAt, paragraphFragmentsOf, tableContextAt } from '@docx-editor.dev/core/layout';
 import {
   isTableEditorCommand,
   planTableCommand,
@@ -181,6 +182,53 @@ export function currentPage(
   mode: 'viewport' | 'caret' = 'caret'
 ): number {
   return surface ? surface.currentPage(mode) : 1;
+}
+
+/**
+ * Metric position of the caret within the layout (page, total pages, line, column).
+ */
+export function caretPositionOf(surface: PaginatedSurface | null): CaretPositionMetrics | null {
+  if (!surface) return null;
+  const layout = surface.layout();
+  const state = surface.state();
+  const totalPages = Math.max(1, state.pageCount || layout.pages.length);
+  const head = state.selection?.head;
+  if (!head || typeof head.paragraphId !== 'string' || !Number.isFinite(head.offset)) {
+    return {
+      pageNumber: 1,
+      totalPages,
+      lineNumber: 1,
+      columnNumber: 1,
+    };
+  }
+  const geom = caretAt(layout, head);
+  const pageIndex = geom?.pageIndex ?? 0;
+  const page = layout.pages[pageIndex];
+  let lineNumber = 1;
+  let columnNumber = 1;
+  if (page && geom) {
+    const pageFragments = paragraphFragmentsOf(page);
+    let lineIdx = 0;
+    let found = false;
+    for (const fragment of pageFragments) {
+      for (const line of fragment.lines) {
+        lineIdx++;
+        if (line.id === geom.lineId) {
+          lineNumber = lineIdx;
+          columnNumber = Math.max(1, head.offset - line.range.start + 1);
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+  }
+  return {
+    pageNumber: pageIndex + 1,
+    totalPages,
+    lineNumber,
+    columnNumber,
+  };
 }
 
 export function gateTableCommand(command: EditorCommand, surface: PaginatedSurface): CommandGate {
@@ -386,6 +434,9 @@ export function gateCommand(
   if (command.type === 'insertPageField') {
     const active = surface.activeScope?.() ?? { kind: 'body' as const };
     if (active.kind !== 'headerFooter') {
+      if (command.target === 'header' || command.target === 'footer') {
+        return { ok: true };
+      }
       return {
         ok: false,
         refusal: {
@@ -472,13 +523,27 @@ export function tableContextOf(surface: PaginatedSurface | null): TableContext |
   // table either way and one lookup serves both.
   const context = tableContextAt(surface.layout(), state.selection.head.paragraphId);
   if (!context) return null;
+  const isSingleCell =
+    !cells || (cells.rows.from === cells.rows.to && cells.columns.from === cells.columns.to);
   return {
     rows: context.rows,
     columns: context.columns,
     // A rectangle reports its top-left, which is where its commands are anchored.
     rowIndex: cells ? cells.rows.from : context.rowIndex,
     columnIndex: cells ? cells.columns.from : context.columnIndex,
+    canSplitCell: isSingleCell,
   };
+}
+
+/** Maximum row and column bounds for splitting the current cell. */
+export function splitCellConfigOf(surface: PaginatedSurface | null): {
+  maxRows: number;
+  maxCols: number;
+} | null {
+  if (!surface) return null;
+  const context = tableContextOf(surface);
+  if (!context || !context.canSplitCell) return null;
+  return { maxRows: 64, maxCols: 63 };
 }
 
 /** Half-point reshape of `snapshot().formatting` for `getSelectionFormatting`. */

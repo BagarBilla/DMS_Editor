@@ -14,8 +14,11 @@ import { DocxEditorHorizontalRuler, DocxEditorVerticalRuler } from '../editor/Do
 import { DocxEditorDocumentOutline } from '../editor/DocxEditorOutline';
 import { Navigation as DocxEditorNavigationCompound } from '../editor/navigation';
 import { DocxEditorPageSetupDialog } from '../editor/DocxEditorPageSetup';
+import { DocxEditorSplitCellDialog } from '../editor/DocxEditorSplitCellDialog';
+import { DocxEditorChartDialog } from '../editor/charts';
 import { DocxEditorPageNumber, PageNumberTranslationContext } from '../editor/DocxEditorPageNumber';
 import { DocxEditorFontNotice } from '../editor/DocxEditorFontNotice';
+import { DocxEditorStatusBar } from '../editor/DocxEditorStatusBar';
 import { DocxEditorHeaderFooterChrome } from '../editor/DocxEditorHeaderFooter';
 import { DocxEditorHyperLink } from '../editor/DocxEditorHyperLink';
 import { DocxEditorNotesChrome } from '../editor/DocxEditorNotes';
@@ -229,11 +232,13 @@ const DocxEditorFrame = forwardRef<DocxEditorRef, DocxEditorProps>(
       onOpen,
       onSave,
       onWatermark,
+      onChart,
       hyperlinkPopup,
       contextMenu = true,
       menu = true,
       navigation = true,
       rulers = true,
+      statusBar = true,
     } = props;
 
     // Chrome colour mode: 'system' subscribes to the OS setting. Only the chrome
@@ -338,6 +343,7 @@ const DocxEditorFrame = forwardRef<DocxEditorRef, DocxEditorProps>(
                   {...(onOpen ? { onOpen } : {})}
                   {...(onSave ? { onSave } : {})}
                   {...(onWatermark ? { onWatermark } : {})}
+                  {...(onChart ? { onChart } : {})}
                   // An object `menu` is menu props, spread LAST so a host's own handler wins
                   // over the ones derived from the top-level props above.
                   {...(typeof menu === 'object' ? menu : {})}
@@ -378,6 +384,7 @@ const DocxEditorFrame = forwardRef<DocxEditorRef, DocxEditorProps>(
             <DocxEditorPageNumber />
           </PageNumberTranslationContext.Provider>
         </div>
+        {statusBar ? <DocxEditorStatusBar t={translate} /> : null}
       </div>
     ) : (
       viewport
@@ -466,6 +473,10 @@ export interface DocxEditorNamespace extends ForwardRefExoticComponent<
   readonly Navigation: typeof DocxEditorNavigationCompound;
   /** Page Setup dialog — size, orientation, margins — applied as one undo step. */
   readonly PageSetupDialog: typeof DocxEditorPageSetupDialog;
+  /** Split Cell dialog — configure column and row subdivision for a table cell. */
+  readonly SplitCellDialog: typeof DocxEditorSplitCellDialog;
+  /** Chart dialog — create, insert, and edit charts and graphs. */
+  readonly ChartDialog: typeof DocxEditorChartDialog;
   /** Floating localized page readout for the active viewport. */
   readonly PageNumber: typeof DocxEditorPageNumber;
   /** Word-style notice when document fonts render in substitute faces. */
@@ -491,6 +502,8 @@ export interface DocxEditorNamespace extends ForwardRefExoticComponent<
    * `contentControl.inspector` chrome slot.
    */
   readonly ContentControl: typeof DocxEditorContentControl;
+  /** Microsoft Word-like bottom status bar. */
+  readonly StatusBar: typeof DocxEditorStatusBar;
 }
 
 export const DocxEditor: DocxEditorNamespace = Object.assign(DocxEditorImpl, {
@@ -505,7 +518,10 @@ export const DocxEditor: DocxEditorNamespace = Object.assign(DocxEditorImpl, {
   DocumentOutline: DocxEditorDocumentOutline,
   Navigation: DocxEditorNavigationCompound,
   PageSetupDialog: DocxEditorPageSetupDialog,
+  SplitCellDialog: DocxEditorSplitCellDialog,
+  ChartDialog: DocxEditorChartDialog,
   PageNumber: DocxEditorPageNumber,
+  StatusBar: DocxEditorStatusBar,
   FontNotice: DocxEditorFontNotice,
   HeaderFooterChrome: DocxEditorHeaderFooterChrome,
   NotesChrome: DocxEditorNotesChrome,

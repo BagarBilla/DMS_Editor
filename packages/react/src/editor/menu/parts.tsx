@@ -209,6 +209,7 @@ export function MenuItem({ slot, labelKey, shortcutKey, className, hidden }: Men
   const { execute, isActive, isEnabled, disabledReason } = useEditorCommand(slot);
   const { setOpenMenu } = useMenuContext();
   const label = useMenuLabel();
+  const editor = useDocxEditor();
   if (hidden) return null;
   const control = chromeControlForSlot(slot);
   const text = label(labelKey ?? control?.labelKey ?? slot);
@@ -218,17 +219,55 @@ export function MenuItem({ slot, labelKey, shortcutKey, className, hidden }: Men
   const isToggle = command?.type === 'toggleMark' || command?.type === 'setAlignment';
   // The four alignments are one-of-four, not four independent toggles.
   const isRadio = command?.type === 'setAlignment';
+
+  const isPageFieldSlot =
+    slot === 'insert.pageNumber' ||
+    slot === 'insert.pageXofY' ||
+    slot === 'insert.totalPages' ||
+    slot === 'insert.sectionPages';
+
+  let effectiveEnabled = isEnabled;
+  let effectiveReason = disabledReason;
+
+  if (isPageFieldSlot && !isEnabled && editor) {
+    const field =
+      slot === 'insert.pageNumber'
+        ? ('PAGE' as const)
+        : slot === 'insert.pageXofY'
+        ? ('PAGE_X_OF_Y' as const)
+        : slot === 'insert.totalPages'
+        ? ('NUMPAGES' as const)
+        : ('SECTIONPAGES' as const);
+    const canWithTarget = editor.can({ type: 'insertPageField', field, target: 'footer' });
+    if (canWithTarget.ok) {
+      effectiveEnabled = true;
+      effectiveReason = null;
+    }
+  }
+
   return (
     <MenuRow
       slot={slot}
       icon={chromeIcon(control?.paths)}
       {...(shortcutKey ? { shortcut: label(shortcutKey) } : {})}
-      disabled={!isEnabled}
-      {...(disabledReason ? { title: disabledReason } : {})}
+      disabled={!effectiveEnabled}
+      {...(effectiveReason ? { title: effectiveReason } : {})}
       {...(isToggle ? { active: isActive } : {})}
       {...(isRadio ? { selected: true as const } : {})}
       onSelect={() => {
-        execute();
+        if (isPageFieldSlot && !isEnabled && editor) {
+          const field =
+            slot === 'insert.pageNumber'
+              ? ('PAGE' as const)
+              : slot === 'insert.pageXofY'
+              ? ('PAGE_X_OF_Y' as const)
+              : slot === 'insert.totalPages'
+              ? ('NUMPAGES' as const)
+              : ('SECTIONPAGES' as const);
+          editor.exec({ type: 'insertPageField', field, target: 'footer' });
+        } else {
+          execute();
+        }
         setOpenMenu(null);
       }}
       {...(className ? { className } : {})}
@@ -397,6 +436,34 @@ function MenuVideoInsertImpl({ className, hidden }: MenuActionProps) {
 
 export const MenuVideoInsert = Object.assign(MenuVideoInsertImpl, {
   docxSlot: 'video.insert' as ChromeSlotId,
+});
+
+function MenuChartInsertImpl({ className, hidden }: MenuActionProps) {
+  const context = useMenuContext();
+  const label = useMenuLabel();
+  if (hidden) return null;
+  const control = chromeControlForSlot('chart.insert');
+  const rawChartText = label(control?.labelKey ?? 'toolbar.chart');
+  const text = !rawChartText || rawChartText === 'toolbar.chart' ? 'Chart' : rawChartText;
+  const enabled = !!context.onChart;
+  return (
+    <MenuRow
+      slot="chart.insert"
+      icon={chromeIcon(control?.paths)}
+      disabled={!enabled}
+      onSelect={() => {
+        context.onChart?.();
+        context.setOpenMenu(null);
+      }}
+      {...(className ? { className } : {})}
+    >
+      {text}
+    </MenuRow>
+  );
+}
+
+export const MenuChartInsert = Object.assign(MenuChartInsertImpl, {
+  docxSlot: 'chart.insert' as ChromeSlotId,
 });
 
 function MenuWatermarkImpl({ className, hidden }: MenuActionProps) {
@@ -794,6 +861,7 @@ export function MenuEntry({ entry }: { entry: ChromeMenuEntry }) {
   if (entry.slot === 'file.pageSetup') return <MenuPageSetup />;
   if (entry.slot === 'image.insert') return <MenuImageInsert />;
   if (entry.slot === 'video.insert') return <MenuVideoInsert />;
+  if (entry.slot === 'chart.insert') return <MenuChartInsert />;
   if (entry.slot === 'insert.watermark') return <MenuWatermark />;
   if (entry.picker === 'tableGrid') return <MenuTablePicker entry={entry} />;
   return (

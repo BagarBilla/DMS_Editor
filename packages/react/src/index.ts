@@ -44,9 +44,37 @@ export {
   type DocxEditorPageSetupDialogProps,
 } from './editor/DocxEditorPageSetup';
 export {
+  DocxEditorSplitCellDialog,
+  type DocxEditorSplitCellDialogProps,
+} from './editor/DocxEditorSplitCellDialog';
+export {
+  DocxEditorChartDialog,
+  type DocxEditorChartDialogProps,
+  type ChartType,
+  type ChartSeries,
+  type ChartOptions,
+  type ChartPalette,
+  type ChartConfig,
+  CHART_PALETTES,
+  serializeChartConfig,
+  parseChartConfig,
+  isChartDescription,
+  createDefaultChartConfig,
+  renderChartSvg,
+  chartToPngBytes,
+} from './editor/charts';
+export {
   DocxEditorFontNotice,
   type DocxEditorFontNoticeProps,
 } from './editor/DocxEditorFontNotice';
+export {
+  DocxEditorStatusBar,
+  type DocxEditorStatusBarProps,
+} from './editor/DocxEditorStatusBar';
+export {
+  useEditorCaretPosition,
+  type EditorCaretPosition,
+} from './editor/useEditorCaretPosition';
 // The review PANE lives in `@docx-editor.dev/pro/react` (the review capability is
 // module-gated). What this package exports are the integration points the pro pane —
 // or any external chrome — composes with: the rail registry the Viewport and rulers

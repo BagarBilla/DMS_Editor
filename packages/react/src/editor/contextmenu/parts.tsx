@@ -31,6 +31,7 @@ import {
   SELECT_ALL_PATHS,
   REFRESH_TOC_PATHS,
   REFRESH_TOC_PAGE_NUMBERS_PATHS,
+  MERGE_CELLS_PATHS,
 } from './contextmenu-icons';
 import { chromeIcon } from '../toolbar/ToolbarButton';
 
@@ -228,6 +229,20 @@ function defineTableCommandRow(
   };
   return Object.assign(Part, { docxRow: rowId });
 }
+
+/** Merge selected table cells. @public */
+export const ContextMenuMergeCells = defineTableCommandRow(
+  'table.mergeCells',
+  { type: 'mergeCells' },
+  { labelKey: 'table.mergeCells', paths: MERGE_CELLS_PATHS }
+);
+
+/** Split selected table cell. @public */
+export const ContextMenuSplitCell = defineTableCommandRow(
+  'table.splitCell',
+  { type: 'splitCell' },
+  { labelKey: 'table.splitCell', paths: tableChromeIconPaths('call_split') }
+);
 
 /** Insert a row above the current table row. @public */
 export const ContextMenuInsertRowAbove = defineTableCommandRow(
@@ -441,6 +456,8 @@ export function useTableContextMenuVisible(): boolean {
 
 /** Fixed table context rows in registry order. @internal */
 export const TABLE_CONTEXT_ROWS = [
+  ContextMenuMergeCells,
+  ContextMenuSplitCell,
   ContextMenuInsertRowAbove,
   ContextMenuInsertRowBelow,
   ContextMenuInsertColumnLeft,

@@ -508,6 +508,19 @@ export const CHROME_GROUPS = [
     ],
   },
   {
+    id: 'chart',
+    labelKey: 'toolbar.chart',
+    contextual: true,
+    controls: [
+      {
+        id: 'insert',
+        labelKey: 'toolbar.chart',
+        paths: GENERATED_ICON_PATHS['table_chart'],
+        state: { kind: 'command' },
+      },
+    ],
+  },
+  {
     id: 'table',
     labelKey: 'formattingBar.groups.table',
     contextual: true,
@@ -712,6 +725,7 @@ export type ChromeGroupId =
   | 'contentControl'
   | 'image'
   | 'video'
+  | 'chart'
   | 'table'
   | 'file'
   | 'insert';
@@ -760,6 +774,7 @@ export type ChromeSlotId =
   | 'image.wrap'
   | 'image.altText'
   | 'video.insert'
+  | 'chart.insert'
   | 'table.insert'
   | 'table.borderTarget'
   | 'table.borderColor'
@@ -982,10 +997,23 @@ export const CHROME_MENUS: readonly ChromeMenu[] = [
     entries: [
       { kind: 'item', slot: 'image.insert' },
       { kind: 'item', slot: 'video.insert' },
+      { kind: 'item', slot: 'chart.insert' },
       { kind: 'item', slot: 'table.insert', picker: 'tableGrid' },
       { kind: 'separator' },
       { kind: 'item', slot: 'insert.footnote' },
       { kind: 'item', slot: 'insert.endnote' },
+      { kind: 'separator' },
+      {
+        kind: 'submenu',
+        labelKey: 'headerFooter.insertPageNumber',
+        paths: GENERATED_ICON_PATHS['format_list_numbered'],
+        items: [
+          { kind: 'item', slot: 'insert.pageNumber' },
+          { kind: 'item', slot: 'insert.pageXofY' },
+          { kind: 'item', slot: 'insert.totalPages' },
+          { kind: 'item', slot: 'insert.sectionPages' },
+        ],
+      },
       { kind: 'separator' },
       {
         kind: 'submenu',

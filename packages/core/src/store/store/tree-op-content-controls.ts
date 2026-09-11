@@ -406,6 +406,20 @@ const TREE_OP_REACH: {
   setTableCellBorders: (op) => each(op.cellIds),
   setTableCellFill: (op) => each(op.cellIds),
   setTableCellVerticalAlignment: (op) => each(op.cellIds),
+  mergeTableCells: (op) => ({
+    kind: 'nodes',
+    targets: [
+      { nodeId: op.tableId, structural: true },
+      ...op.cellIds.map((nodeId) => ({ nodeId, structural: true, removes: true })),
+    ],
+  }),
+  splitTableCell: (op) => ({
+    kind: 'nodes',
+    targets: [
+      { nodeId: op.tableId, structural: true },
+      { nodeId: op.cellId, structural: true },
+    ],
+  }),
   insertDrawing: (op) => writingAt(op.paragraphId, op.offset),
   replaceDrawingResource: (op) => whole(op.drawingNodeId),
   deleteDrawing: (op) => ({

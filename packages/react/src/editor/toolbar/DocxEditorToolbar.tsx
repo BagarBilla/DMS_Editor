@@ -79,6 +79,8 @@ import {
   ToolbarSubscript,
   ToolbarSuperscript,
   ToolbarTableInsert,
+  ToolbarPageNumber,
+  ToolbarPageXofY,
   ToolbarUnderline,
   ToolbarUndo,
   type ToolbarPartComponent,
@@ -105,6 +107,8 @@ import {
   ToolbarTableBorderTarget,
   ToolbarTableBorderWidth,
   ToolbarTableCellFill,
+  ToolbarTableMergeCells,
+  ToolbarTableSplitCell,
   type TableBorderColorNamespace,
   type TableBorderStyleNamespace,
   type TableBorderTargetNamespace,
@@ -116,6 +120,8 @@ import { useScopeClassName } from '../scope-context';
 
 /** Contextual table chrome slots appended when the caret is inside a table. */
 const TABLE_CHROME_SLOTS: readonly ArrangementKey[] = [
+  'table.mergeCells',
+  'table.splitCell',
   'table.borderTarget',
   'table.borderColor',
   'table.borderStyle',
@@ -127,7 +133,7 @@ const TABLE_CHROME_SLOTS: readonly ArrangementKey[] = [
  * A default-arrangement key: a chrome slot, or `'alignment'` for the MERGED
  * alignment dropdown that stands in for the four `alignment.*` slots.
  */
-type ArrangementKey = ChromeSlotId | 'alignment';
+type ArrangementKey = ChromeSlotId | 'alignment' | 'table.mergeCells' | 'table.splitCell';
 
 /** One default-arrangement entry: the slot and the part that draws it. */
 interface DefaultEntry {
@@ -486,6 +492,10 @@ export interface DocxEditorToolbarNamespace {
   readonly ImageWrap: ImageWrapPartComponent;
   readonly ImageAltText: ImageAltTextPartComponent;
   readonly TableInsert: ToolbarPartComponent;
+  /** Contextual table cell merge toolbar button. */
+  readonly TableMergeCells: typeof ToolbarTableMergeCells;
+  /** Contextual table cell split toolbar button. */
+  readonly TableSplitCell: typeof ToolbarTableSplitCell;
   /** Border-edge target picker compound for contextual table chrome. */
   readonly TableBorderTarget: TableBorderTargetNamespace;
   /** Border-colour split compound (quick-apply main + swatch dialog). */
@@ -509,6 +519,8 @@ export interface DocxEditorToolbarNamespace {
   readonly ContentControlFormFill: ToolbarPartComponent;
   readonly ContentControlInspector: ToolbarPartComponent;
   readonly ContentControlRemove: ToolbarPartComponent;
+  readonly PageNumber: ToolbarPartComponent;
+  readonly PageXofY: ToolbarPartComponent;
 }
 
 /**
@@ -547,6 +559,8 @@ export const DocxEditorToolbar: DocxEditorToolbarNamespace = Object.assign(DocxE
   ImageWrap: ToolbarImageWrap,
   ImageAltText: ToolbarImageAltText,
   TableInsert: ToolbarTableInsert,
+  TableMergeCells: ToolbarTableMergeCells,
+  TableSplitCell: ToolbarTableSplitCell,
   TableBorderTarget: ToolbarTableBorderTarget,
   TableBorderColor: ToolbarTableBorderColor,
   TableBorderStyle: ToolbarTableBorderStyle,
@@ -565,6 +579,8 @@ export const DocxEditorToolbar: DocxEditorToolbarNamespace = Object.assign(DocxE
   ContentControlFormFill: ToolbarContentControlFormFill,
   ContentControlInspector: ToolbarContentControlInspector,
   ContentControlRemove: ToolbarContentControlRemove,
+  PageNumber: ToolbarPageNumber,
+  PageXofY: ToolbarPageXofY,
 });
 
 export { useFontFamily, useParagraphStyle };

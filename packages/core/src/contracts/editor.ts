@@ -671,6 +671,10 @@ export interface Editor {
    * Viewport mode falls back to the caret when no measurable viewport is attached.
    */
   getCurrentPage(mode?: 'viewport' | 'caret'): number;
+  /**
+   * Where the caret is in layout coordinates (page, line, column), or null when unplaced.
+   */
+  getCaretPosition(): CaretPositionMetrics | null;
 
   /**
    * Display scale of the painted pages. 1 is 100%.
@@ -1082,7 +1086,7 @@ export interface EditorCommands
   deleteColumn: { target?: TableColumnOccurrenceTarget };
   deleteTable: Record<never, never>;
   mergeCells: Record<never, never>;
-  splitCell: { rows: number; cols: number };
+  splitCell: { rows?: number; cols?: number };
   /** Selected-cell fill. `null` clears direct fill so the table-style cascade applies again. */
   setCellFill: { color: ColorValue | null };
   /** Vertically align content inside the selected table cells. */
@@ -1402,6 +1406,8 @@ export interface TableContext {
   readonly rowIndex: number;
   /** Zero-based, within the row. */
   readonly columnIndex: number;
+  /** Whether the current cell can be split. */
+  readonly canSplitCell?: boolean;
 }
 
 /**
@@ -1476,6 +1482,22 @@ export interface PageSetup {
   };
   /** Binding gutter (`w:gutter`), folded into the left margin by layout. */
   readonly gutterTwips?: number;
+}
+
+/**
+ * Metrics describing where the caret is positioned in layout and document coordinates.
+ *
+ * @public
+ */
+export interface CaretPositionMetrics {
+  /** 1-based page number containing the caret. */
+  readonly pageNumber: number;
+  /** Total number of pages in the document. */
+  readonly totalPages: number;
+  /** 1-based line number of the caret on the current page. */
+  readonly lineNumber: number;
+  /** 1-based column number (character offset) on the current line. */
+  readonly columnNumber: number;
 }
 
 /**

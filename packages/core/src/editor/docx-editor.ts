@@ -135,6 +135,7 @@ import {
 } from './custom-node-wiring.js';
 import {
   currentPage as currentPageOf,
+  caretPositionOf,
   pageSetupOf,
   gateCommand,
   hyperlinkAtOf,
@@ -145,6 +146,7 @@ import {
   totalPages as totalPagesOf,
   tableContextOf,
   selectedTableOf,
+  splitCellConfigOf,
 } from './docx-editor-derive.js';
 import {
   canContentControlCommand,
@@ -2467,8 +2469,10 @@ export function createDocxEditor(config: DocxEditorConfig): DocxEditorInstance {
           return tableContextOf(surface) as EditorQueryResults[K];
         case 'watermark':
           return (surface?.getWatermark() ?? null) as unknown as EditorQueryResults[K];
+        case 'splitCellConfig':
+          return splitCellConfigOf(surface) as unknown as EditorQueryResults[K];
         default:
-          // splitCellConfig and pageContent are nullable and underived.
+          // pageContent is nullable and underived.
           return null as EditorQueryResults[K];
       }
     },
@@ -2477,6 +2481,7 @@ export function createDocxEditor(config: DocxEditorConfig): DocxEditorInstance {
 
     getTotalPages: () => totalPagesOf(surface),
     getCurrentPage: (mode) => currentPageOf(surface, mode),
+    getCaretPosition: () => caretPositionOf(surface),
 
     // Page NUMBERS are 1-based in this contract; the layout indexes from 0.
     scrollToPage: (pageNumber: number) =>

@@ -23,6 +23,7 @@
     "rightToLeft": "Right-to-left text",
     "image": "Image",
     "table": "Table",
+    "chart": "Chart",
     "break": "Break",
     "insertFootnote": "Insert Footnote",
     "insertEndnote": "Insert Endnote",
@@ -203,6 +204,41 @@
         "paragraph": "Paragraph",
         "line": "Line"
       }
+    },
+    "splitCell": {
+      "title": "Split Cells",
+      "numberOfColumns": "Number of columns:",
+      "numberOfRows": "Number of rows:",
+      "ok": "OK",
+      "cancel": "Cancel"
+    },
+    "chart": {
+      "title": "Chart Editor",
+      "insert": "Insert Chart",
+      "update": "Update Chart",
+      "cancel": "Cancel",
+      "chartType": "Chart Type",
+      "chartTitle": "Chart Title",
+      "types": {
+        "column": "Column",
+        "bar": "Bar",
+        "line": "Line",
+        "area": "Area",
+        "pie": "Pie",
+        "donut": "Donut"
+      },
+      "data": "Chart Data",
+      "categories": "Categories",
+      "series": "Series",
+      "options": "Options",
+      "showLegend": "Show Legend",
+      "showGrid": "Show Gridlines",
+      "showValues": "Show Values",
+      "palette": "Color Palette",
+      "addCategory": "Add Category",
+      "removeCategory": "Remove Category",
+      "addSeries": "Add Series",
+      "removeSeries": "Remove Series"
     },
     "pageSetup": {
       "title": "Page Setup",
@@ -638,5 +674,28 @@
     "replaced": "Replaced",
     "replacedWith": "with",
     "commentRefused": "Could not add the comment"
+  },
+  "dialogs": {
+    "chart": {
+      "title": "Insert Chart",
+      "update": "Update Chart",
+      "editBadge": "Edit Chart",
+      "chartType": "Chart Type",
+      "chartTitle": "Chart Title",
+      "data": "Data & Series",
+      "addCategory": "Add Category",
+      "addSeries": "Add Series",
+      "categories": "Categories",
+      "removeSeries": "Remove series",
+      "removeCategory": "Remove category",
+      "palette": "Color Palette",
+      "options": "Display Options",
+      "showLegend": "Show Legend",
+      "showGrid": "Show Gridlines",
+      "showValues": "Show Data Values",
+      "cancel": "Cancel",
+      "insert": "Insert Chart"
+    }
   }
 }
+

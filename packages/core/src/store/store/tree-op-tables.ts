@@ -48,11 +48,16 @@ import {
   patchTblPrChild,
   patchTcPrChild,
   patchTrPrChild,
+  removeTcPrChild,
 } from './tree-op-table-properties.js';
 import { paragraphIdsWithin } from './tree-op-blocks.js';
 import { fromEdit, TEXT_DEPS } from './tree-op-nodes.js';
-import { isWmlElement, wmlAttributeValue, wmlChildNamed } from './tree-op-table-shared.js';
+import { isWmlElement, isWmlGridCol, wmlAttributeValue, wmlChildNamed } from './tree-op-table-shared.js';
 import { readEditableTableTopology, type EditableTableTopology } from './tree-op-table-topology.js';
+import {
+  mapTopologyRejection,
+  validateCellSelection,
+} from './tree-op-table-cell-properties.js';
 import { nextRevisionId } from './tree-op-tracked.js';
 import type {
   RevisionAttributionInput,
@@ -78,6 +83,20 @@ const COLUMN_SAFE_TCPR_LEAVES: readonly string[] = CT_TCPR_SEQUENCE.filter(
 const COMPOUND_PROPERTY_CHILDREN: Readonly<Record<string, readonly string[]>> = {
   tcBorders: ['top', 'left', 'bottom', 'right', 'insideH', 'insideV'],
   tcMar: ['top', 'left', 'bottom', 'right'],
+};
+
+export type TableMergeDocOp = {
+  readonly op: 'mergeTableCells';
+  readonly tableId: string;
+  readonly cellIds: readonly string[];
+};
+
+export type TableSplitDocOp = {
+  readonly op: 'splitTableCell';
+  readonly tableId: string;
+  readonly cellId: string;
+  readonly rows: number;
+  readonly cols: number;
 };
 
 export type TableRowDocOp =
@@ -1831,6 +1850,571 @@ export function applyTableResizeOp(
   if (op.op === 'setTableColumnWidths') return applySetTableColumnWidths(part, op, options);
   if (op.op === 'setTableRightEdgeWidth') return applySetTableRightEdgeWidth(part, op, options);
   return applySetTableRowHeight(part, op, options);
+}
+
+function isCellEffectivelyEmpty(cell: OoxmlTableCellNode): boolean {
+  const blocks = cell.children.filter(
+    (child) => child.kind !== 'generic' || (child as OoxmlElement).localName !== 'tcPr'
+  );
+  if (blocks.length === 0) return true;
+  if (blocks.length === 1 && blocks[0]!.kind === 'paragraph') {
+    const p = blocks[0] as OoxmlParagraphNode;
+    const hasContent = p.children.some((child) => {
+      if (child.kind === 'paragraphProperties') return false;
+      if (child.kind === 'run') {
+        return child.children.some((rc) => {
+          if (rc.kind === 'runProperties') return false;
+          if (rc.kind === 'textValue' && rc.value.length > 0) return true;
+          if (
+            rc.kind === 'text' &&
+            rc.children.some((tc) => tc.kind === 'textValue' && tc.value.length > 0)
+          ) {
+            return true;
+          }
+          return true;
+        });
+      }
+      return true;
+    });
+    return !hasContent;
+  }
+  return false;
+}
+
+export function validateMergeTableCells(
+  part: OoxmlPart,
+  op: TableMergeDocOp,
+  limits: TableTopologyLimits = DEFAULT_TABLE_TOPOLOGY_LIMITS
+): TreeOpRejection | null {
+  if (typeof op.tableId !== 'string' || op.tableId.length === 0) return 'invalidArgs';
+  if (!Array.isArray(op.cellIds) || op.cellIds.length < 2) return 'invalidArgs';
+
+  const resolved = resolveTableTopologyLimits(limits);
+  const topologyResult = readEditableTableTopology(part.root, op.tableId, resolved);
+  if (!topologyResult.ok) return mapTopologyRejection(topologyResult.reason);
+
+  const selectionResult = validateCellSelection(topologyResult.topology, op.cellIds, resolved);
+  if (!selectionResult.ok) return selectionResult.reason;
+
+  const { grid } = selectionResult.selection;
+  if (grid.rowFrom === grid.rowTo && grid.colFrom === grid.colTo) {
+    return 'invalidArgs';
+  }
+
+  return null;
+}
+
+export function applyMergeTableCells(
+  part: OoxmlPart,
+  op: TableMergeDocOp,
+  options?: EditOptions,
+  limits: TableTopologyLimits = DEFAULT_TABLE_TOPOLOGY_LIMITS
+): TreeOpResult {
+  const rejection = validateMergeTableCells(part, op, limits);
+  if (rejection) return { ok: false, reason: rejection };
+
+  const resolved = resolveTableTopologyLimits(limits);
+  const topologyResult = readEditableTableTopology(part.root, op.tableId, resolved);
+  if (!topologyResult.ok) return { ok: false, reason: mapTopologyRejection(topologyResult.reason) };
+
+  const selectionResult = validateCellSelection(topologyResult.topology, op.cellIds, resolved);
+  if (!selectionResult.ok) return { ok: false, reason: selectionResult.reason };
+
+  const { index, grid } = selectionResult.selection;
+  const { rowFrom, rowTo, colFrom, colTo } = grid;
+  const colSpan = colTo - colFrom + 1;
+  const rowSpan = rowTo - rowFrom + 1;
+
+  const table = topologyResult.topology.table;
+  const nextId = createNodeIdAllocator(part);
+  const wml = wmlFreshNamespaceContextAt(part, table);
+  const used = usedParaIds(part.root);
+
+  const attribute = (localName: string, value: string): OoxmlAttribute => ({
+    kind: 'genericExtension',
+    namespaceUri: WML_NAMESPACE_URI,
+    localName,
+    prefix: wml.attributePrefix,
+    value,
+  });
+
+  let mergedWidthTwips = 0;
+  if (topologyResult.topology.gridColumns.length > colTo) {
+    for (let c = colFrom; c <= colTo; c += 1) {
+      const colNode = topologyResult.topology.gridColumns[c];
+      const w = colNode ? readGridColWidthTwips(colNode) : null;
+      if (w !== null) mergedWidthTwips += w;
+    }
+  }
+
+  const collectedContentBlocks: OoxmlNode[] = [];
+  const selectedCellSet = new Set(op.cellIds);
+  let defaultEmptyBlock: OoxmlNode | null = null;
+
+  for (let r = rowFrom; r <= rowTo; r += 1) {
+    const rowEntries = index.byRow.get(r) ?? [];
+    for (const entry of rowEntries) {
+      if (selectedCellSet.has(entry.cell.id)) {
+        const contentBlocks = entry.cell.children.filter(
+          (child) => child.kind !== 'generic' || (child as OoxmlElement).localName !== 'tcPr'
+        );
+        if (defaultEmptyBlock === null && contentBlocks.length > 0) {
+          defaultEmptyBlock = contentBlocks[0]!;
+        }
+        if (!isCellEffectivelyEmpty(entry.cell)) {
+          collectedContentBlocks.push(...contentBlocks);
+        }
+      }
+    }
+  }
+
+  const primaryContentBlocks: OoxmlNode[] =
+    collectedContentBlocks.length > 0
+      ? collectedContentBlocks
+      : defaultEmptyBlock !== null
+        ? [defaultEmptyBlock]
+        : [emptyParagraph(part, table, nextId, `${op.tableId}:p`, used, wml)];
+
+  const edits: ((current: OoxmlPart) => ReturnType<typeof replaceNode>)[] = [];
+  const dirtyRowIds = new Set<string>();
+  const dirtyCellIds = new Set<string>();
+  const deletedCellIds = new Set<string>();
+
+  for (let r = rowFrom; r <= rowTo; r += 1) {
+    const rowData = topologyResult.topology.rows[r]!;
+    const row = rowData.row;
+    dirtyRowIds.add(row.id);
+
+    const rowEntries = index.byRow.get(r) ?? [];
+    const cellsInRange = rowEntries.filter((entry) => selectedCellSet.has(entry.cell.id));
+    if (cellsInRange.length === 0) continue;
+
+    const rowKeeperEntry = cellsInRange[0]!;
+    const keeperCell = rowKeeperEntry.cell;
+    dirtyCellIds.add(keeperCell.id);
+
+    for (let i = 1; i < cellsInRange.length; i += 1) {
+      deletedCellIds.add(cellsInRange[i]!.cell.id);
+    }
+
+    let tcPr = wmlChildNamed(keeperCell, 'tcPr');
+    if (!tcPr) {
+      tcPr = freshWmlElement('tcPr', nextId, wml, []);
+    }
+
+    if (colSpan > 1) {
+      const gridSpanEl = freshWmlElement('gridSpan', nextId, wml, [
+        attribute('val', String(colSpan)),
+      ]);
+      const patch = patchTcPrChild(tcPr, gridSpanEl);
+      if (patch.ok) tcPr = patch.container;
+    } else {
+      const patch = removeTcPrChild(tcPr, 'gridSpan');
+      if (patch.ok) tcPr = patch.container;
+    }
+
+    if (r === rowFrom) {
+      if (rowSpan > 1) {
+        const vMergeEl = freshWmlElement('vMerge', nextId, wml, [attribute('val', 'restart')]);
+        const patch = patchTcPrChild(tcPr, vMergeEl);
+        if (patch.ok) tcPr = patch.container;
+      } else {
+        const patch = removeTcPrChild(tcPr, 'vMerge');
+        if (patch.ok) tcPr = patch.container;
+      }
+    } else {
+      const vMergeEl = freshWmlElement('vMerge', nextId, wml, [attribute('val', 'continue')]);
+      const patch = patchTcPrChild(tcPr, vMergeEl);
+      if (patch.ok) tcPr = patch.container;
+    }
+
+    if (mergedWidthTwips > 0) {
+      const tcW = freshWidthDxaElement('tcW', nextId, wml, mergedWidthTwips);
+      const patch = patchTcPrChild(tcPr, tcW);
+      if (patch.ok) tcPr = patch.container;
+    }
+
+    const newCellChildren: OoxmlNode[] = [tcPr];
+    if (r === rowFrom) {
+      newCellChildren.push(...primaryContentBlocks);
+    } else {
+      newCellChildren.push(
+        emptyParagraph(part, table, nextId, `${keeperCell.id}:p`, used, wml)
+      );
+    }
+
+    const updatedKeeperCell = Object.freeze({
+      ...keeperCell,
+      children: newCellChildren,
+    }) as OoxmlTableCellNode;
+
+    const cellsToDeleteSet = new Set(cellsInRange.slice(1).map((e) => e.cell.id));
+    const newRowChildren: OoxmlNode[] = [];
+    for (const child of row.children) {
+      if (child.id === keeperCell.id) {
+        newRowChildren.push(updatedKeeperCell);
+      } else if (cellsToDeleteSet.has(child.id)) {
+        // dropped
+      } else {
+        newRowChildren.push(child);
+      }
+    }
+
+    const updatedRow = Object.freeze({
+      ...row,
+      children: newRowChildren,
+    }) as OoxmlTableRowNode;
+
+    edits.push((current) => replaceNode(current, row.id, updatedRow, options));
+  }
+
+  const effect: TreeOpEffect = {
+    dirty: [op.tableId, ...dirtyRowIds, ...dirtyCellIds, ...paragraphIdsWithin(table)],
+    created: [],
+    deleted: [...deletedCellIds],
+    dependencyKeys: TEXT_DEPS,
+    impact: 'flow-structural',
+  };
+
+  return fromEdit(applyEdits(part, edits, options), effect);
+}
+
+export function validateSplitTableCell(
+  part: OoxmlPart,
+  op: TableSplitDocOp,
+  limits: TableTopologyLimits = DEFAULT_TABLE_TOPOLOGY_LIMITS
+): TreeOpRejection | null {
+  if (typeof op.tableId !== 'string' || op.tableId.length === 0) return 'invalidArgs';
+  if (typeof op.cellId !== 'string' || op.cellId.length === 0) return 'invalidArgs';
+  if (!Number.isInteger(op.rows) || op.rows < 1) return 'invalidArgs';
+  if (!Number.isInteger(op.cols) || op.cols < 1) return 'invalidArgs';
+  if (op.rows === 1 && op.cols === 1) return 'invalidArgs';
+
+  const resolved = resolveTableTopologyLimits(limits);
+  const topologyResult = readEditableTableTopology(part.root, op.tableId, resolved);
+  if (!topologyResult.ok) return mapTopologyRejection(topologyResult.reason);
+
+  const selectionResult = validateCellSelection(topologyResult.topology, [op.cellId], resolved);
+  if (!selectionResult.ok) return selectionResult.reason;
+
+  const target = selectionResult.selection.index.byId.get(op.cellId);
+  if (!target) return 'invalidArgs';
+  if (target.isContinue) return 'invalidArgs';
+
+  const additionalCols = Math.max(0, op.cols - target.span);
+  if (topologyResult.topology.gridColumns.length + additionalCols > resolved.maxColumns) {
+    return 'resource-limit';
+  }
+
+  const additionalRows = op.rows - 1;
+  if (topologyResult.topology.rows.length + additionalRows > resolved.maxRows) {
+    return 'resource-limit';
+  }
+
+  return null;
+}
+
+export function applySplitTableCell(
+  part: OoxmlPart,
+  op: TableSplitDocOp,
+  options?: EditOptions,
+  limits: TableTopologyLimits = DEFAULT_TABLE_TOPOLOGY_LIMITS
+): TreeOpResult {
+  const rejection = validateSplitTableCell(part, op, limits);
+  if (rejection) return { ok: false, reason: rejection };
+
+  const resolved = resolveTableTopologyLimits(limits);
+  const topologyResult = readEditableTableTopology(part.root, op.tableId, resolved);
+  if (!topologyResult.ok) return { ok: false, reason: mapTopologyRejection(topologyResult.reason) };
+
+  const selectionResult = validateCellSelection(topologyResult.topology, [op.cellId], resolved);
+  if (!selectionResult.ok) return { ok: false, reason: selectionResult.reason };
+
+  const { index } = selectionResult.selection;
+  const targetEntry = index.byId.get(op.cellId)!;
+  const targetCell = targetEntry.cell;
+  const targetRowIndex = targetEntry.rowIndex;
+  const startCol = targetEntry.startCol;
+  const endCol = targetEntry.endCol;
+  const colSpan = targetEntry.span;
+
+  const table = topologyResult.topology.table;
+  const nextId = createNodeIdAllocator(part);
+  const wml = wmlFreshNamespaceContextAt(part, table);
+  const used = usedParaIds(part.root);
+
+  const attribute = (localName: string, value: string): OoxmlAttribute => ({
+    kind: 'genericExtension',
+    namespaceUri: WML_NAMESPACE_URI,
+    localName,
+    prefix: wml.attributePrefix,
+    value,
+  });
+
+  let targetWidthTwips = 0;
+  const targetTcPr = wmlChildNamed(targetCell, 'tcPr');
+  const tcW = targetTcPr && wmlChildNamed(targetTcPr, 'tcW');
+  const wAttr = tcW && wmlAttributeValue(tcW, 'w');
+  if (wAttr && /^\d+$/.test(wAttr)) {
+    targetWidthTwips = Number(wAttr);
+  }
+  if (targetWidthTwips <= 0 && topologyResult.topology.gridColumns.length > endCol) {
+    for (let c = startCol; c <= endCol; c += 1) {
+      const colNode = topologyResult.topology.gridColumns[c];
+      const w = colNode ? readGridColWidthTwips(colNode) : null;
+      if (w !== null) targetWidthTwips += w;
+    }
+  }
+  if (targetWidthTwips <= 0) targetWidthTwips = 2400;
+
+  const cols = op.cols;
+  const rows = op.rows;
+  const subWidths: number[] = [];
+  const baseW = Math.floor(targetWidthTwips / cols);
+  const remW = targetWidthTwips - baseW * cols;
+  for (let i = 0; i < cols; i += 1) {
+    subWidths.push(baseW + (i === cols - 1 ? remW : 0));
+  }
+
+  if (colSpan === cols && topologyResult.topology.gridColumns.length > endCol) {
+    for (let i = 0; i < cols; i += 1) {
+      const colNode = topologyResult.topology.gridColumns[startCol + i];
+      const w = colNode ? readGridColWidthTwips(colNode) : null;
+      if (w !== null && w > 0) subWidths[i] = w;
+    }
+  }
+
+  const edits: ((current: OoxmlPart) => ReturnType<typeof replaceNode>)[] = [];
+  const dirtyRowIds = new Set<string>();
+  const dirtyCellIds = new Set<string>();
+  const createdCellIds = new Set<string>();
+  const createdParagraphIds: string[] = [];
+
+  const cloneTcPr = (
+    originalTcPr: OoxmlElement | undefined,
+    widthTwips: number,
+    gridSpanVal?: number,
+    vMergeVal?: 'restart' | 'continue'
+  ): OoxmlElement => {
+    let pr = originalTcPr
+      ? Object.freeze({ ...originalTcPr, children: [...originalTcPr.children] })
+      : freshWmlElement('tcPr', nextId, wml, []);
+    const tcWEl = freshWidthDxaElement('tcW', nextId, wml, widthTwips);
+    const patchW = patchTcPrChild(pr, tcWEl);
+    if (patchW.ok) pr = patchW.container;
+    if (gridSpanVal && gridSpanVal > 1) {
+      const gsEl = freshWmlElement('gridSpan', nextId, wml, [attribute('val', String(gridSpanVal))]);
+      const patchGs = patchTcPrChild(pr, gsEl);
+      if (patchGs.ok) pr = patchGs.container;
+    } else {
+      const patchGs = removeTcPrChild(pr, 'gridSpan');
+      if (patchGs.ok) pr = patchGs.container;
+    }
+    if (vMergeVal) {
+      const vmEl = freshWmlElement('vMerge', nextId, wml, [attribute('val', vMergeVal)]);
+      const patchVm = patchTcPrChild(pr, vmEl);
+      if (patchVm.ok) pr = patchVm.container;
+    } else {
+      const patchVm = removeTcPrChild(pr, 'vMerge');
+      if (patchVm.ok) pr = patchVm.container;
+    }
+    return pr;
+  };
+
+  const gridExpansion = cols - colSpan;
+  const gridNode = topologyResult.topology.grid;
+  if (gridExpansion !== 0 && gridNode) {
+    const newCols: OoxmlNode[] = [];
+    let colCursor = 0;
+    for (const child of gridNode.children) {
+      if (isWmlGridCol(child)) {
+        if (colCursor >= startCol && colCursor <= endCol) {
+          if (colCursor === startCol) {
+            for (let i = 0; i < cols; i += 1) {
+              newCols.push(
+                freshWmlElement('gridCol', nextId, wml, [attribute('w', String(subWidths[i]!))])
+              );
+            }
+          }
+        } else {
+          newCols.push(child);
+        }
+        colCursor += 1;
+      } else {
+        newCols.push(child);
+      }
+    }
+    const updatedGrid = Object.freeze({ ...gridNode, children: newCols }) as OoxmlTableGridNode;
+    edits.push((current) => replaceNode(current, gridNode.id, updatedGrid, options));
+  }
+
+  const firstCellTcPr = cloneTcPr(
+    targetTcPr,
+    subWidths[0]!,
+    undefined,
+    rows > 1 ? 'restart' : undefined
+  );
+  const firstCellChildren: OoxmlNode[] = [
+    firstCellTcPr,
+    ...targetCell.children.filter(
+      (c) => c.kind !== 'generic' || (c as OoxmlElement).localName !== 'tcPr'
+    ),
+  ];
+  if (firstCellChildren.length === 1) {
+    const p = emptyParagraph(part, table, nextId, `${targetCell.id}:p`, used, wml);
+    firstCellChildren.push(p);
+    createdParagraphIds.push(p.id);
+  }
+  const updatedFirstCell = Object.freeze({
+    ...targetCell,
+    children: firstCellChildren,
+  }) as OoxmlTableCellNode;
+  dirtyCellIds.add(updatedFirstCell.id);
+
+  const newSiblingCells: OoxmlTableCellNode[] = [];
+  for (let i = 1; i < cols; i += 1) {
+    const cId = nextId();
+    createdCellIds.add(cId);
+    const p = emptyParagraph(part, table, nextId, `${cId}:p`, used, wml);
+    createdParagraphIds.push(p.id);
+    const sibTcPr = cloneTcPr(
+      targetTcPr,
+      subWidths[i]!,
+      undefined,
+      rows > 1 ? 'restart' : undefined
+    );
+    newSiblingCells.push(
+      freshWmlElement('tc', () => cId, wml, [sibTcPr, p]) as unknown as OoxmlTableCellNode
+    );
+  }
+
+  const targetRowData = topologyResult.topology.rows[targetRowIndex]!;
+  const targetRow = targetRowData.row;
+  dirtyRowIds.add(targetRow.id);
+
+  const updatedTargetRowChildren: OoxmlNode[] = [];
+  for (const child of targetRow.children) {
+    if (child.id === targetCell.id) {
+      updatedTargetRowChildren.push(updatedFirstCell, ...newSiblingCells);
+    } else {
+      if (rows > 1 && child.kind === 'tableCell') {
+        const cTcPr = wmlChildNamed(child, 'tcPr');
+        const cWNode = cTcPr && wmlChildNamed(cTcPr, 'tcW');
+        const cW = (cWNode && Number(wmlAttributeValue(cWNode, 'w'))) || 2400;
+        const cSpan = readGridSpan(cTcPr);
+        const nextPr = cloneTcPr(cTcPr, cW, cSpan > 1 ? cSpan : undefined, 'restart');
+        const updatedOtherCell = Object.freeze({
+          ...child,
+          children: [
+            nextPr,
+            ...child.children.filter(
+              (c) => c.kind !== 'generic' || (c as OoxmlElement).localName !== 'tcPr'
+            ),
+          ],
+        }) as OoxmlTableCellNode;
+        updatedTargetRowChildren.push(updatedOtherCell);
+        dirtyCellIds.add(child.id);
+      } else {
+        updatedTargetRowChildren.push(child);
+      }
+    }
+  }
+
+  const updatedTargetRow = Object.freeze({
+    ...targetRow,
+    children: updatedTargetRowChildren,
+  }) as OoxmlTableRowNode;
+  edits.push((current) => replaceNode(current, targetRow.id, updatedTargetRow, options));
+
+  if (gridExpansion > 0) {
+    for (let r = 0; r < topologyResult.topology.rows.length; r += 1) {
+      if (r === targetRowIndex) continue;
+      const rowData = topologyResult.topology.rows[r]!;
+      const row = rowData.row;
+      const rowEntries = index.byRow.get(r) ?? [];
+      const spanningEntry = rowEntries.find((e) => startCol >= e.startCol && startCol <= e.endCol);
+      if (!spanningEntry) continue;
+      const cellToUpdate = spanningEntry.cell;
+      dirtyCellIds.add(cellToUpdate.id);
+      dirtyRowIds.add(row.id);
+
+      const oldSpan = spanningEntry.span;
+      const newSpan = oldSpan + gridExpansion;
+      const cTcPr = wmlChildNamed(cellToUpdate, 'tcPr');
+      const cWNode = cTcPr && wmlChildNamed(cTcPr, 'tcW');
+      const cW = (cWNode && Number(wmlAttributeValue(cWNode, 'w'))) || 2400;
+      const updatedTcPr = cloneTcPr(cTcPr, cW, newSpan, spanningEntry.vMergeKind);
+      const updatedCell = Object.freeze({
+        ...cellToUpdate,
+        children: [
+          updatedTcPr,
+          ...cellToUpdate.children.filter(
+            (c) => c.kind !== 'generic' || (c as OoxmlElement).localName !== 'tcPr'
+          ),
+        ],
+      }) as OoxmlTableCellNode;
+
+      const newRowChildren = row.children.map((c) => (c.id === cellToUpdate.id ? updatedCell : c));
+      const updatedOtherRow = Object.freeze({ ...row, children: newRowChildren }) as OoxmlTableRowNode;
+      edits.push((current) => replaceNode(current, row.id, updatedOtherRow, options));
+    }
+  }
+
+  const newRowNodes: OoxmlTableRowNode[] = [];
+  if (rows > 1) {
+    for (let r = 1; r < rows; r += 1) {
+      const newRowId = nextId();
+      dirtyRowIds.add(newRowId);
+      const rowChildren: OoxmlNode[] = [];
+
+      for (let c = 0; c < targetRowData.cells.length; c += 1) {
+        const origCell = targetRowData.cells[c]!;
+        if (origCell.id === targetCell.id) {
+          for (let i = 0; i < cols; i += 1) {
+            const splitCellId = nextId();
+            createdCellIds.add(splitCellId);
+            const p = emptyParagraph(part, table, nextId, `${splitCellId}:p`, used, wml);
+            createdParagraphIds.push(p.id);
+            const pr = cloneTcPr(targetTcPr, subWidths[i]!, undefined, undefined);
+            rowChildren.push(
+              freshWmlElement('tc', () => splitCellId, wml, [pr, p]) as unknown as OoxmlTableCellNode
+            );
+          }
+        } else {
+          const contCellId = nextId();
+          createdCellIds.add(contCellId);
+          const p = emptyParagraph(part, table, nextId, `${contCellId}:p`, used, wml);
+          createdParagraphIds.push(p.id);
+          const cTcPr = wmlChildNamed(origCell, 'tcPr');
+          const cWNode = cTcPr && wmlChildNamed(cTcPr, 'tcW');
+          const cW = (cWNode && Number(wmlAttributeValue(cWNode, 'w'))) || 2400;
+          const cSpan = readGridSpan(cTcPr);
+          const pr = cloneTcPr(cTcPr, cW, cSpan > 1 ? cSpan : undefined, 'continue');
+          rowChildren.push(
+            freshWmlElement('tc', () => contCellId, wml, [pr, p]) as unknown as OoxmlTableCellNode
+          );
+        }
+      }
+
+      const newRowNode = freshWmlElement('tr', () => newRowId, wml, rowChildren) as unknown as OoxmlTableRowNode;
+      newRowNodes.push(newRowNode);
+    }
+  }
+
+  if (newRowNodes.length > 0) {
+    const insertAt = rowChildIndex(table, targetRow.id);
+    edits.push((current) => insertChildren(current, table.id, insertAt + 1, newRowNodes, options));
+  }
+
+  const effect: TreeOpEffect = {
+    dirty: [op.tableId, ...dirtyRowIds, ...dirtyCellIds, ...paragraphIdsWithin(table)],
+    created: [...createdCellIds, ...createdParagraphIds, ...newRowNodes.map((r) => r.id)],
+    deleted: [],
+    dependencyKeys: TEXT_DEPS,
+    impact: 'flow-structural',
+  };
+
+  return fromEdit(applyEdits(part, edits, options), effect);
 }
 
 export {

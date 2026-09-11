@@ -10,6 +10,7 @@ export {
   MenuItem,
   MenuImageInsert,
   MenuVideoInsert,
+  MenuChartInsert,
   MenuReportIssue,
   MenuRow,
   MenuSeparator,

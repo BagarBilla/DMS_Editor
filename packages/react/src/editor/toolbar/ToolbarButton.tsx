@@ -15,6 +15,7 @@ import {
   type ChromeControl,
   type ChromeSlotId,
 } from '@docx-editor.dev/core/editor';
+import { useDocxEditor } from '../context';
 import { useEditorCommand } from '../useEditorCommand';
 import { useToolbarLabel } from './toolbar-context';
 import { Slot } from './Slot';
@@ -84,21 +85,63 @@ export function ToolbarButton(props: ToolbarButtonProps) {
   const command = commandForSlot(slot);
   const isToggle = command?.type === 'toggleMark' || command?.type === 'setAlignment';
 
+  const editor = useDocxEditor();
+  const isPageFieldSlot =
+    slot === 'insert.pageNumber' ||
+    slot === 'insert.pageXofY' ||
+    slot === 'insert.totalPages' ||
+    slot === 'insert.sectionPages';
+
+  let effectiveEnabled = isEnabled;
+  let effectiveReason = disabledReason;
+
+  if (isPageFieldSlot && !isEnabled && editor) {
+    const field =
+      slot === 'insert.pageNumber'
+        ? ('PAGE' as const)
+        : slot === 'insert.pageXofY'
+        ? ('PAGE_X_OF_Y' as const)
+        : slot === 'insert.totalPages'
+        ? ('NUMPAGES' as const)
+        : ('SECTIONPAGES' as const);
+    const canWithTarget = editor.can({ type: 'insertPageField', field, target: 'footer' });
+    if (canWithTarget.ok) {
+      effectiveEnabled = true;
+      effectiveReason = null;
+    }
+  }
+
+  const handleExecute = () => {
+    if (isPageFieldSlot && !isEnabled && editor) {
+      const field =
+        slot === 'insert.pageNumber'
+          ? ('PAGE' as const)
+          : slot === 'insert.pageXofY'
+          ? ('PAGE_X_OF_Y' as const)
+          : slot === 'insert.totalPages'
+          ? ('NUMPAGES' as const)
+          : ('SECTIONPAGES' as const);
+      editor.exec({ type: 'insertPageField', field, target: 'footer' });
+    } else {
+      execute();
+    }
+  };
+
   const shared = {
-    onClick: () => execute(),
+    onClick: handleExecute,
     onMouseDown: guardToolbarMousedown,
-    disabled: !isEnabled,
+    disabled: !effectiveEnabled,
     // Stable slot identity for hosts, tests, and e2e — control ids alone collide
     // (`image.insert` / `table.insert`), so the full slot id is the marker.
     'data-slot': slot,
     className: `docx-toolbar__button${className ? ` ${className}` : ''}`,
     // Presence attributes: present (empty string) when on, absent when off.
     ...(isActive ? { 'data-active': '' } : {}),
-    ...(!isEnabled ? { 'data-disabled': '' } : {}),
+    ...(!effectiveEnabled ? { 'data-disabled': '' } : {}),
     ...(isToggle ? { 'aria-pressed': isActive } : {}),
     'aria-label': text,
     // The engine's own reason surfaces as the tooltip when disabled.
-    title: disabledReason ?? text,
+    title: effectiveReason ?? text,
   };
 
   if (asChild) return <Slot {...shared}>{children}</Slot>;
