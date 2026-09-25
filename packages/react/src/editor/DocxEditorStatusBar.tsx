@@ -152,9 +152,7 @@ export function DocxEditorStatusBar({
     }
   }, [editor, caret.pageNumber]);
 
-  const pageLabel = t
-    ? `Page ${caret.pageNumber} of ${caret.totalPages}`
-    : `Page ${caret.pageNumber} of ${caret.totalPages}`;
+  const pageLabel = `Page ${caret.pageNumber} of ${caret.totalPages}`;
 
   const wordLabel =
     caret.selectedWordCount > 0

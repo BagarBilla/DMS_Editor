@@ -216,6 +216,7 @@
       "title": "Chart Editor",
       "insert": "Insert Chart",
       "update": "Update Chart",
+      "editBadge": "Edit Chart",
       "cancel": "Cancel",
       "chartType": "Chart Type",
       "chartTitle": "Chart Title",
@@ -674,28 +675,5 @@
     "replaced": "Replaced",
     "replacedWith": "with",
     "commentRefused": "Could not add the comment"
-  },
-  "dialogs": {
-    "chart": {
-      "title": "Insert Chart",
-      "update": "Update Chart",
-      "editBadge": "Edit Chart",
-      "chartType": "Chart Type",
-      "chartTitle": "Chart Title",
-      "data": "Data & Series",
-      "addCategory": "Add Category",
-      "addSeries": "Add Series",
-      "categories": "Categories",
-      "removeSeries": "Remove series",
-      "removeCategory": "Remove category",
-      "palette": "Color Palette",
-      "options": "Display Options",
-      "showLegend": "Show Legend",
-      "showGrid": "Show Gridlines",
-      "showValues": "Show Data Values",
-      "cancel": "Cancel",
-      "insert": "Insert Chart"
-    }
   }
 }
-

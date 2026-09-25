@@ -30,6 +30,7 @@ import {
   type OoxmlParagraphNode,
   type OoxmlPart,
   type OoxmlTableCellNode,
+  type OoxmlTableGridNode,
   type OoxmlTableRowNode,
 } from '../package/ooxml-tree.js';
 import {
@@ -55,7 +56,6 @@ import { fromEdit, TEXT_DEPS } from './tree-op-nodes.js';
 import { isWmlElement, isWmlGridCol, wmlAttributeValue, wmlChildNamed } from './tree-op-table-shared.js';
 import { readEditableTableTopology, type EditableTableTopology } from './tree-op-table-topology.js';
 import {
-  mapTopologyRejection,
   validateCellSelection,
 } from './tree-op-table-cell-properties.js';
 import { nextRevisionId } from './tree-op-tracked.js';
@@ -1864,13 +1864,13 @@ function isCellEffectivelyEmpty(cell: OoxmlTableCellNode): boolean {
       if (child.kind === 'run') {
         return child.children.some((rc) => {
           if (rc.kind === 'runProperties') return false;
-          if (rc.kind === 'textValue' && rc.value.length > 0) return true;
           if (
             rc.kind === 'text' &&
             rc.children.some((tc) => tc.kind === 'textValue' && tc.value.length > 0)
           ) {
             return true;
           }
+          if (rc.kind === 'text') return false;
           return true;
         });
       }
@@ -1928,7 +1928,7 @@ export function applyMergeTableCells(
   const table = topologyResult.topology.table;
   const nextId = createNodeIdAllocator(part);
   const wml = wmlFreshNamespaceContextAt(part, table);
-  const used = usedParaIds(part.root);
+  const used = new Set(usedParaIds(part.root));
 
   const attribute = (localName: string, value: string): OoxmlAttribute => ({
     kind: 'genericExtension',
@@ -2099,7 +2099,7 @@ export function validateSplitTableCell(
 
   const target = selectionResult.selection.index.byId.get(op.cellId);
   if (!target) return 'invalidArgs';
-  if (target.isContinue) return 'invalidArgs';
+  if (target.vMergeKind === 'continue') return 'invalidArgs';
 
   const additionalCols = Math.max(0, op.cols - target.span);
   if (topologyResult.topology.gridColumns.length + additionalCols > resolved.maxColumns) {
@@ -2141,7 +2141,7 @@ export function applySplitTableCell(
   const table = topologyResult.topology.table;
   const nextId = createNodeIdAllocator(part);
   const wml = wmlFreshNamespaceContextAt(part, table);
-  const used = usedParaIds(part.root);
+  const used = new Set(usedParaIds(part.root));
 
   const attribute = (localName: string, value: string): OoxmlAttribute => ({
     kind: 'genericExtension',
@@ -2194,11 +2194,9 @@ export function applySplitTableCell(
     originalTcPr: OoxmlElement | undefined,
     widthTwips: number,
     gridSpanVal?: number,
-    vMergeVal?: 'restart' | 'continue'
+    vMergeVal?: 'restart' | 'continue' | 'none'
   ): OoxmlElement => {
-    let pr = originalTcPr
-      ? Object.freeze({ ...originalTcPr, children: [...originalTcPr.children] })
-      : freshWmlElement('tcPr', nextId, wml, []);
+    let pr: OoxmlElement = originalTcPr ?? freshWmlElement('tcPr', nextId, wml, []);
     const tcWEl = freshWidthDxaElement('tcW', nextId, wml, widthTwips);
     const patchW = patchTcPrChild(pr, tcWEl);
     if (patchW.ok) pr = patchW.container;
@@ -2210,7 +2208,7 @@ export function applySplitTableCell(
       const patchGs = removeTcPrChild(pr, 'gridSpan');
       if (patchGs.ok) pr = patchGs.container;
     }
-    if (vMergeVal) {
+    if (vMergeVal && vMergeVal !== 'none') {
       const vmEl = freshWmlElement('vMerge', nextId, wml, [attribute('val', vMergeVal)]);
       const patchVm = patchTcPrChild(pr, vmEl);
       if (patchVm.ok) pr = patchVm.container;
@@ -2284,7 +2282,7 @@ export function applySplitTableCell(
       rows > 1 ? 'restart' : undefined
     );
     newSiblingCells.push(
-      freshWmlElement('tc', () => cId, wml, [sibTcPr, p]) as unknown as OoxmlTableCellNode
+      freshWmlElement('tc', () => cId, wml, [], [sibTcPr, p]) as unknown as OoxmlTableCellNode
     );
   }
 
@@ -2377,7 +2375,7 @@ export function applySplitTableCell(
             createdParagraphIds.push(p.id);
             const pr = cloneTcPr(targetTcPr, subWidths[i]!, undefined, undefined);
             rowChildren.push(
-              freshWmlElement('tc', () => splitCellId, wml, [pr, p]) as unknown as OoxmlTableCellNode
+              freshWmlElement('tc', () => splitCellId, wml, [], [pr, p]) as unknown as OoxmlTableCellNode
             );
           }
         } else {
@@ -2391,12 +2389,12 @@ export function applySplitTableCell(
           const cSpan = readGridSpan(cTcPr);
           const pr = cloneTcPr(cTcPr, cW, cSpan > 1 ? cSpan : undefined, 'continue');
           rowChildren.push(
-            freshWmlElement('tc', () => contCellId, wml, [pr, p]) as unknown as OoxmlTableCellNode
+            freshWmlElement('tc', () => contCellId, wml, [], [pr, p]) as unknown as OoxmlTableCellNode
           );
         }
       }
 
-      const newRowNode = freshWmlElement('tr', () => newRowId, wml, rowChildren) as unknown as OoxmlTableRowNode;
+      const newRowNode = freshWmlElement('tr', () => newRowId, wml, [], rowChildren) as unknown as OoxmlTableRowNode;
       newRowNodes.push(newRowNode);
     }
   }

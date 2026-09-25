@@ -456,7 +456,10 @@ function labelOf(
   entry: DefaultEntry,
   groupLabelKey: string
 ): string {
-  const control = entry.slot === 'alignment' ? null : chromeControlForSlot(entry.slot);
+  const control =
+    entry.slot === 'alignment' || entry.slot === 'table.mergeCells' || entry.slot === 'table.splitCell'
+      ? null
+      : chromeControlForSlot(entry.slot);
   return label(control?.labelKey ?? groupLabelKey);
 }
 

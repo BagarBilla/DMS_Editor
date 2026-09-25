@@ -429,6 +429,7 @@ export function DocxEditorContextMenu({
       onSave: undefined,
       onPageSetup: undefined,
       onWatermark: undefined,
+      onChart: undefined,
       onReportIssue: undefined,
       reportIssue: undefined,
     }),
